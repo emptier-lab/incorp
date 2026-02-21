@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incorp — Changelog</title>
+  <meta name="description" content="Track all updates, new features, and improvements to the Incorp bot.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m12 3-10 5 10 5 10-5-10-5z'/><path d='m2 12 10 5 10-5'/><path d='m2 17 10 5 10-5'/></svg>">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="site-header-container">
+      <a href="index.html" class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3-10 5 10 5 10-5-10-5z" />
+          <path d="m2 12 10 5 10-5" />
+          <path d="m2 17 10 5 10-5" />
+        </svg>
+        incorp
+      </a>
+      <div class="header-actions">
+        <nav class="header-nav" aria-label="Social">
+          <a href="#" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4" />
+            </svg></a>
+          <a href="https://discord.com/users/1333972569014931466" aria-label="Discord" target="_blank"><svg width="18"
+              height="18" viewBox="0 0 127.14 96.36" fill="currentColor">
+              <path
+                d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2.04a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2.04a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15zM42.45 65.69C36.18 65.69 31 60 31 53.05s5-12.68 11.45-12.68S53.89 46 53.88 53.05 48.84 65.69 42.45 65.69zm42.24 0C78.41 65.69 73.25 60 73.25 53.05s5-12.68 11.44-12.68S96.23 46 96.12 53.05 91.08 65.69 84.69 65.69z" />
+            </svg></a>
+        </nav>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Menu" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" x2="20" y1="12" y2="12" />
+            <line x1="4" x2="20" y1="6" y2="6" />
+            <line x1="4" x2="20" y1="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="site-layout">
+    <aside class="site-sidebar" id="sidebar">
+      <div class="sidebar-group">
+        <h4>Overview</h4>
+        <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="index.html#features">Features</a>
+          <a href="index.html#updates">Updates</a>
+          <a href="index.html#stats">Stats</a>
+        </nav>
+      </div>
+      <div class="sidebar-group">
+        <h4>Resources</h4>
+        <nav class="nav-links">
+          <a href="#" class="active">Changelog</a>
+          <a href="settings.html">Settings</a>
+        </nav>
+      </div>
+      <div class="sidebar-group">
+        <h4>Versions</h4>
+        <nav class="nav-links" id="clNav">
+          <a href="#v321" class="active">v3.2.1</a>
+          <a href="#v320">v3.2.0</a>
+          <a href="#v301">v3.0.1</a>
+          <a href="#v300">v3.0.0</a>
+          <a href="#v230">v2.3.0</a>
+          <a href="#v229">v2.2.9</a>
+          <a href="#v226">v2.2.6</a>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="site-main">
+
+      <section class="cl-head reveal">
+        <h1>Changelog</h1>
+        <p>All updates, improvements, and fixes.</p>
+      </section>
+
+      <article id="v321" class="ver reveal">
+        <div class="ver-h">
+          <h2>Dice Duel PvP Gambling</h2>
+          <span class="badge">latest</span>
+        </div>
+        <span class="ver-date">August 2025</span>
+        <p class="ver-p">Player-vs-player dice gambling. Challenge others to high-stakes dice rolls to test your luck in
+          the arena.</p>
+        <div class="ver-grid">
+          <div class="ver-box">
+            <h4>Dice Duel</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Challenge players to dice duels</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> 60s time limit to accept</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Higher roll wins the bet</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Ties — no coins exchanged</li>
+            </ul>
+          </div>
+          <div class="ver-box">
+            <h4>Commands</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m2 12 10 5 10-5" />
+                </svg> .diceduel @player 500</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m2 12 10 5 10-5" />
+                </svg> .diceduel accept</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m2 12 10 5 10-5" />
+                </svg> .diceduel decline</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m2 12 10 5 10-5" />
+                </svg> .dd alias</li>
+            </ul>
+          </div>
+          <div class="ver-box">
+            <h4>Details</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Support for all/half betting</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Balance verification</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> 30s cooldown between rounds</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Visual dice roll results</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+      <hr class="ver-sep">
+
+      <article id="v320" class="ver reveal">
+        <div class="ver-h">
+          <h2>Romance &amp; Economy Expansion</h2>
+          <span class="badge">v3.2.0</span>
+        </div>
+        <span class="ver-date">June 2025</span>
+        <p class="ver-p">Major romance system expansion with new gambling games and enhanced fishing economy impacts.
+        </p>
+        <div class="ver-grid">
+          <div class="ver-box">
+            <h4>Romance</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Items affect romance success</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Protection items included</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Mood enhancers</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> .stopuse command</li>
+            </ul>
+          </div>
+          <div class="ver-box">
+            <h4>Economy Games</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Coin Flip — double or nothing</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Lottery — massive pools</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Bank Heist — team robberies</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Fishing — new rare catches</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+      <hr class="ver-sep">
+
+      <article id="v301" class="ver reveal">
+        <div class="ver-h">
+          <h2>Advanced Upgrade System</h2>
+          <span class="badge">v3.0.1</span>
+        </div>
+        <span class="ver-date">June 12, 2025</span>
+        <p class="ver-p">Seven unique upgrades enhancing every aspect of gameplay progression and efficiency.</p>
+        <div class="ver-grid">
+          <div class="ver-box">
+            <h4>Upgrades</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Lucky Gambler — +12% winnings</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Robbery Protection — -15% losses</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Bank Interest — 0.5% daily</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg> Energy Booster — -10% cooldowns</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+    </main>
+  </div>
+
+  <script>
+    const toggle = document.getElementById('mobileToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    toggle?.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    });
+
+    sidebar.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A' && window.innerWidth <= 768) {
+        sidebar.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+
+    document.querySelectorAll('.cl-side a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    const clNav = document.querySelectorAll('#clNav a');
+    const sects = [...clNav].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    window.addEventListener('scroll', () => {
+      let idx = 0;
+      for (let i = 0; i < sects.length; i++) { if (sects[i] && sects[i].getBoundingClientRect().top < 200) idx = i; }
+      clNav.forEach((a, i) => a.classList.toggle('active', i === idx));
+    }, { passive: true });
+  </script>
+</body>
+
+</html>
