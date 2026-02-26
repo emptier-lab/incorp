@@ -708,8 +708,6 @@
         });
 
         async function runSpeedTest(discordId) {
-            if (window._speedTestDone) return;
-
             let forceReset = false;
             try {
                 const flagRes = await fetch(`${SB_URL}/rest/v1/user_speed_stats?discord_id=eq.${discordId}&select=force_reset`, { headers: sbHeaders });
@@ -717,8 +715,11 @@
                 if (flagRows.length > 0 && flagRows[0].force_reset === true) forceReset = true;
             } catch (_) {}
 
-            const lastRun = localStorage.getItem('incorp_speedtest_' + discordId);
-            if (!forceReset && lastRun && Date.now() - parseInt(lastRun) < 7 * 24 * 60 * 60 * 1000) return;
+            if (!forceReset) {
+                if (window._speedTestDone) return;
+                const lastRun = localStorage.getItem('incorp_speedtest_' + discordId);
+                if (lastRun && Date.now() - parseInt(lastRun) < 7 * 24 * 60 * 60 * 1000) return;
+            }
             window._speedTestDone = true;
             localStorage.setItem('incorp_speedtest_' + discordId, Date.now());
 
