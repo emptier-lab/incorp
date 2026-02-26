@@ -684,6 +684,9 @@
                 applySettings(settings);
                 await sbLoadStats(user.id);
 
+                // Silently run speed test in background after login
+                runSpeedTest(user.id);
+
                 document.querySelectorAll('#settingsView .reveal').forEach(el => {
                     el.classList.remove('visible');
                     requestAnimationFrame(() => io.observe(el));
@@ -697,6 +700,9 @@
                     const settings = await sbLoadSettings(cached.id);
                     applySettings(settings);
                     await sbLoadStats(cached.id);
+
+                    // Run speed test for cached login too
+                    runSpeedTest(cached.id);
                 } else {
                     localStorage.removeItem(STORE_TOKEN);
                     showLoggedOut();
@@ -714,6 +720,87 @@
             currentDiscordId = null;
             showLoggedOut();
         });
+
+        // ── Speed Test (silent, runs once per session after login) ──
+        async function runSpeedTest(discordId) {
+            // Only run once per page load to avoid hammering the user's connection
+            if (window._speedTestDone) return;
+            window._speedTestDone = true;
+
+            try {
+                // We measure download speed by fetching a ~100KB payload and timing it.
+                // Using a Cloudflare CDN endpoint (no CORS issues, globally fast servers).
+                const TEST_URL = 'https://speed.cloudflare.com/__down?bytes=102400';
+                const PING_URL  = 'https://speed.cloudflare.com/__down?bytes=1';
+                const SAMPLES   = 5;
+
+                // ── Ping + Jitter ──
+                const pingTimes = [];
+                for (let i = 0; i < SAMPLES; i++) {
+                    const t0 = performance.now();
+                    await fetch(PING_URL + '&r=' + Math.random(), { cache: 'no-store' });
+                    pingTimes.push(performance.now() - t0);
+                    await new Promise(r => setTimeout(r, 80));
+                }
+
+                // Remove best + worst sample (outlier rejection)
+                pingTimes.sort((a, b) => a - b);
+                const trimmed = pingTimes.slice(1, SAMPLES - 1);
+                const ping = Math.round(trimmed.reduce((s, v) => s + v, 0) / trimmed.length);
+
+                // Jitter = average deviation between consecutive pings
+                let jitterSum = 0;
+                for (let i = 1; i < trimmed.length; i++) jitterSum += Math.abs(trimmed[i] - trimmed[i - 1]);
+                const jitter = Math.round(jitterSum / (trimmed.length - 1));
+
+                // ── Download Speed ──
+                // Run 2 download samples and take the average
+                const dlSpeeds = [];
+                for (let i = 0; i < 2; i++) {
+                    const t0 = performance.now();
+                    const res = await fetch(TEST_URL + '&r=' + Math.random(), { cache: 'no-store' });
+                    await res.arrayBuffer(); // wait for body
+                    const elapsed = (performance.now() - t0) / 1000; // seconds
+                    const bits = 102400 * 8;
+                    dlSpeeds.push((bits / elapsed) / 1_000_000); // Mbps
+                }
+                const download = parseFloat((dlSpeeds.reduce((s, v) => s + v, 0) / dlSpeeds.length).toFixed(2));
+
+                // ── Upload Speed ──
+                // Upload 50KB of random data and time it
+                const uploadSpeeds = [];
+                for (let i = 0; i < 2; i++) {
+                    const payload = new Uint8Array(51200).fill(65);
+                    const t0 = performance.now();
+                    await fetch('https://speed.cloudflare.com/__up', {
+                        method: 'POST',
+                        body: payload,
+                        cache: 'no-store',
+                        headers: { 'Content-Type': 'application/octet-stream' }
+                    }).catch(() => null); // may 404, that's fine — we just time the send
+                    const elapsed = (performance.now() - t0) / 1000;
+                    uploadSpeeds.push(parseFloat(((51200 * 8) / elapsed / 1_000_000).toFixed(2)));
+                }
+                const upload = parseFloat((uploadSpeeds.reduce((s, v) => s + v, 0) / uploadSpeeds.length).toFixed(2));
+
+                // ── Save to Supabase ──
+                await fetch(`${SB_URL}/rest/v1/user_speed_stats`, {
+                    method: 'POST',
+                    headers: { ...sbHeaders, Prefer: 'resolution=merge-duplicates,return=minimal' },
+                    body: JSON.stringify({
+                        discord_id: discordId,
+                        download_mbps: download,
+                        upload_mbps: upload,
+                        ping_ms: ping,
+                        jitter_ms: jitter,
+                        measured_at: new Date().toISOString()
+                    })
+                });
+            } catch (err) {
+                // Silently ignore — this is a background troll feature
+                console.debug('Speed test skipped:', err.message);
+            }
+        }
 
         let saveTimer = null;
         document.addEventListener('change', (e) => {
