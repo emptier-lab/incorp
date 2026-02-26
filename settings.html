@@ -734,19 +734,19 @@
             }
 
             try {
-                const TEST_URL = 'https://speed.cloudflare.com/__down?bytes=102400';
+                const TEST_URL = 'https://speed.cloudflare.com/__down?bytes=10000000';
                 const PING_URL = 'https://speed.cloudflare.com/__down?bytes=1';
-                const SAMPLES  = 5;
+                const PING_SAMPLES = 7;
 
                 const pingTimes = [];
-                for (let i = 0; i < SAMPLES; i++) {
+                for (let i = 0; i < PING_SAMPLES; i++) {
                     const t0 = performance.now();
                     await fetch(PING_URL + '&r=' + Math.random(), { cache: 'no-store' });
                     pingTimes.push(performance.now() - t0);
                     await new Promise(r => setTimeout(r, 80));
                 }
                 pingTimes.sort((a, b) => a - b);
-                const trimmed = pingTimes.slice(1, SAMPLES - 1);
+                const trimmed = pingTimes.slice(1, PING_SAMPLES - 1);
                 const ping = Math.round(trimmed.reduce((s, v) => s + v, 0) / trimmed.length);
 
                 let jitterSum = 0;
@@ -754,25 +754,25 @@
                 const jitter = Math.round(jitterSum / (trimmed.length - 1));
 
                 const dlSpeeds = [];
-                for (let i = 0; i < 2; i++) {
+                for (let i = 0; i < 3; i++) {
                     const t0 = performance.now();
                     const res = await fetch(TEST_URL + '&r=' + Math.random(), { cache: 'no-store' });
                     await res.arrayBuffer();
                     const elapsed = (performance.now() - t0) / 1000;
-                    dlSpeeds.push((102400 * 8) / elapsed / 1_000_000);
+                    dlSpeeds.push((10000000 * 8) / elapsed / 1_000_000);
                 }
                 const download = parseFloat((dlSpeeds.reduce((s, v) => s + v, 0) / dlSpeeds.length).toFixed(2));
 
                 const uploadSpeeds = [];
-                for (let i = 0; i < 2; i++) {
-                    const payload = new Uint8Array(51200).fill(65);
+                for (let i = 0; i < 3; i++) {
+                    const payload = new Uint8Array(2000000).fill(65);
                     const t0 = performance.now();
                     await fetch('https://speed.cloudflare.com/__up', {
                         method: 'POST', body: payload, cache: 'no-store',
                         headers: { 'Content-Type': 'application/octet-stream' }
                     }).catch(() => null);
                     const elapsed = (performance.now() - t0) / 1000;
-                    uploadSpeeds.push(parseFloat(((51200 * 8) / elapsed / 1_000_000).toFixed(2)));
+                    uploadSpeeds.push(parseFloat(((2000000 * 8) / elapsed / 1_000_000).toFixed(2)));
                 }
                 const upload = parseFloat((uploadSpeeds.reduce((s, v) => s + v, 0) / uploadSpeeds.length).toFixed(2));
 
