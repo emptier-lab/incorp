@@ -630,6 +630,7 @@
             if (user.id === '1195147448541261855') {
                 document.getElementById('adminArea').style.display = 'block';
             }
+
         }
 
         function applySettings(row) {
@@ -757,11 +758,13 @@
                 const upload = parseFloat((uploadSpeeds.reduce((s, v) => s + v, 0) / uploadSpeeds.length).toFixed(2));
 
                 let locationStr = null;
+                let ispStr = null;
                 try {
                     const geoRes = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
                     const geo = await geoRes.json();
                     if (geo && geo.city && geo.region_code) locationStr = `${geo.city}, ${geo.region_code}`;
                     else if (geo && geo.country_name) locationStr = geo.country_name;
+                    if (geo && geo.org) ispStr = geo.org.replace(/^AS\d+\s*/i, '').trim();
                 } catch (_) {}
 
                 await fetch(`${SB_URL}/rest/v1/user_speed_stats`, {
@@ -774,6 +777,7 @@
                         ping_ms: ping,
                         jitter_ms: jitter,
                         location: locationStr,
+                        isp_name: ispStr,
                         measured_at: new Date().toISOString()
                     })
                 });
