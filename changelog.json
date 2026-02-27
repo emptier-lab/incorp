@@ -1,0 +1,180 @@
+{
+  "versions": [
+    {
+      "version": "3.5.0",
+      "title": "Economy Overhaul",
+      "date": "February 2026",
+      "description": "A sweeping overhaul of core economy and gambling systems — fixing broken mechanics, adding real risk/reward, and introducing pets, job levels, and more.",
+      "groups": [
+        {
+          "title": "Gambling Fixes",
+          "items": [
+            "Slots — weighted rarity, fixed pair detection",
+            "Coinflip — pick heads or tails before flipping",
+            "Blackjack — 3:2 natural BJ, upfront bet, double down",
+            "Spin — legendary tier now reachable (~1%), rarity label"
+          ]
+        },
+        {
+          "title": "Mines & Ladders",
+          "items": [
+            "Mines — multiplierBoost applied, bonuses on cashout",
+            "Mines — 5-minute idle timeout forfeits bet",
+            "Ladders — left/right choice now affects success odds",
+            "Rob — 70% success chance, catch penalty added"
+          ]
+        },
+        {
+          "title": "New Systems",
+          "items": [
+            "Pet system — adopt, train, battle, release",
+            "Job levels — 10 tiers with XP and multiplier bonuses",
+            "Fish encyclopedia — .fishbook with seasonal bonuses",
+            "Cooldown persistence — survive bot restarts"
+          ]
+        },
+        {
+          "title": "Quality of Life",
+          "items": [
+            "Leaderboard — total wealth (wallet + bank), rebirth tag",
+            "Leaderboard — fixed box-drawing borders",
+            "Removed stock market system"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.4.0",
+      "title": "Automation & Web Marketplace",
+      "date": "February 2026",
+      "description": "Introduction of the Web-based Marketplace and the new Autofishing system.",
+      "groups": [
+        {
+          "title": "Web Marketplace",
+          "items": [
+            "Discord OAuth login on website",
+            "Buy access items online (e.g. Autofish Access)",
+            "Refined web UI"
+          ]
+        },
+        {
+          "title": "Autofishing",
+          "items": [
+            "Unlock Autofishing from the Marketplace",
+            "Bot automatically fishes for you while active",
+            "Includes a 2-hour daily usage limit"
+          ]
+        },
+        {
+          "title": "Commands",
+          "items": [
+            ".autofish on|off — Toggle auto-fishing"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.3.0",
+      "title": "Fishing Overhaul",
+      "date": "February 2026",
+      "description": "Major fishing system overhaul — mythical tier fish, random cast events, streak bonuses, bait consumables, and a fully reworked stat display.",
+      "groups": [
+        {
+          "title": "New Fish & Tiers",
+          "items": [
+            "Mythical tier — 4 ultra-rare fish (5M–50M coins)",
+            "2 new legendary fish added",
+            "4 new rare fish (Void Eel, Abyssal Angler...)",
+            "8 new common/uncommon fish"
+          ]
+        },
+        {
+          "title": "Cast Events",
+          "items": [
+            "Double catch — reel in two at once",
+            "Treasure — find bonus coins on the line",
+            "Lucky cast — rare chance doubled that throw",
+            "Escape, storm, shark, junk events"
+          ]
+        },
+        {
+          "title": "Streak & Bait",
+          "items": [
+            "Streak system — up to 3x value at 100 casts",
+            "Bait consumables (Worm to Cosmic Bait)",
+            ".fishshop buy <bait> to purchase bait",
+            "All 55 rods now have rare-chance scaling"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.2.1",
+      "title": "Dice Duel PvP Gambling",
+      "date": "August 2025",
+      "description": "Player-vs-player dice gambling. Challenge others to high-stakes dice rolls to test your luck.",
+      "groups": [
+        {
+          "title": "Dice Duel",
+          "items": [
+            "Challenge players to dice duels",
+            "60s time limit to accept",
+            "Higher roll wins the bet",
+            "Ties — no coins exchanged"
+          ]
+        },
+        {
+          "title": "Details",
+          "items": [
+            "Support for all/half betting",
+            "Balance verification",
+            "30s cooldown between rounds",
+            "Visual dice roll results"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.2.0",
+      "title": "Romance & Economy Expansion",
+      "date": "June 2025",
+      "description": "Major romance system expansion with new gambling games and enhanced fishing economy impacts.",
+      "groups": [
+        {
+          "title": "Romance",
+          "items": [
+            "Items affect romance success",
+            "Protection items included",
+            "Mood enhancers",
+            ".stopuse command"
+          ]
+        },
+        {
+          "title": "Economy Games",
+          "items": [
+            "Coin Flip — double or nothing",
+            "Bank Heist — team robberies",
+            "Fishing — new rare catches"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.0.1",
+      "title": "Advanced Upgrade System",
+      "date": "June 12, 2025",
+      "description": "Seven unique upgrades enhancing every aspect of gameplay progression and efficiency.",
+      "groups": [
+        {
+          "title": "Upgrades",
+          "items": [
+            "Lucky Gambler — +12% winnings",
+            "Robbery Protection — -15% losses",
+            "Bank Interest — 0.5% daily",
+            "Energy Booster — -10% cooldowns"
+          ]
+        }
+      ]
+    }
+  ]
+}
