@@ -43,6 +43,37 @@
       ]
     },
     {
+      "version": "3.5.5",
+      "title": "Quality of Life Update",
+      "date": "February 2026",
+      "description": "Help command overhaul, shorthand amount support across all economy commands, and leaderboard improvements.",
+      "groups": [
+        {
+          "title": "Help Command",
+          "items": [
+            ".help now opens an index page listing all categories with shortcut keys",
+            ".help <key> jumps directly to a section (e.g. .help f for fishing)",
+            "Visual redesign — cleaner dividers, section key shown in header"
+          ]
+        },
+        {
+          "title": "Shorthand Amounts",
+          "items": [
+            "All economy & gambling commands now accept k/m/b/t suffixes",
+            "Decimal values supported — e.g. 2.7m, 1.5k, 0.5b",
+            "Applies to: deposit, withdraw, give, rob, bet, flip, slots, blackjack, plinko, mines, ladders, wheel, coinstreak, invest, diffuser, rune"
+          ]
+        },
+        {
+          "title": "Leaderboard",
+          "items": [
+            "Unresolvable users no longer appear as Unknown on the leaderboard",
+            "Blacklisted users are marked with 🚫"
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.5.0",
       "title": "Economy Overhaul",
       "date": "February 2026",
