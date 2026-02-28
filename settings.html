@@ -670,6 +670,12 @@
                 currentDiscordId = user.id;
                 renderUser(user);
 
+                // Sync username to Supabase for admin panel
+                fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}`, {
+                    method: 'PATCH', headers: sbHeaders,
+                    body: JSON.stringify({ discord_username: user.username })
+                }).catch(() => {});
+
                 const settings = await sbLoadSettings(user.id);
                 applySettings(settings);
                 await sbLoadStats(user.id);
