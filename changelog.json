@@ -1,6 +1,48 @@
 {
   "versions": [
     {
+      "version": "3.6.0",
+      "title": "Profile Cards & Theme System",
+      "date": "February 2026",
+      "description": "Full profile card system, theme marketplace, and XP tracking overhaul.",
+      "groups": [
+        {
+          "title": "Profile Cards",
+          "items": [
+            ".profile / .p — renders your custom profile card",
+            ".rep @user — give +1 rep (24h cooldown per person)",
+            "Card shows level, global rank, XP bar, rep, stats, bio, badges"
+          ]
+        },
+        {
+          "title": "Theme System",
+          "items": [
+            "14 themes across Standard, Premium, Seasonal & Exclusive tiers",
+            "Themes cost Tokens — buy & equip from the marketplace website",
+            "Each theme has a unique color scheme; 7 have custom pixel-art backgrounds",
+            "Exclusive themes (Legend Gold, Founders) are earned, not purchased"
+          ]
+        },
+        {
+          "title": "XP Overhaul",
+          "items": [
+            "XP now tracks server messages + group commands combined",
+            "Chat Activity stat shows server messages only",
+            "Global XP shows total combined activity",
+            "Level-up rank checks use total activity"
+          ]
+        },
+        {
+          "title": "Website",
+          "items": [
+            "Marketplace — new Profile Themes tab with category filters",
+            "Marketplace — new Profile Settings tab (set bio, more coming)",
+            "Bio/About set from website, no longer a bot command"
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.5.0",
       "title": "Economy Overhaul",
       "date": "February 2026",
