@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (discordButton) {
         discordButton.addEventListener('click', function(e) {
             e.preventDefault();
-            window.open('https://discord.com/users/1333972569014931466', '_blank');
+            window.open('https://discord.com/users/924317568242679859', '_blank');
         });
     }
 });
