@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incorp — Admin Panel</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m12 3-10 5 10 5 10-5-10-5z'/><path d='m2 12 10 5 10-5'/><path d='m2 17 10 5 10-5'/></svg>">
+    <style>
+        /* ── Modal ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal {
+            background: #111113;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 2rem;
+            width: 95%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.96) translateY(8px);
+            transition: transform 0.2s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+        .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h3 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+        .modal-close {
+            background: none; border: none; color: var(--fg-3);
+            cursor: pointer; padding: 0.25rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+            display: flex; align-items: center;
+        }
+        .modal-close:hover { color: var(--fg); background: rgba(255,255,255,0.08); }
+
+        /* ── Buttons ── */
+        .btn-cancel {
+            background: rgba(255,255,255,0.07); color: var(--fg);
+            border: 1px solid var(--border); padding: 0.6rem 1.1rem; border-radius: 6px;
+            cursor: pointer; font-weight: 500; transition: background 0.2s; font-family: var(--font);
+            font-size: 0.875rem;
+        }
+        .btn-cancel:hover { background: rgba(255,255,255,0.12); }
+        .btn-primary {
+            background: #a78bfa; color: #111827;
+            border: none; padding: 0.6rem 1.1rem; border-radius: 6px;
+            cursor: pointer; font-weight: 600; transition: filter 0.2s; font-family: var(--font);
+            font-size: 0.875rem;
+        }
+        .btn-primary:hover { filter: brightness(1.1); }
+        .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; filter: none; }
+        .btn-danger {
+            background: rgba(239,68,68,0.1); color: #f87171;
+            border: 1px solid rgba(239,68,68,0.3); padding: 0.6rem 1.1rem; border-radius: 6px;
+            cursor: pointer; font-weight: 500; transition: background 0.2s; font-family: var(--font);
+            font-size: 0.875rem;
+        }
+        .btn-danger:hover { background: rgba(239,68,68,0.18); }
+        .btn-sm {
+            padding: 0.3rem 0.65rem; font-size: 0.78rem;
+        }
+
+        /* ── Access denied ── */
+        .denied-card {
+            text-align: center;
+            padding: 4rem 2rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .denied-icon {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.25);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.25rem;
+            color: #f87171;
+        }
+        .denied-card h2 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .denied-card p { color: var(--fg-3); font-size: 0.9rem; line-height: 1.6; }
+
+        /* ── Admin badge ── */
+        .admin-badge {
+            background: rgba(239,68,68,0.12); color: #f87171;
+            border: 1px solid rgba(239,68,68,0.3);
+            padding: 0.2rem 0.5rem; border-radius: 4px;
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .owner-badge {
+            background: rgba(251,191,36,0.12); color: #fbbf24;
+            border: 1px solid rgba(251,191,36,0.3);
+            padding: 0.2rem 0.5rem; border-radius: 4px;
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        /* ── Stats bar ── */
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #111113;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+        }
+        .stat-card-label { font-size: 0.75rem; color: var(--fg-3); font-weight: 500; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.04em; }
+        .stat-card-value { font-size: 1.5rem; font-weight: 700; }
+
+        /* ── Search + filter bar ── */
+        .toolbar {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+        .search-input {
+            background: #111113;
+            border: 1px solid var(--border);
+            color: var(--fg);
+            font-family: var(--font);
+            font-size: 0.875rem;
+            padding: 0.55rem 0.9rem;
+            border-radius: 6px;
+            outline: none;
+            flex: 1;
+            min-width: 180px;
+            transition: border-color 0.15s;
+        }
+        .search-input:focus { border-color: var(--border-2); }
+        .search-input::placeholder { color: var(--fg-4); }
+        .select-input {
+            background: #111113;
+            border: 1px solid var(--border);
+            color: var(--fg);
+            font-family: var(--font);
+            font-size: 0.8rem;
+            padding: 0.55rem 0.75rem;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+        }
+        .select-input:focus { border-color: var(--border-2); }
+
+        /* ── Users table ── */
+        .users-table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        thead th {
+            text-align: left;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--fg-3);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+            background: #111113;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.15s;
+        }
+        thead th:hover { color: var(--fg-2); }
+        thead th .sort-icon { opacity: 0.4; margin-left: 4px; }
+        thead th.sorted .sort-icon { opacity: 1; }
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.1s;
+        }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: rgba(255,255,255,0.03); cursor: pointer; }
+        tbody td { padding: 0.75rem 1rem; color: var(--fg-2); vertical-align: middle; }
+        tbody td.td-name { color: var(--fg); font-weight: 500; }
+        tbody td.td-mono { font-family: var(--mono); font-size: 0.8rem; color: var(--fg-3); }
+
+        /* ── Rig badge ── */
+        .rig-badge {
+            display: inline-block;
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            padding: 0.15rem 0.45rem; border-radius: 4px; letter-spacing: 0.04em;
+        }
+        .rig-off { background: rgba(255,255,255,0.05); color: var(--fg-4); border: 1px solid var(--border); }
+        .rig-win { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+        .rig-lose { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+        .rig-jackpot { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+
+        /* ── Modal sections ── */
+        .modal-section {
+            margin-bottom: 1.5rem;
+        }
+        .modal-section-title {
+            font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--fg-4); margin-bottom: 0.75rem;
+        }
+        .stat-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .stat-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+        }
+        .stat-item-label { font-size: 0.7rem; color: var(--fg-3); margin-bottom: 0.2rem; }
+        .stat-item-value { font-size: 1rem; font-weight: 600; }
+
+        /* ── Toggle rows ── */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .toggle-row:last-child { border-bottom: none; }
+        .toggle-label { font-size: 0.875rem; color: var(--fg-2); }
+        .toggle-desc { font-size: 0.75rem; color: var(--fg-4); margin-top: 0.1rem; }
+        /* Toggle switch */
+        .toggle-switch { position: relative; display: inline-flex; width: 36px; height: 20px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            transition: background 0.2s;
+            border: 1px solid var(--border);
+        }
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            height: 14px; width: 14px;
+            left: 2px; bottom: 2px;
+            background: var(--fg-3);
+            border-radius: 50%;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .toggle-switch input:checked + .toggle-slider { background: rgba(167,139,250,0.3); border-color: rgba(167,139,250,0.5); }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); background: #a78bfa; }
+
+        /* ── Rig mode control ── */
+        .rig-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .rig-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--fg-3);
+            font-size: 0.78rem; font-weight: 500;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: all 0.15s;
+        }
+        .rig-btn:hover { border-color: var(--border-2); color: var(--fg-2); }
+        .rig-btn.active-off { background: rgba(255,255,255,0.08); color: var(--fg); border-color: var(--border-2); }
+        .rig-btn.active-win { background: rgba(52,211,153,0.12); color: #34d399; border-color: rgba(52,211,153,0.4); }
+        .rig-btn.active-lose { background: rgba(239,68,68,0.12); color: #f87171; border-color: rgba(239,68,68,0.4); }
+        .rig-btn.active-jackpot { background: rgba(251,191,36,0.12); color: #fbbf24; border-color: rgba(251,191,36,0.4); }
+
+        /* ── Action rows ── */
+        .action-row {
+            display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+        }
+
+        /* ── Toast ── */
+        #toast {
+            position: fixed; bottom: 1.5rem; right: 1.5rem;
+            background: #111113; border: 1px solid var(--border);
+            color: var(--fg); padding: 0.75rem 1.1rem;
+            border-radius: 8px; font-size: 0.875rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            transform: translateY(8px);
+            opacity: 0; transition: opacity 0.2s, transform 0.2s;
+            z-index: 2000; pointer-events: none;
+            max-width: 300px;
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+        #toast.success { border-color: rgba(52,211,153,0.4); }
+        #toast.error { border-color: rgba(239,68,68,0.4); }
+
+        /* ── Loading ── */
+        .spinner {
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #a78bfa;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--fg-4);
+            font-size: 0.875rem;
+        }
+
+        /* ── User ID copy ── */
+        .id-copy {
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            color: var(--fg-3);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.15rem 0.3rem;
+            border-radius: 4px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .id-copy:hover { background: rgba(255,255,255,0.08); color: var(--fg); }
+    </style>
+</head>
+
+<!-- Body is hidden immediately; revealed only after admin access is confirmed -->
+<body style="visibility:hidden">
+
+    <header class="site-header">
+        <div class="site-header-container">
+            <a href="index.html" class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 3-10 5 10 5 10-5-10-5z" />
+                    <path d="m2 12 10 5 10-5" />
+                    <path d="m2 17 10 5 10-5" />
+                </svg>
+                incorp
+            </a>
+            <div class="header-actions">
+                <nav class="header-nav" aria-label="Social">
+                    <a href="#" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4" />
+                        </svg></a>
+                    <a href="https://discord.com/users/924317568242679859" aria-label="Discord" target="_blank"><svg
+                            width="18" height="18" viewBox="0 0 127.14 96.36" fill="currentColor">
+                            <path
+                                d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2.04a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2.04a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15zM42.45 65.69C36.18 65.69 31 60 31 53.05s5-12.68 11.45-12.68S53.89 46 53.88 53.05 48.84 65.69 42.45 65.69zm42.24 0C78.41 65.69 73.25 60 73.25 53.05s5-12.68 11.44-12.68S96.23 46 96.12 53.05 91.08 65.69 84.69 65.69z" />
+                        </svg></a>
+                </nav>
+                <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" x2="20" y1="12" y2="12" />
+                        <line x1="4" x2="20" y1="6" y2="6" />
+                        <line x1="4" x2="20" y1="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="site-layout">
+        <aside class="site-sidebar" id="sidebar">
+            <div class="sidebar-group">
+                <h4>Overview</h4>
+                <nav class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="index.html#features">Features</a>
+                    <a href="index.html#updates">Updates</a>
+                    <a href="index.html#stats">Stats</a>
+                </nav>
+            </div>
+            <div class="sidebar-group">
+                <h4>Resources</h4>
+                <nav class="nav-links">
+                    <a href="changelog.html">Changelog</a>
+                    <a href="settings.html">Settings</a>
+                    <a href="marketplace.html">Marketplace</a>
+                    <a href="admin.html" class="active">Admin</a>
+                </nav>
+            </div>
+        </aside>
+
+        <main class="site-main">
+
+            <section class="settings-head reveal">
+                <h1>Admin Panel</h1>
+                <p>Manage users, settings, and controls. Admin access only.</p>
+            </section>
+
+            <!-- ── Admin Panel View ── -->
+            <div id="adminView" style="display:none">
+
+                <!-- User bar -->
+                <div class="user-bar reveal" style="justify-content: space-between; margin-bottom: 2rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="user-avatar" id="userAvatar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="8" r="5" />
+                                <path d="M20 21a8 8 0 0 0-16 0" />
+                            </svg>
+                        </div>
+                        <div class="user-info">
+                            <strong id="userName">User</strong>
+                            <span id="userTag">#0000</span>
+                        </div>
+                        <span id="myRoleBadge"></span>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <button class="btn-cancel btn-sm" id="refreshBtn" title="Refresh users">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle">
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                                <path d="M21 3v5h-5"/>
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                                <path d="M8 16H3v5"/>
+                            </svg>
+                            Refresh
+                        </button>
+                        <button class="btn-cancel btn-sm" id="logoutBtn" style="padding: 0.35rem 0.75rem;">Sign out</button>
+                    </div>
+                </div>
+
+                <!-- Overview stats -->
+                <div class="stat-cards reveal" id="overviewStats" style="transition-delay:.04s">
+                    <div class="stat-card">
+                        <div class="stat-card-label">Total Users</div>
+                        <div class="stat-card-value" id="statTotalUsers">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Total Balance</div>
+                        <div class="stat-card-value" id="statTotalBalance">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Total Bank</div>
+                        <div class="stat-card-value" id="statTotalBank">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Rigged Users</div>
+                        <div class="stat-card-value" id="statRigged">—</div>
+                    </div>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="toolbar reveal" style="transition-delay:.08s">
+                    <input type="search" class="search-input" id="searchInput" placeholder="Search by username or ID…">
+                    <select class="select-input" id="sortSelect">
+                        <option value="balance_desc">Balance ↓</option>
+                        <option value="balance_asc">Balance ↑</option>
+                        <option value="level_desc">Level ↓</option>
+                        <option value="level_asc">Level ↑</option>
+                        <option value="tokens_desc">Tokens ↓</option>
+                        <option value="commands_desc">Commands ↓</option>
+                        <option value="name_asc">Name A–Z</option>
+                    </select>
+                    <select class="select-input" id="rigFilter">
+                        <option value="all">All Rig Modes</option>
+                        <option value="off">Normal</option>
+                        <option value="always_win">Always Win</option>
+                        <option value="always_lose">Always Lose</option>
+                        <option value="jackpot">Jackpot</option>
+                    </select>
+                    <div id="loadingSpinner" style="display:none"><span class="spinner"></span></div>
+                </div>
+
+                <!-- Users table -->
+                <div class="settings-section reveal" style="padding: 0; transition-delay:.1s">
+                    <div class="users-table-wrap">
+                        <table id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th data-col="name">Username <span class="sort-icon">↕</span></th>
+                                    <th data-col="id">Discord ID <span class="sort-icon">↕</span></th>
+                                    <th data-col="balance">Balance <span class="sort-icon">↕</span></th>
+                                    <th data-col="bank">Bank <span class="sort-icon">↕</span></th>
+                                    <th data-col="level">Lvl <span class="sort-icon">↕</span></th>
+                                    <th data-col="tokens">Tokens <span class="sort-icon">↕</span></th>
+                                    <th data-col="commands">Cmds <span class="sort-icon">↕</span></th>
+                                    <th>Rig</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersBody">
+                                <tr><td colspan="9" class="empty-state"><span class="spinner"></span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="tableFooter" style="padding: 0.75rem 1rem; font-size: 0.78rem; color: var(--fg-4); border-top: 1px solid var(--border);"></div>
+                </div>
+
+            </div><!-- /adminView -->
+
+        </main>
+    </div><!-- /site-layout -->
+
+    <!-- ── User Detail Modal ── -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <h3 id="modalTitle">User Details</h3>
+                    <span id="modalRoleBadge"></span>
+                </div>
+                <button class="modal-close" id="modalClose">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- ID row -->
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem;">
+                <span style="font-size:0.78rem; color:var(--fg-4);">ID:</span>
+                <button class="id-copy" id="modalUserId" title="Click to copy" onclick="copyId()"></button>
+                <span style="font-size:0.72rem; color:var(--fg-4);" id="copiedHint" style="display:none"></span>
+            </div>
+
+            <!-- Stats -->
+            <div class="modal-section">
+                <div class="modal-section-title">Economy Stats</div>
+                <div class="stat-row">
+                    <div class="stat-item">
+                        <div class="stat-item-label">Balance 💰</div>
+                        <div class="stat-item-value" id="mBalance">—</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">Bank 🏦</div>
+                        <div class="stat-item-value" id="mBank">—</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">Level ⭐</div>
+                        <div class="stat-item-value" id="mLevel">—</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">Tokens 🪙</div>
+                        <div class="stat-item-value" id="mTokens">—</div>
+                    </div>
+                </div>
+                <div class="stat-item" style="margin-top:0.5rem;">
+                    <div class="stat-item-label">Commands Run 🎮</div>
+                    <div class="stat-item-value" id="mCmds">—</div>
+                </div>
+            </div>
+
+            <!-- Rig mode -->
+            <div class="modal-section">
+                <div class="modal-section-title">Rig Mode</div>
+                <div class="rig-controls" id="rigControls">
+                    <button class="rig-btn" data-rig="off" onclick="setRig('off')">⚪ Normal</button>
+                    <button class="rig-btn" data-rig="always_win" onclick="setRig('always_win')">🟢 Always Win</button>
+                    <button class="rig-btn" data-rig="always_lose" onclick="setRig('always_lose')">🔴 Always Lose</button>
+                    <button class="rig-btn" data-rig="jackpot" onclick="setRig('jackpot')">⭐ Jackpot</button>
+                </div>
+                <p style="font-size:0.75rem; color:var(--fg-4); margin-top:0.5rem;">Overrides gambling results for this user.</p>
+            </div>
+
+            <!-- Settings toggles -->
+            <div class="modal-section">
+                <div class="modal-section-title">User Settings</div>
+                <div id="settingsToggles">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <!-- Admin controls (owner only) -->
+            <div class="modal-section" id="adminControls" style="display:none">
+                <div class="modal-section-title">Admin Controls</div>
+                <div class="action-row">
+                    <button class="btn-primary btn-sm" id="grantAdminBtn" onclick="toggleAdmin(true)">Grant Admin</button>
+                    <button class="btn-danger btn-sm" id="revokeAdminBtn" onclick="toggleAdmin(false)">Revoke Admin</button>
+                </div>
+                <p style="font-size:0.75rem; color:var(--fg-4); margin-top:0.5rem;" id="adminStatusLine"></p>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; padding-top:1rem; border-top:1px solid var(--border);">
+                <button class="btn-cancel" id="modalCancelBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Toast ── -->
+    <div id="toast"></div>
+
+    <script>
+        const CLIENT_ID = '1474880055980195953';
+        const OWNER_ID  = '1195147448541261855';
+        const REDIRECT_URI = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+            ? location.origin + '/admin.html'
+            : 'https://incorp.live/admin.html';
+        const OAUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+
+        const SB_URL = 'https://pwbvvzskdzuccnskduiz.supabase.co';
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3YnZ2enNrZHp1Y2Nuc2tkdWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3MDcyMTMsImV4cCI6MjA4NzI4MzIxM30.r5G_RQgEkudLkSLn4QUBviJAzum3tHm2Z4zqytxl1kQ';
+
+        const STORE_TOKEN = 'incorp_token';
+        const STORE_USER  = 'incorp_user';
+
+        const sbHeaders = {
+            apikey: SB_KEY,
+            Authorization: `Bearer ${SB_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=representation'
+        };
+
+        const SETTINGS_TOGGLES = [
+            { key: 'passive_income',   label: 'Passive Income',     desc: 'Earns money passively over time' },
+            { key: 'bank_interest',    label: 'Bank Interest',      desc: 'Earns daily interest on bank balance' },
+            { key: 'rob_protect',      label: 'Rob Protection',     desc: 'Cannot be robbed by other users' },
+            { key: 'gambling',         label: 'Gambling',           desc: 'Access to gambling commands' },
+            { key: 'pvp_challenges',   label: 'PvP Challenges',     desc: 'Can receive PvP duel challenges' },
+            { key: 'dm_notifs',        label: 'DM Notifications',   desc: 'Receive DMs for events and alerts' },
+            { key: 'cd_remind',        label: 'Cooldown Reminders', desc: 'Ping when cooldowns expire' },
+            { key: 'lvlup_msg',        label: 'Level-Up Messages',  desc: 'Announce level-up in chat' },
+            { key: 'public_profile',   label: 'Public Profile',     desc: 'Profile visible to other users' },
+            { key: 'leaderboard',      label: 'On Leaderboard',     desc: 'Appear on public leaderboards' },
+            { key: 'analytics',        label: 'Analytics',          desc: 'Contribute to usage analytics' },
+            { key: 'romance',          label: 'Romance',            desc: 'Enable romance features' },
+            { key: 'family_invites',   label: 'Family Invites',     desc: 'Can receive family invites' },
+        ];
+
+        // ── State ──
+        let currentUser   = null;
+        let isOwner       = false;
+        let allUsers      = [];   // merged user_stats + user_settings
+        let filteredUsers = [];
+        let currentModal  = null; // discord_id of open modal
+        let sortCol       = 'balance';
+        let sortDir       = 'desc';
+
+        // ── Helpers ──
+        function fmt(n) {
+            n = Number(n) || 0;
+            if (n >= 1e9)  return (n/1e9).toFixed(1) + 'B';
+            if (n >= 1e6)  return (n/1e6).toFixed(1) + 'M';
+            if (n >= 1e3)  return (n/1e3).toFixed(1) + 'K';
+            return n.toLocaleString();
+        }
+
+        function showToast(msg, type = '') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'show' + (type ? ' ' + type : '');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => { t.className = ''; }, 2800);
+        }
+
+        function rigClass(mode) {
+            if (mode === 'always_win')  return 'rig-win';
+            if (mode === 'always_lose') return 'rig-lose';
+            if (mode === 'jackpot')     return 'rig-jackpot';
+            return 'rig-off';
+        }
+        function rigLabel(mode) {
+            if (mode === 'always_win')  return 'WIN';
+            if (mode === 'always_lose') return 'LOSE';
+            if (mode === 'jackpot')     return 'JPOT';
+            return 'OFF';
+        }
+
+        // ── Auth ──
+        function login() {
+            location.href = OAUTH_URL;
+        }
+
+        function logout() {
+            localStorage.removeItem(STORE_TOKEN);
+            localStorage.removeItem(STORE_USER);
+            location.reload();
+        }
+
+        async function fetchDiscordUser(token) {
+            const r = await fetch('https://discord.com/api/users/@me', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!r.ok) return null;
+            return r.json();
+        }
+
+        async function checkIsAdmin(discordId) {
+            if (discordId === OWNER_ID) return true;
+            const r = await fetch(
+                `${SB_URL}/rest/v1/user_settings?discord_id=eq.${discordId}&select=is_admin`,
+                { headers: sbHeaders }
+            );
+            if (!r.ok) return false;
+            const data = await r.json();
+            return data?.[0]?.is_admin === true;
+        }
+
+        // ── Save discord_username to Supabase ──
+        async function syncUsername(discordId, username) {
+            await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${discordId}`, {
+                method: 'PATCH',
+                headers: sbHeaders,
+                body: JSON.stringify({ discord_username: username })
+            });
+        }
+
+        // ── Load all users ──
+        async function loadUsers() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            try {
+                const [statsRes, settingsRes] = await Promise.all([
+                    fetch(`${SB_URL}/rest/v1/user_stats?select=*&order=balance.desc`, { headers: sbHeaders }),
+                    fetch(`${SB_URL}/rest/v1/user_settings?select=discord_id,discord_username,is_admin,rig_mode`, { headers: sbHeaders })
+                ]);
+
+                const statsData    = statsRes.ok    ? await statsRes.json()    : [];
+                const settingsData = settingsRes.ok ? await settingsRes.json() : [];
+
+                // Build settings map by discord_id
+                const settingsMap = {};
+                for (const s of settingsData) settingsMap[s.discord_id] = s;
+
+                // Merge
+                allUsers = statsData.map(u => ({
+                    ...u,
+                    discord_username: settingsMap[u.discord_id]?.discord_username || null,
+                    is_admin:         settingsMap[u.discord_id]?.is_admin         || false,
+                    rig_mode:         settingsMap[u.discord_id]?.rig_mode         || 'off',
+                }));
+
+                updateOverviewStats();
+                applyFilters();
+            } catch (e) {
+                showToast('Failed to load users', 'error');
+            } finally {
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }
+        }
+
+        function updateOverviewStats() {
+            document.getElementById('statTotalUsers').textContent    = allUsers.length;
+            document.getElementById('statTotalBalance').textContent  = fmt(allUsers.reduce((s, u) => s + (u.balance || 0), 0));
+            document.getElementById('statTotalBank').textContent     = fmt(allUsers.reduce((s, u) => s + (u.bank || 0), 0));
+            document.getElementById('statRigged').textContent        = allUsers.filter(u => u.rig_mode && u.rig_mode !== 'off').length;
+        }
+
+        function applyFilters() {
+            const q        = document.getElementById('searchInput').value.trim().toLowerCase();
+            const rigF     = document.getElementById('rigFilter').value;
+            const sortVal  = document.getElementById('sortSelect').value;
+
+            let list = allUsers.filter(u => {
+                if (q) {
+                    const name = (u.discord_username || '').toLowerCase();
+                    if (!name.includes(q) && !u.discord_id.includes(q)) return false;
+                }
+                if (rigF !== 'all') {
+                    const mode = u.rig_mode || 'off';
+                    if (mode !== rigF) return false;
+                }
+                return true;
+            });
+
+            // Sort
+            const [col, dir] = sortVal.split('_');
+            const multiplier = dir === 'desc' ? -1 : 1;
+            list.sort((a, b) => {
+                let av, bv;
+                if (col === 'balance') { av = a.balance || 0; bv = b.balance || 0; }
+                else if (col === 'level') { av = a.level || 0; bv = b.level || 0; }
+                else if (col === 'tokens') { av = a.tokens || 0; bv = b.tokens || 0; }
+                else if (col === 'commands') { av = a.commands_run || 0; bv = b.commands_run || 0; }
+                else if (col === 'name') {
+                    av = (a.discord_username || a.discord_id).toLowerCase();
+                    bv = (b.discord_username || b.discord_id).toLowerCase();
+                    return av < bv ? -1 : av > bv ? 1 : 0;
+                }
+                return (bv - av) * (dir === 'asc' ? -1 : 1);
+            });
+
+            filteredUsers = list;
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('usersBody');
+            const footer = document.getElementById('tableFooter');
+
+            if (filteredUsers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="empty-state">No users found</td></tr>`;
+                footer.textContent = '';
+                return;
+            }
+
+            tbody.innerHTML = filteredUsers.map(u => {
+                const name     = u.discord_username || `<span style="color:var(--fg-4);font-family:var(--mono);font-size:0.78rem">${u.discord_id}</span>`;
+                const rig      = u.rig_mode || 'off';
+                const isAdm    = u.is_admin || u.discord_id === OWNER_ID;
+                const roleBadge = u.discord_id === OWNER_ID
+                    ? `<span class="owner-badge">Owner</span>`
+                    : isAdm ? `<span class="admin-badge">Admin</span>` : '';
+                return `<tr onclick="openUser('${u.discord_id}')">
+                    <td class="td-name">${name}</td>
+                    <td class="td-mono">${u.discord_id}</td>
+                    <td>${fmt(u.balance)}</td>
+                    <td>${fmt(u.bank)}</td>
+                    <td>${u.level || 0}</td>
+                    <td>${fmt(u.tokens)}</td>
+                    <td>${(u.commands_run || 0).toLocaleString()}</td>
+                    <td><span class="rig-badge ${rigClass(rig)}">${rigLabel(rig)}</span></td>
+                    <td>${roleBadge}</td>
+                </tr>`;
+            }).join('');
+
+            footer.textContent = `Showing ${filteredUsers.length} of ${allUsers.length} users`;
+        }
+
+        // ── Open user modal ──
+        async function openUser(discordId) {
+            currentModal = discordId;
+            const user = allUsers.find(u => u.discord_id === discordId);
+            if (!user) return;
+
+            // Populate stats
+            document.getElementById('modalTitle').textContent   = user.discord_username || discordId;
+            document.getElementById('modalUserId').textContent  = discordId;
+            document.getElementById('mBalance').textContent     = (user.balance || 0).toLocaleString();
+            document.getElementById('mBank').textContent        = (user.bank    || 0).toLocaleString();
+            document.getElementById('mLevel').textContent       = user.level    || 0;
+            document.getElementById('mTokens').textContent      = (user.tokens  || 0).toLocaleString();
+            document.getElementById('mCmds').textContent        = (user.commands_run || 0).toLocaleString();
+
+            // Role badge
+            const isAdm = user.is_admin || user.discord_id === OWNER_ID;
+            document.getElementById('modalRoleBadge').innerHTML = user.discord_id === OWNER_ID
+                ? `<span class="owner-badge">Owner</span>`
+                : isAdm ? `<span class="admin-badge">Admin</span>` : '';
+
+            // Rig mode buttons
+            const rig = user.rig_mode || 'off';
+            document.querySelectorAll('#rigControls .rig-btn').forEach(btn => {
+                btn.className = 'rig-btn';
+                if (btn.dataset.rig === rig) btn.classList.add('active-' + rig.replace('always_', ''));
+            });
+
+            // Settings toggles — fetch full settings
+            document.getElementById('settingsToggles').innerHTML = '<span style="font-size:0.8rem;color:var(--fg-4)">Loading…</span>';
+            const sr = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${discordId}&select=*`, { headers: sbHeaders });
+            const settings = sr.ok ? (await sr.json())?.[0] || {} : {};
+
+            document.getElementById('settingsToggles').innerHTML = SETTINGS_TOGGLES.map(t => `
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">${t.label}</div>
+                        <div class="toggle-desc">${t.desc}</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" data-key="${t.key}" ${settings[t.key] ? 'checked' : ''} onchange="patchSetting('${discordId}','${t.key}',this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            `).join('');
+
+            // Admin controls (owner only)
+            const adminSection = document.getElementById('adminControls');
+            if (isOwner && discordId !== OWNER_ID) {
+                adminSection.style.display = 'block';
+                document.getElementById('grantAdminBtn').disabled  = isAdm;
+                document.getElementById('revokeAdminBtn').disabled = !isAdm;
+                document.getElementById('adminStatusLine').textContent = isAdm
+                    ? 'This user is currently an admin.'
+                    : 'This user has no admin privileges.';
+            } else {
+                adminSection.style.display = 'none';
+            }
+
+            document.getElementById('userModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('userModal').classList.remove('active');
+            currentModal = null;
+        }
+
+        // ── Patch a setting toggle ──
+        async function patchSetting(discordId, key, value) {
+            const r = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${discordId}`, {
+                method: 'PATCH',
+                headers: sbHeaders,
+                body: JSON.stringify({ [key]: value })
+            });
+            if (r.ok) {
+                showToast(`${key} → ${value ? 'on' : 'off'}`, 'success');
+            } else {
+                showToast('Failed to update setting', 'error');
+            }
+        }
+
+        // ── Set rig mode ──
+        async function setRig(mode) {
+            if (!currentModal) return;
+            // rig_set_by is validated by the bot against its local adminList —
+            // this prevents users from self-exploiting via the public anon key.
+            const r = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${currentModal}`, {
+                method: 'PATCH',
+                headers: sbHeaders,
+                body: JSON.stringify({ rig_mode: mode, rig_set_by: currentUser.id })
+            });
+            if (r.ok) {
+                // Update local state
+                const u = allUsers.find(u => u.discord_id === currentModal);
+                if (u) u.rig_mode = mode;
+                // Update buttons
+                document.querySelectorAll('#rigControls .rig-btn').forEach(btn => {
+                    btn.className = 'rig-btn';
+                    if (btn.dataset.rig === mode) btn.classList.add('active-' + mode.replace('always_', ''));
+                });
+                updateOverviewStats();
+                renderTable();
+                showToast(`Rig mode → ${mode}`, 'success');
+            } else {
+                showToast('Failed to set rig mode', 'error');
+            }
+        }
+
+        // ── Toggle admin status ──
+        async function toggleAdmin(grant) {
+            if (!currentModal || !isOwner) return;
+            const r = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${currentModal}`, {
+                method: 'PATCH',
+                headers: sbHeaders,
+                body: JSON.stringify({ is_admin: grant })
+            });
+            if (r.ok) {
+                const u = allUsers.find(u => u.discord_id === currentModal);
+                if (u) u.is_admin = grant;
+                document.getElementById('grantAdminBtn').disabled  = grant;
+                document.getElementById('revokeAdminBtn').disabled = !grant;
+                document.getElementById('adminStatusLine').textContent = grant
+                    ? 'This user is currently an admin.'
+                    : 'This user has no admin privileges.';
+                const roleBadge = grant ? `<span class="admin-badge">Admin</span>` : '';
+                document.getElementById('modalRoleBadge').innerHTML = roleBadge;
+                renderTable();
+                showToast(grant ? 'Admin granted' : 'Admin revoked', 'success');
+            } else {
+                showToast('Failed to update admin status', 'error');
+            }
+        }
+
+        // ── Copy ID ──
+        function copyId() {
+            if (!currentModal) return;
+            navigator.clipboard.writeText(currentModal).then(() => {
+                showToast('Discord ID copied', 'success');
+            });
+        }
+
+        // ── Init ──
+        async function init() {
+            // Reveal animations
+            document.querySelectorAll('.reveal').forEach(el => {
+                const io = new IntersectionObserver(entries => {
+                    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+                }, { threshold: 0.05 });
+                io.observe(el);
+            });
+
+            // Mobile sidebar toggle
+            document.getElementById('mobileToggle')?.addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('open');
+            });
+
+            // Handle OAuth callback
+            if (location.hash.includes('access_token=')) {
+                const params = new URLSearchParams(location.hash.slice(1));
+                const token  = params.get('access_token');
+                if (token) {
+                    const user = await fetchDiscordUser(token);
+                    if (user) {
+                        localStorage.setItem(STORE_TOKEN, token);
+                        localStorage.setItem(STORE_USER, JSON.stringify(user));
+                    }
+                }
+                history.replaceState(null, '', location.pathname);
+            }
+
+            const token    = localStorage.getItem(STORE_TOKEN);
+            const userData = localStorage.getItem(STORE_USER);
+
+            if (!token || !userData) {
+                location.replace('404.html');
+                return;
+            }
+
+            currentUser = JSON.parse(userData);
+
+            // Verify token still valid
+            const freshUser = await fetchDiscordUser(token);
+            if (!freshUser) {
+                localStorage.removeItem(STORE_TOKEN);
+                localStorage.removeItem(STORE_USER);
+                location.replace('404.html');
+                return;
+            }
+            currentUser = freshUser;
+            localStorage.setItem(STORE_USER, JSON.stringify(freshUser));
+
+            // Check admin access
+            isOwner     = currentUser.id === OWNER_ID;
+            const admin = await checkIsAdmin(currentUser.id);
+
+            if (!admin) {
+                location.replace('404.html');
+                return;
+            }
+
+            // Access confirmed — reveal the page
+            document.body.style.visibility = '';
+
+            // Sync discord_username
+            await syncUsername(currentUser.id, currentUser.username);
+
+            // Show admin panel
+            document.getElementById('adminView').style.display = 'block';
+
+            // Populate user bar
+            const avatar = currentUser.avatar
+                ? `https://cdn.discordapp.com/avatars/${currentUser.id}/${currentUser.avatar}.webp?size=64`
+                : null;
+            if (avatar) {
+                document.getElementById('userAvatar').innerHTML = `<img src="${avatar}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+            }
+            document.getElementById('userName').textContent = currentUser.username;
+            document.getElementById('userTag').textContent  = currentUser.discriminator && currentUser.discriminator !== '0'
+                ? `#${currentUser.discriminator}` : '';
+            document.getElementById('myRoleBadge').innerHTML = isOwner
+                ? `<span class="owner-badge">Owner</span>`
+                : `<span class="admin-badge">Admin</span>`;
+
+            // Wire up controls
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('refreshBtn').addEventListener('click', loadUsers);
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('sortSelect').addEventListener('change', applyFilters);
+            document.getElementById('rigFilter').addEventListener('change', applyFilters);
+            document.getElementById('modalClose').addEventListener('click', closeModal);
+            document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
+            document.getElementById('userModal').addEventListener('click', e => {
+                if (e.target === document.getElementById('userModal')) closeModal();
+            });
+
+            // Trigger reveals
+            setTimeout(() => {
+                document.querySelectorAll('#adminView .reveal').forEach(el => el.classList.add('visible'));
+            }, 50);
+
+            // Load data
+            await loadUsers();
+        }
+
+        init();
+    </script>
+
+</body>
+</html>

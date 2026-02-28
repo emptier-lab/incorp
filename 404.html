@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incorp — 404</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m12 3-10 5 10 5 10-5-10-5z'/><path d='m2 12 10 5 10-5'/><path d='m2 17 10 5 10-5'/></svg>">
+    <style>
+        .not-found {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 56px);
+            text-align: center;
+            padding: 2rem;
+            gap: 1rem;
+        }
+        .not-found-code {
+            font-size: 6rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--border-2);
+            letter-spacing: -0.04em;
+        }
+        .not-found h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .not-found p {
+            color: var(--fg-3);
+            font-size: 0.9rem;
+            max-width: 320px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .not-found a {
+            margin-top: 0.5rem;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid var(--border);
+            color: var(--fg);
+            padding: 0.6rem 1.25rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.15s;
+        }
+        .not-found a:hover { background: rgba(255,255,255,0.12); }
+    </style>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="site-header-container">
+            <a href="index.html" class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 3-10 5 10 5 10-5-10-5z" />
+                    <path d="m2 12 10 5 10-5" />
+                    <path d="m2 17 10 5 10-5" />
+                </svg>
+                incorp
+            </a>
+        </div>
+    </header>
+
+    <div class="not-found">
+        <div class="not-found-code">404</div>
+        <h1>Page not found</h1>
+        <p>The page you're looking for doesn't exist or you don't have permission to view it.</p>
+        <a href="index.html">Go home</a>
+    </div>
+
+</body>
+</html>
