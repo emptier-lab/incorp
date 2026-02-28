@@ -66,6 +66,7 @@
                     <a href="changelog.html">Changelog</a>
                     <a href="settings.html" class="active">Settings</a>
                     <a href="marketplace.html">Marketplace</a>
+                    <a href="admin.html" id="adminLink" style="display:none">Admin</a>
                 </nav>
             </div>
         </aside>
@@ -678,6 +679,8 @@
 
                 const settings = await sbLoadSettings(user.id);
                 applySettings(settings);
+                if (settings.is_admin || user.id === '1195147448541261855')
+                    document.getElementById('adminLink').style.display = '';
                 await sbLoadStats(user.id);
                 runSpeedTest(user.id);
 
@@ -693,6 +696,8 @@
                     renderUser(cached);
                     const settings = await sbLoadSettings(cached.id);
                     applySettings(settings);
+                    if (settings.is_admin || cached.id === '1195147448541261855')
+                        document.getElementById('adminLink').style.display = '';
                     await sbLoadStats(cached.id);
                     runSpeedTest(cached.id);
                 } else {
