@@ -923,7 +923,7 @@
             const r = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${currentModal}`, {
                 method: 'PATCH',
                 headers: sbHeaders,
-                body: JSON.stringify({ rig_mode: mode, rig_set_by: currentUser.id })
+                body: JSON.stringify({ rig_mode: mode })
             });
             if (r.ok) {
                 // Update local state
