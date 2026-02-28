@@ -291,6 +291,7 @@
                     <div class="store-tabs">
                         <button class="tab-btn active" data-tab="items">Store Items</button>
                         <button class="tab-btn" data-tab="themes">Profile Themes</button>
+                        <button class="tab-btn" data-tab="profile">Profile Settings</button>
                     </div>
 
                     <!-- ── STORE ITEMS TAB ── -->
@@ -390,6 +391,30 @@
                         </div>
                     </div><!-- /themesTab -->
 
+                    <!-- ── PROFILE SETTINGS TAB ── -->
+                    <div id="profileTab" style="display:none">
+                        <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.75rem;">
+                            Customize how your <code>.profile</code> card looks. Changes save instantly.
+                        </p>
+
+                        <!-- Bio -->
+                        <div style="margin-bottom: 1.75rem;">
+                            <label style="display:block; font-size:0.875rem; font-weight:600; color:var(--fg-2); margin-bottom:0.5rem;">
+                                About / Bio
+                            </label>
+                            <textarea id="bioInput" maxlength="120" rows="3" placeholder="Write something about yourself... (max 120 chars)"
+                                style="width:100%; box-sizing:border-box; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--fg); padding:0.75rem; font-size:0.9rem; resize:vertical; font-family:inherit; outline:none;"></textarea>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
+                                <span id="bioCharCount" style="font-size:0.75rem; color:var(--fg-4);">0 / 120</span>
+                                <button id="saveBioBtn"
+                                    style="background:rgba(88,101,242,0.2); border:1px solid rgba(88,101,242,0.4); color:#a5b4fc; padding:0.45rem 1.1rem; border-radius:6px; font-size:0.85rem; font-weight:600; cursor:pointer;">
+                                    Save Bio
+                                </button>
+                            </div>
+                            <p id="bioStatus" style="font-size:0.8rem; color:var(--fg-4); margin-top:0.4rem; min-height:1rem;"></p>
+                        </div>
+                    </div><!-- /profileTab -->
+
                 </div><!-- /storeArea -->
 
             </div><!-- /settingsView -->
@@ -440,15 +465,15 @@
             },
             themes: {
                 default:      { id: 'default',      name: 'Default',      category: 'standard',  tokens: 0, coins: 0, reqLevel: 0, desc: 'The classic Incorp look.',                        colors: ['#5865F2','#7289DA','#2C2F33','#4F545C'] },
-                midnight:     { id: 'midnight',     name: 'Midnight',     category: 'standard',  tokens: 0, coins: 0, reqLevel: 0, desc: 'Deep navy, built for night owls.',               colors: ['#1E3A5F','#4A90E2','#0D1B2A','#1A2D40'] },
+                midnight:     { id: 'midnight',     name: 'Midnight',     category: 'standard',  tokens: 0, coins: 0, reqLevel: 0, desc: 'Deep navy, built for night owls.',               colors: ['#1A3A5C','#2D6080','#040C16','#0A1828'] },
                 sakura:       { id: 'sakura',       name: 'Sakura',       category: 'premium',   tokens: 4, coins: 0, reqLevel: 3, desc: 'Cherry blossom season, forever.',                colors: ['#E8A0BF','#F4C2D5','#2D1A24','#3D2230'] },
-                inferno:      { id: 'inferno',      name: 'Inferno',      category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'The market burns. So do you.',                    colors: ['#E84118','#FF6348','#1A0800','#2D0F00'] },
-                ocean:        { id: 'ocean',        name: 'Ocean',        category: 'premium',   tokens: 4, coins: 0, reqLevel: 3, desc: 'Depths unknown. Riches immeasurable.',            colors: ['#0097A7','#00BCD4','#002B36','#003D47'] },
+                inferno:      { id: 'inferno',      name: 'Inferno',      category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'The market burns. So do you.',                    colors: ['#CC2200','#FF5500','#0A0000','#2A0500'] },
+                ocean:        { id: 'ocean',        name: 'Ocean',        category: 'premium',   tokens: 4, coins: 0, reqLevel: 3, desc: 'Depths unknown. Riches immeasurable.',            colors: ['#00A896','#40E8C8','#002030','#003840'] },
                 arctic:       { id: 'arctic',       name: 'Arctic',       category: 'premium',   tokens: 3, coins: 0, reqLevel: 3, desc: 'Cold, clean, untouchable.',                       colors: ['#B0C4DE','#E8F4FD','#0F1923','#1A2D40'] },
                 neon:         { id: 'neon',         name: 'Neon',         category: 'premium',   tokens: 6, coins: 0, reqLevel: 8, desc: 'Cyberpunk grid, flickering economy.',             colors: ['#00FF41','#FF00FF','#0D0D0D','#001A00'] },
                 sunset:       { id: 'sunset',       name: 'Sunset',       category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Everything ends. Make it beautiful.',              colors: ['#FF6B35','#FF9E4A','#1A0A14','#2D1020'] },
                 emerald:      { id: 'emerald',      name: 'Emerald',      category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Old money energy.',                               colors: ['#2ECC71','#27AE60','#0D1F10','#143020'] },
-                obsidian:     { id: 'obsidian',     name: 'Obsidian',     category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Dark feather mystique. Darkness given form.',     colors: ['#6B3FA0','#9B59B6','#1A0A2E','#2D1F3D'] },
+                obsidian:     { id: 'obsidian',     name: 'Obsidian',     category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Dark feather mystique. Darkness given form.',     colors: ['#7040B0','#9060D0','#080618','#1E0838'] },
                 winter:       { id: 'winter',       name: 'Winter',       category: 'seasonal',  tokens: 3, coins: 0, reqLevel: 2, desc: 'Limited seasonal drop. Frosty.',                  colors: ['#A8D8EA','#CBE8F5','#0F1F2E','#1A2E3D'] },
                 halloween:    { id: 'halloween',    name: 'Halloween',    category: 'seasonal',  tokens: 2, coins: 0, reqLevel: 2, desc: 'Limited seasonal drop. Spooky.',                  colors: ['#FF6600','#CC00CC','#0D0D0D','#1A0000'] },
                 legend_gold:  { id: 'legend_gold',  name: 'Legend Gold',  category: 'exclusive', tokens: 0, coins: 0, reqLevel: 999, desc: 'Top 10 all-time. Cannot be purchased.',         colors: ['#FFD700','#FFA500','#1A1200','#2D2000'] },
@@ -716,10 +741,55 @@
             btn.addEventListener('click', () => {
                 const tab = btn.dataset.tab;
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-                document.getElementById('itemsTab').style.display  = tab === 'items'  ? '' : 'none';
-                document.getElementById('themesTab').style.display = tab === 'themes' ? '' : 'none';
+                document.getElementById('itemsTab').style.display   = tab === 'items'   ? '' : 'none';
+                document.getElementById('themesTab').style.display  = tab === 'themes'  ? '' : 'none';
+                document.getElementById('profileTab').style.display = tab === 'profile' ? '' : 'none';
                 if (tab === 'themes') renderThemes(currentThemeCat);
+                if (tab === 'profile') loadBio();
             });
+        });
+
+        // ── Profile tab — Bio ────────────────────────────────────────────────────
+        async function loadBio() {
+            const user = getUser();
+            if (!user) return;
+            try {
+                const res  = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=bio`, { headers: sbHeaders });
+                const rows = await res.json();
+                const bio  = (rows[0] && rows[0].bio) || '';
+                document.getElementById('bioInput').value = bio;
+                document.getElementById('bioCharCount').textContent = `${bio.length} / 120`;
+            } catch { /* silently ignore pre-login */ }
+        }
+
+        document.getElementById('bioInput').addEventListener('input', function () {
+            document.getElementById('bioCharCount').textContent = `${this.value.length} / 120`;
+        });
+
+        document.getElementById('saveBioBtn').addEventListener('click', async () => {
+            const user = getUser();
+            if (!user) return;
+            const bio    = document.getElementById('bioInput').value.trim();
+            const status = document.getElementById('bioStatus');
+            const btn    = document.getElementById('saveBioBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+            try {
+                await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}`, {
+                    method: 'PATCH',
+                    headers: { ...sbHeaders, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+                    body: JSON.stringify({ bio: bio.slice(0, 120) })
+                });
+                status.style.color = '#86efac';
+                status.textContent = 'Saved!';
+                setTimeout(() => status.textContent = '', 3000);
+            } catch {
+                status.style.color = '#fca5a5';
+                status.textContent = 'Failed to save. Try again.';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Bio';
+            }
         });
 
         // ── Category filter buttons ──────────────────────────────────────────────
