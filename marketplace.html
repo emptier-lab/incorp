@@ -10,13 +10,11 @@
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m12 3-10 5 10 5 10-5-10-5z'/><path d='m2 12 10 5 10-5'/><path d='m2 17 10 5 10-5'/></svg>">
     <style>
+        /* ── Modal ── */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
@@ -26,14 +24,9 @@
             pointer-events: none;
             transition: opacity 0.2s ease;
         }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
         .modal {
-            background: var(--bg-primary);
+            background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 2rem;
@@ -41,75 +34,141 @@
             max-width: 400px;
             transform: scale(0.95);
             transition: transform 0.2s ease;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
-
-        .modal-overlay.active .modal {
-            transform: scale(1);
-        }
-
-        .modal h3 {
-            margin-top: 0;
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .modal p {
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-        }
-
+        .modal-overlay.active .modal { transform: scale(1); }
+        .modal h3 { margin-top: 0; font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .modal p { color: var(--fg-3); margin-bottom: 1.5rem; line-height: 1.5; }
+        .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; }
         .btn-cancel {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-            border: none;
-            padding: 0.75rem 1.25rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.2s;
+            background: rgba(255,255,255,0.1); color: var(--fg);
+            border: none; padding: 0.75rem 1.25rem; border-radius: 6px;
+            cursor: pointer; font-weight: 500; transition: background 0.2s;
         }
-
-        .btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
+        .btn-cancel:hover { background: rgba(255,255,255,0.15); }
         .btn-confirm {
-            background: #a78bfa;
-            color: #111827;
-            border: none;
-            padding: 0.75rem 1.25rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: filter 0.2s;
+            background: #a78bfa; color: #111827;
+            border: none; padding: 0.75rem 1.25rem; border-radius: 6px;
+            cursor: pointer; font-weight: 600; transition: filter 0.2s;
         }
+        .btn-confirm:hover { filter: brightness(1.1); }
+        .btn-confirm:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
 
-        .btn-confirm:hover {
-            filter: brightness(1.1);
-        }
-
-        .btn-confirm:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            filter: none;
-        }
-
+        /* ── User bar badge ── */
         .tokens-badge {
-            background: rgba(167, 139, 250, 0.15);
-            color: #c4b5fd;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border: 1px solid rgba(167, 139, 250, 0.3);
+            background: rgba(167,139,250,0.15); color: #c4b5fd;
+            padding: 0.25rem 0.5rem; border-radius: 4px;
+            font-size: 0.85rem; font-weight: 600;
+            border: 1px solid rgba(167,139,250,0.3);
+        }
+
+        /* ── Tabs ── */
+        .store-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            gap: 0;
+        }
+        .tab-btn {
+            background: none; border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--fg-3);
+            font-size: 0.875rem; font-weight: 500;
+            padding: 0.625rem 1.25rem;
+            cursor: pointer;
+            margin-bottom: -1px;
+            transition: color 0.15s, border-color 0.15s;
+            font-family: var(--font);
+        }
+        .tab-btn:hover { color: var(--fg-2); }
+        .tab-btn.active { color: var(--fg); border-bottom-color: var(--fg); }
+
+        /* ── Category filter pills ── */
+        .cat-filter-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .cat-btn {
+            background: #18181b; border: 1px solid var(--border);
+            color: var(--fg-3); font-size: 0.75rem; font-weight: 500;
+            padding: 0.3rem 0.75rem; border-radius: 999px;
+            cursor: pointer; transition: all 0.15s; font-family: var(--font);
+        }
+        .cat-btn.active, .cat-btn:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+
+        /* ── Theme grid + cards ── */
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+        .theme-card {
+            border-radius: 12px; overflow: hidden;
+            display: flex; flex-direction: column;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s, transform 0.2s;
+            position: relative;
+            background: #111113;
+        }
+        .theme-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+        .theme-card.is-active {
+            border-color: rgba(167,139,250,0.55);
+            box-shadow: 0 0 0 1px rgba(167,139,250,0.25);
+        }
+        .theme-palette { height: 72px; display: flex; }
+        .theme-palette-swatch { flex: 1; }
+        .theme-body { padding: 0.875rem; flex: 1; display: flex; flex-direction: column; gap: 0.375rem; }
+        .theme-cat-badge {
+            font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.06em; padding: 0.15rem 0.5rem; border-radius: 999px;
+            display: inline-flex; align-self: flex-start;
+        }
+        .theme-name { font-size: 0.9375rem; font-weight: 600; margin-top: 0.1rem; }
+        .theme-desc { font-size: 0.75rem; color: var(--fg-3); line-height: 1.5; flex: 1; }
+        .theme-footer { margin-top: 0.625rem; display: flex; gap: 0.5rem; align-items: center; }
+        .theme-price { font-size: 0.75rem; color: var(--fg-4); flex: 1; }
+        .btn-theme-action {
+            font-size: 0.8rem; font-weight: 600; padding: 0.45rem 0.9rem;
+            border-radius: 6px; border: none; cursor: pointer;
+            transition: filter 0.2s; font-family: var(--font); white-space: nowrap;
+        }
+        .btn-theme-action.state-active {
+            background: rgba(167,139,250,0.15); color: #a78bfa;
+            border: 1px solid rgba(167,139,250,0.35); cursor: default;
+        }
+        .btn-theme-action.state-equip {
+            background: #a78bfa; color: #111827;
+        }
+        .btn-theme-action.state-equip:hover { filter: brightness(1.1); }
+        .btn-theme-action.state-buy {
+            background: rgba(167,139,250,0.1);
+            border: 1px solid rgba(167,139,250,0.3); color: #a78bfa;
+        }
+        .btn-theme-action.state-buy:hover { background: rgba(167,139,250,0.18); }
+        .btn-theme-action.state-locked {
+            background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+            color: var(--fg-4); cursor: default;
+        }
+        .theme-owned-badge {
+            position: absolute; top: 0.5rem; right: 0.5rem;
+            background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.12);
+            color: #a78bfa; font-size: 0.6rem; font-weight: 700;
+            padding: 0.125rem 0.4rem; border-radius: 4px; text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Store item cards ── */
+        .item-card {
+            background: linear-gradient(145deg, rgba(20,20,24,1) 0%, rgba(30,30,36,1) 100%);
+            padding: 1.5rem; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .item-card-tag {
+            position: absolute; top: 0; right: 0;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            border-bottom-left-radius: 8px;
         }
     </style>
 </head>
@@ -227,134 +286,113 @@
                 </div>
 
                 <div class="settings-section reveal" id="storeArea" style="margin-top: 2rem;">
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">You earn 1 Token for every level you
-                        achieve, and more tokens for claiming your <code>.daily</code> streak. Some items require you to
-                        be a certain Level before you can buy them.</p>
 
-                    <div
-                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
-
-                        <!-- Theme Bundle -->
-                        <div
-                            style="background: linear-gradient(145deg, rgba(20,20,24,1) 0%, rgba(30,30,36,1) 100%); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(167, 139, 250, 0.2); display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 20px rgba(167, 139, 250, 0.05); position: relative; overflow: hidden;">
-                            <div
-                                style="position: absolute; top: 0; right: 0; padding: 0.25rem 0.75rem; background: rgba(167, 139, 250, 0.2); color: #c4b5fd; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; border-bottom-left-radius: 8px;">
-                                Exclusive</div>
-                            <div>
-                                <h4
-                                    style="margin: 0 0 0.5rem 0; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 2v20"></path>
-                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg>
-                                    Obsidian Theme
-                                </h4>
-                                <p
-                                    style="font-size: 0.9rem; color: var(--text-muted); margin: 0 0 1.5rem 0; line-height: 1.4;">
-                                    Unlock an ultra-sleek, premium dark mode aesthetic for your profile and server
-                                    cards.
-                                </p>
-                                <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">
-                                    Req: Level 5
-                                </p>
-                            </div>
-                            <button class="buy-btn" data-id="obsidian_theme" data-name="Obsidian Theme" data-tokens="5"
-                                data-coins="0" data-req-level="5"
-                                style="background: #a78bfa; color: #111827; padding: 0.75rem; border-radius: 8px; border: none; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: filter 0.2s;">
-                                Purchase — 5 Tokens
-                            </button>
-                        </div>
-
-                        <!-- 1M Coins -->
-                        <div
-                            style="background: linear-gradient(145deg, rgba(20,20,24,1) 0%, rgba(30,30,36,1) 100%); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div>
-                                <h4
-                                    style="margin: 0 0 0.5rem 0; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fcd34d"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
-                                        <path d="M12 18V6"></path>
-                                    </svg>
-                                    1,000,000 Coins
-                                </h4>
-                                <p
-                                    style="font-size: 0.9rem; color: var(--text-muted); margin: 0 0 1.5rem 0; line-height: 1.4;">
-                                    Trade in your Tokens for a massive deposit directly into your bot wallet.
-                                </p>
-                                <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">
-                                    Req: Level 2
-                                </p>
-                            </div>
-                            <button class="buy-btn" data-id="1m_coins" data-name="1,000,000 Coins" data-tokens="2"
-                                data-coins="0" data-req-level="2"
-                                style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-primary); padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
-                                Purchase — 2 Tokens
-                            </button>
-                        </div>
-
-                        <!-- Coin Burner (Coins -> VIP Role) -->
-                        <div
-                            style="background: linear-gradient(145deg, rgba(20,20,24,1) 0%, rgba(30,30,36,1) 100%); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div>
-                                <h4
-                                    style="margin: 0 0 0.5rem 0; color: #ef4444; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="m12 14 4-4" />
-                                        <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-                                    </svg>
-                                    VIP Status Badge
-                                </h4>
-                                <p
-                                    style="font-size: 0.9rem; color: var(--text-muted); margin: 0 0 1.5rem 0; line-height: 1.4;">
-                                    A shiny VIP badge on your profile. Costs a ton of coins to prove your wealth.
-                                </p>
-                                <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">
-                                    Req: Level 10
-                                </p>
-                            </div>
-                            <button class="buy-btn" data-id="vip_role" data-name="VIP Status Badge" data-tokens="10"
-                                data-coins="5000000" data-req-level="10"
-                                style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
-                                Purchase — 10 Tokens + 5M Coins
-                            </button>
-                        </div>
-
-                        <!-- Autofish Access -->
-                        <div
-                            style="background: linear-gradient(145deg, rgba(20,20,24,1) 0%, rgba(30,30,36,1) 100%); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div>
-                                <h4
-                                    style="margin: 0 0 0.5rem 0; color: #14b8a6; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14b8a6"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                                        <line x1="4" y1="22" x2="4" y2="15"></line>
-                                    </svg>
-                                    Autofish Access
-                                </h4>
-                                <p
-                                    style="font-size: 0.9rem; color: var(--text-muted); margin: 0 0 1.5rem 0; line-height: 1.4;">
-                                    Gain access to the <code>.autofish</code> command. Automatically fishes for you when
-                                    you're active, up to 2 hours every day.
-                                </p>
-                                <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">
-                                    Req: Level 3
-                                </p>
-                            </div>
-                            <button class="buy-btn" data-id="autofish_access" data-name="Autofish Access"
-                                data-tokens="15" data-coins="0" data-req-level="3"
-                                style="background: rgba(20, 184, 166, 0.1); border: 1px solid rgba(20, 184, 166, 0.3); color: #14b8a6; padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
-                                Purchase — 15 Tokens
-                            </button>
-                        </div>
+                    <!-- Tab nav -->
+                    <div class="store-tabs">
+                        <button class="tab-btn active" data-tab="items">Store Items</button>
+                        <button class="tab-btn" data-tab="themes">Profile Themes</button>
                     </div>
-                </div>
 
-            </div>
+                    <!-- ── STORE ITEMS TAB ── -->
+                    <div id="itemsTab">
+                        <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.5rem;">
+                            You earn 1 Token for every level you achieve, and more tokens for claiming your
+                            <code>.daily</code> streak. Some items require you to be a certain Level before you can buy
+                            them.
+                        </p>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+
+                            <!-- 1M Coins -->
+                            <div class="item-card">
+                                <div>
+                                    <h4 style="margin: 0 0 0.5rem 0; color: var(--fg); display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                                            <path d="M12 18V6"></path>
+                                        </svg>
+                                        1,000,000 Coins
+                                    </h4>
+                                    <p style="font-size: 0.9rem; color: var(--fg-3); margin: 0 0 1.5rem 0; line-height: 1.4;">
+                                        Trade in your Tokens for a massive deposit directly into your bot wallet.
+                                    </p>
+                                    <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">Req: Level 2</p>
+                                </div>
+                                <button class="buy-btn" data-id="1m_coins" data-name="1,000,000 Coins" data-tokens="2" data-coins="0" data-req-level="2"
+                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--fg); padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
+                                    Purchase — 2 Tokens
+                                </button>
+                            </div>
+
+                            <!-- VIP Badge -->
+                            <div class="item-card">
+                                <div>
+                                    <h4 style="margin: 0 0 0.5rem 0; color: #ef4444; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m12 14 4-4" /><path d="M3.34 19a10 10 0 1 1 17.32 0" />
+                                        </svg>
+                                        VIP Status Badge
+                                    </h4>
+                                    <p style="font-size: 0.9rem; color: var(--fg-3); margin: 0 0 1.5rem 0; line-height: 1.4;">
+                                        A shiny VIP badge on your profile. Costs a ton of coins to prove your wealth.
+                                    </p>
+                                    <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">Req: Level 10</p>
+                                </div>
+                                <button class="buy-btn" data-id="vip_role" data-name="VIP Status Badge" data-tokens="10" data-coins="5000000" data-req-level="10"
+                                    style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
+                                    Purchase — 10 Tokens + 5M Coins
+                                </button>
+                            </div>
+
+                            <!-- Autofish Access -->
+                            <div class="item-card">
+                                <div>
+                                    <h4 style="margin: 0 0 0.5rem 0; color: #14b8a6; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                            <line x1="4" y1="22" x2="4" y2="15"></line>
+                                        </svg>
+                                        Autofish Access
+                                    </h4>
+                                    <p style="font-size: 0.9rem; color: var(--fg-3); margin: 0 0 1.5rem 0; line-height: 1.4;">
+                                        Gain access to the <code>.autofish</code> command. Automatically fishes for you when you're active, up to 2 hours every day.
+                                    </p>
+                                    <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">Req: Level 3</p>
+                                </div>
+                                <button class="buy-btn" data-id="autofish_access" data-name="Autofish Access" data-tokens="15" data-coins="0" data-req-level="3"
+                                    style="background: rgba(20,184,166,0.1); border: 1px solid rgba(20,184,166,0.3); color: #14b8a6; padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
+                                    Purchase — 15 Tokens
+                                </button>
+                            </div>
+
+                        </div>
+                    </div><!-- /itemsTab -->
+
+                    <!-- ── THEMES TAB ── -->
+                    <div id="themesTab" style="display:none">
+                        <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.25rem;">
+                            Customize your <code>.profile</code> card with a theme. Standard themes are free — Premium
+                            and Seasonal themes require Tokens. Exclusive themes are earned, not bought.<br>
+                            After purchasing, click <strong>Equip</strong> to activate a theme on your profile.
+                        </p>
+
+                        <div class="cat-filter-bar">
+                            <button class="cat-btn active" data-cat="all">All</button>
+                            <button class="cat-btn" data-cat="standard">Standard</button>
+                            <button class="cat-btn" data-cat="premium">Premium</button>
+                            <button class="cat-btn" data-cat="seasonal">Seasonal</button>
+                            <button class="cat-btn" data-cat="exclusive">Exclusive</button>
+                        </div>
+
+                        <div class="themes-grid" id="themesGrid">
+                            <p style="color:var(--fg-4); font-size:0.875rem;">Loading themes...</p>
+                        </div>
+                    </div><!-- /themesTab -->
+
+                </div><!-- /storeArea -->
+
+            </div><!-- /settingsView -->
 
         </main>
     </div>
@@ -383,7 +421,7 @@
         const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3YnZ2enNrZHp1Y2Nuc2tkdWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3MDcyMTMsImV4cCI6MjA4NzI4MzIxM30.r5G_RQgEkudLkSLn4QUBviJAzum3tHm2Z4zqytxl1kQ';
 
         const STORE_TOKEN = 'incorp_token';
-        const STORE_USER = 'incorp_user';
+        const STORE_USER  = 'incorp_user';
 
         const sbHeaders = {
             apikey: SB_KEY,
@@ -392,8 +430,35 @@
             Prefer: 'return=representation'
         };
 
-        const toggle = document.getElementById('mobileToggle');
-        const sidebar = document.getElementById('sidebar');
+        // ── Theme catalog (mirrors ./data/themes_catalog.json) ──────────────────
+        const THEMES_CATALOG = {
+            categories: {
+                standard:  { label: 'Standard',  color: '#71717a' },
+                premium:   { label: 'Premium',   color: '#a78bfa' },
+                seasonal:  { label: 'Seasonal',  color: '#34d399' },
+                exclusive: { label: 'Exclusive', color: '#fbbf24' }
+            },
+            themes: {
+                default:      { id: 'default',      name: 'Default',      category: 'standard',  tokens: 0, coins: 0, reqLevel: 0, desc: 'The classic Incorp look.',                        colors: ['#5865F2','#7289DA','#2C2F33','#4F545C'] },
+                midnight:     { id: 'midnight',     name: 'Midnight',     category: 'standard',  tokens: 0, coins: 0, reqLevel: 0, desc: 'Deep navy, built for night owls.',               colors: ['#1E3A5F','#4A90E2','#0D1B2A','#1A2D40'] },
+                sakura:       { id: 'sakura',       name: 'Sakura',       category: 'premium',   tokens: 4, coins: 0, reqLevel: 3, desc: 'Cherry blossom season, forever.',                colors: ['#E8A0BF','#F4C2D5','#2D1A24','#3D2230'] },
+                inferno:      { id: 'inferno',      name: 'Inferno',      category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'The market burns. So do you.',                    colors: ['#E84118','#FF6348','#1A0800','#2D0F00'] },
+                ocean:        { id: 'ocean',        name: 'Ocean',        category: 'premium',   tokens: 4, coins: 0, reqLevel: 3, desc: 'Depths unknown. Riches immeasurable.',            colors: ['#0097A7','#00BCD4','#002B36','#003D47'] },
+                arctic:       { id: 'arctic',       name: 'Arctic',       category: 'premium',   tokens: 3, coins: 0, reqLevel: 3, desc: 'Cold, clean, untouchable.',                       colors: ['#B0C4DE','#E8F4FD','#0F1923','#1A2D40'] },
+                neon:         { id: 'neon',         name: 'Neon',         category: 'premium',   tokens: 6, coins: 0, reqLevel: 8, desc: 'Cyberpunk grid, flickering economy.',             colors: ['#00FF41','#FF00FF','#0D0D0D','#001A00'] },
+                sunset:       { id: 'sunset',       name: 'Sunset',       category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Everything ends. Make it beautiful.',              colors: ['#FF6B35','#FF9E4A','#1A0A14','#2D1020'] },
+                emerald:      { id: 'emerald',      name: 'Emerald',      category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Old money energy.',                               colors: ['#2ECC71','#27AE60','#0D1F10','#143020'] },
+                obsidian:     { id: 'obsidian',     name: 'Obsidian',     category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Dark feather mystique. Darkness given form.',     colors: ['#6B3FA0','#9B59B6','#1A0A2E','#2D1F3D'] },
+                winter:       { id: 'winter',       name: 'Winter',       category: 'seasonal',  tokens: 3, coins: 0, reqLevel: 2, desc: 'Limited seasonal drop. Frosty.',                  colors: ['#A8D8EA','#CBE8F5','#0F1F2E','#1A2E3D'] },
+                halloween:    { id: 'halloween',    name: 'Halloween',    category: 'seasonal',  tokens: 2, coins: 0, reqLevel: 2, desc: 'Limited seasonal drop. Spooky.',                  colors: ['#FF6600','#CC00CC','#0D0D0D','#1A0000'] },
+                legend_gold:  { id: 'legend_gold',  name: 'Legend Gold',  category: 'exclusive', tokens: 0, coins: 0, reqLevel: 999, desc: 'Top 10 all-time. Cannot be purchased.',         colors: ['#FFD700','#FFA500','#1A1200','#2D2000'] },
+                founders:     { id: 'founders',     name: 'Founders',     category: 'exclusive', tokens: 0, coins: 0, reqLevel: 999, desc: 'Early Incorp supporter. You were here first.',  colors: ['#8B5CF6','#A78BFA','#0F0A1E','#1E1040'] }
+            }
+        };
+
+        // ── State ────────────────────────────────────────────────────────────────
+        const toggle   = document.getElementById('mobileToggle');
+        const sidebar  = document.getElementById('sidebar');
         toggle?.addEventListener('click', () => {
             sidebar.classList.toggle('open');
             document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
@@ -405,9 +470,7 @@
         document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
         function getToken() { return localStorage.getItem(STORE_TOKEN); }
-        function getUser() {
-            try { return JSON.parse(localStorage.getItem(STORE_USER)); } catch { return null; }
-        }
+        function getUser()  { try { return JSON.parse(localStorage.getItem(STORE_USER)); } catch { return null; } }
 
         function avatarUrl(user) {
             if (user.avatar) return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar.startsWith('a_') ? 'gif' : 'webp'}?size=80`;
@@ -416,105 +479,177 @@
         }
 
         let currentDiscordId = null;
-        let userStats = null;
-        let selectedItem = null;
+        let userStats        = null;
+        let selectedItem     = null;
+        let ownedThemes      = new Set();
+        let activeTheme      = 'default';
+        let currentThemeCat  = 'all';
 
+        // ── Supabase helpers ─────────────────────────────────────────────────────
         async function sbLoadStats(discordId) {
             try {
-                const res = await fetch(`${SB_URL}/rest/v1/user_stats?discord_id=eq.${discordId}&select=*`, { headers: sbHeaders });
+                const res  = await fetch(`${SB_URL}/rest/v1/user_stats?discord_id=eq.${discordId}&select=*`, { headers: sbHeaders });
                 const rows = await res.json();
                 if (rows.length > 0) {
                     userStats = rows[0];
-                    document.getElementById('tokenDisplay').textContent = `${userStats.tokens || 0} Tokens | ${Number(userStats.balance || 0).toLocaleString()} Coins | Lvl ${userStats.level || 0}`;
+                    document.getElementById('tokenDisplay').textContent =
+                        `${userStats.tokens || 0} Tokens | ${Number(userStats.balance || 0).toLocaleString()} Coins | Lvl ${userStats.level || 0}`;
                 } else {
-                    document.getElementById('tokenDisplay').textContent = `0 Tokens`;
+                    document.getElementById('tokenDisplay').textContent = '0 Tokens';
                     userStats = { tokens: 0, level: 0, balance: 0 };
                 }
             } catch (err) {
                 console.warn('Supabase stats load failed:', err);
-                document.getElementById('tokenDisplay').textContent = `Failed to load`;
+                document.getElementById('tokenDisplay').textContent = 'Failed to load';
             }
         }
 
-        function renderUser(user) {
-            document.getElementById('loginView').style.display = 'none';
-            document.getElementById('settingsView').style.display = 'block';
-            document.getElementById('userName').textContent = user.global_name || user.username;
-            document.getElementById('userTag').textContent = user.discriminator === '0' ? '@' + user.username : '#' + user.discriminator;
-            const av = document.getElementById('userAvatar');
-            av.innerHTML = `<img src="${avatarUrl(user)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-        }
-
-        function showLoggedOut() {
-            document.getElementById('loginView').style.display = 'block';
-            document.getElementById('settingsView').style.display = 'none';
-        }
-
-        async function purchaseItem() {
-            if (!selectedItem || !currentDiscordId) return;
-
-            const btn = document.getElementById('btnConfirm');
-            const errEl = document.getElementById('modalError');
-            btn.textContent = "Processing...";
-            btn.disabled = true;
-            errEl.style.display = "none";
+        async function sbLoadThemeData(discordId) {
+            // Always own standard/free themes
+            Object.values(THEMES_CATALOG.themes)
+                .filter(t => t.category === 'standard')
+                .forEach(t => ownedThemes.add(t.id));
 
             try {
-                await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
-                    method: 'POST',
-                    headers: sbHeaders,
-                    body: JSON.stringify({
-                        discord_id: currentDiscordId,
-                        item_id: selectedItem.id,
-                        cost_tokens: parseInt(selectedItem.tokens),
-                        cost_coins: parseInt(selectedItem.coins)
-                    })
-                });
+                // Active theme from user_settings
+                const sr = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${discordId}&select=active_theme`, { headers: sbHeaders });
+                const srows = await sr.json();
+                if (srows.length > 0 && srows[0].active_theme) activeTheme = srows[0].active_theme;
 
-                // Update UI Optimistically
-                if (userStats) {
-                    if (selectedItem.tokens > 0) userStats.tokens -= parseInt(selectedItem.tokens);
-                    if (selectedItem.coins > 0) userStats.balance -= parseInt(selectedItem.coins);
-                    document.getElementById('tokenDisplay').textContent = `${userStats.tokens} Tokens | ${Number(userStats.balance).toLocaleString()} Coins | Lvl ${userStats.level}`;
+                // Owned themes from marketplace_purchases (fulfilled)
+                const pr = await fetch(`${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${discordId}&fulfilled=eq.true&select=item_id`, { headers: sbHeaders });
+                const purchases = await pr.json();
+                for (const p of purchases) {
+                    // Support both 'theme_obsidian' and legacy 'obsidian_theme'
+                    if (p.item_id.startsWith('theme_')) ownedThemes.add(p.item_id.slice(6));
+                    else if (p.item_id.endsWith('_theme')) ownedThemes.add(p.item_id.replace('_theme', ''));
                 }
-
-                closeModal();
-                alert(`Purchase verified! The bot will now process the transaction and remove the tokens/coins from your account shortly.`);
             } catch (err) {
-                errEl.textContent = "Error communicating with server.";
-                errEl.style.display = "block";
-            } finally {
-                btn.textContent = "Yes, I want to buy this";
-                btn.disabled = false;
+                console.warn('Theme data load failed:', err);
             }
         }
 
+        async function equipTheme(themeId) {
+            if (!currentDiscordId) return;
+            try {
+                // Try PATCH first; if no row exists, POST with upsert
+                const r = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${currentDiscordId}`, {
+                    method: 'PATCH',
+                    headers: { ...sbHeaders, Prefer: 'return=minimal' },
+                    body: JSON.stringify({ active_theme: themeId })
+                });
+                // If nothing was updated (no existing row), insert
+                if (r.status === 200 || r.status === 204) {
+                    const check = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${currentDiscordId}&select=discord_id`, { headers: sbHeaders });
+                    const rows = await check.json();
+                    if (rows.length === 0) {
+                        await fetch(`${SB_URL}/rest/v1/user_settings`, {
+                            method: 'POST',
+                            headers: { ...sbHeaders, Prefer: 'resolution=merge-duplicates,return=minimal' },
+                            body: JSON.stringify({ discord_id: currentDiscordId, active_theme: themeId })
+                        });
+                    }
+                }
+                activeTheme = themeId;
+                renderThemes(currentThemeCat);
+            } catch {
+                alert('Failed to equip theme. Please try again.');
+            }
+        }
+
+        // ── Theme renderer ───────────────────────────────────────────────────────
+        function renderThemes(cat) {
+            currentThemeCat = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+
+            const grid   = document.getElementById('themesGrid');
+            const themes = Object.values(THEMES_CATALOG.themes)
+                .filter(t => cat === 'all' || t.category === cat);
+
+            grid.innerHTML = themes.map(t => {
+                const catInfo   = THEMES_CATALOG.categories[t.category];
+                const isOwned   = ownedThemes.has(t.id);
+                const isActive  = activeTheme === t.id;
+                const isExcl    = t.category === 'exclusive';
+
+                const palette = t.colors.map(c =>
+                    `<div class="theme-palette-swatch" style="background:${c}"></div>`
+                ).join('');
+
+                let badgeBg, badgeColor;
+                switch (t.category) {
+                    case 'premium':   badgeBg = 'rgba(167,139,250,.15)'; badgeColor = '#a78bfa'; break;
+                    case 'seasonal':  badgeBg = 'rgba(52,211,153,.15)';  badgeColor = '#34d399'; break;
+                    case 'exclusive': badgeBg = 'rgba(251,191,36,.15)';  badgeColor = '#fbbf24'; break;
+                    default:          badgeBg = 'rgba(113,113,122,.15)'; badgeColor = '#71717a';
+                }
+
+                let actionBtn;
+                if (isActive) {
+                    actionBtn = `<button class="btn-theme-action state-active" disabled>✓ Active</button>`;
+                } else if (isOwned) {
+                    actionBtn = `<button class="btn-theme-action state-equip" onclick="equipTheme('${t.id}')">Equip</button>`;
+                } else if (isExcl) {
+                    actionBtn = `<button class="btn-theme-action state-locked" disabled>Locked</button>`;
+                } else {
+                    actionBtn = `<button class="btn-theme-action state-buy buy-btn"
+                        data-id="theme_${t.id}" data-name="${t.name} Theme"
+                        data-tokens="${t.tokens}" data-coins="${t.coins}" data-req-level="${t.reqLevel}">
+                        ${t.tokens > 0 ? `${t.tokens} Tokens` : 'Free'}
+                    </button>`;
+                }
+
+                const priceLabel = isExcl ? 'Earned only' : isOwned ? 'Owned' : (t.tokens > 0 ? `${t.tokens} Tokens` : 'Free');
+
+                return `
+                    <div class="theme-card${isActive ? ' is-active' : ''}">
+                        ${isOwned && !isActive ? '<div class="theme-owned-badge">Owned</div>' : ''}
+                        <div class="theme-palette">${palette}</div>
+                        <div class="theme-body">
+                            <span class="theme-cat-badge" style="background:${badgeBg};color:${badgeColor}">${catInfo.label}</span>
+                            <div class="theme-name">${t.name}</div>
+                            <div class="theme-desc">${t.desc}</div>
+                            <div class="theme-footer">
+                                <span class="theme-price">${priceLabel}</span>
+                                ${actionBtn}
+                            </div>
+                        </div>
+                    </div>`;
+            }).join('');
+
+            // Re-bind buy buttons rendered in the themes grid
+            document.querySelectorAll('#themesGrid .buy-btn').forEach(btn => {
+                btn.addEventListener('click', () => openModal(btn.dataset));
+            });
+        }
+
+        // ── Modal ────────────────────────────────────────────────────────────────
         function openModal(item) {
             selectedItem = item;
-            document.getElementById('modalTitle').textContent = "Confirm Purchase";
-            let costText = [];
-            if (item.tokens > 0) costText.push(`${item.tokens} Tokens`);
-            if (item.coins > 0) costText.push(`${Number(item.coins).toLocaleString()} Coins`);
+            let costParts = [];
+            if (parseInt(item.tokens) > 0) costParts.push(`${item.tokens} Tokens`);
+            if (parseInt(item.coins)  > 0) costParts.push(`${Number(item.coins).toLocaleString()} Coins`);
 
-            document.getElementById('modalDesc').innerHTML = `Are you sure you want to buy <strong>${item.name}</strong> for ${costText.join(' and ')}?`;
-            document.getElementById('modalError').style.display = "none";
+            document.getElementById('modalTitle').textContent = 'Confirm Purchase';
+            document.getElementById('modalDesc').innerHTML =
+                `Are you sure you want to buy <strong>${item.name}</strong> for ${costParts.join(' and ')}?`;
+            document.getElementById('modalError').style.display = 'none';
 
             const btn = document.getElementById('btnConfirm');
             btn.disabled = false;
 
-            // Validation Checks
             if (userStats) {
                 if ((userStats.level || 0) < parseInt(item.reqLevel)) {
-                    document.getElementById('modalError').textContent = `You must be Level ${item.reqLevel} to purchase this item!`;
-                    document.getElementById('modalError').style.display = "block";
+                    document.getElementById('modalError').textContent = `You must be Level ${item.reqLevel} to purchase this.`;
+                    document.getElementById('modalError').style.display = 'block';
                     btn.disabled = true;
                 } else if ((userStats.tokens || 0) < parseInt(item.tokens)) {
-                    document.getElementById('modalError').textContent = `You don't have enough Tokens! You need ${item.tokens}.`;
-                    document.getElementById('modalError').style.display = "block";
+                    document.getElementById('modalError').textContent = `You need ${item.tokens} Tokens. You have ${userStats.tokens}.`;
+                    document.getElementById('modalError').style.display = 'block';
                     btn.disabled = true;
                 } else if ((userStats.balance || 0) < parseInt(item.coins)) {
-                    document.getElementById('modalError').textContent = `You don't have enough Coins! You need ${Number(item.coins).toLocaleString()}.`;
-                    document.getElementById('modalError').style.display = "block";
+                    document.getElementById('modalError').textContent = `You need ${Number(item.coins).toLocaleString()} Coins.`;
+                    document.getElementById('modalError').style.display = 'block';
                     btn.disabled = true;
                 }
             }
@@ -527,13 +662,90 @@
             selectedItem = null;
         }
 
+        async function purchaseItem() {
+            if (!selectedItem || !currentDiscordId) return;
+            const btn   = document.getElementById('btnConfirm');
+            const errEl = document.getElementById('modalError');
+            btn.textContent = 'Processing...';
+            btn.disabled    = true;
+            errEl.style.display = 'none';
+
+            try {
+                await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
+                    method: 'POST',
+                    headers: sbHeaders,
+                    body: JSON.stringify({
+                        discord_id:   currentDiscordId,
+                        item_id:      selectedItem.id,
+                        cost_tokens:  parseInt(selectedItem.tokens),
+                        cost_coins:   parseInt(selectedItem.coins)
+                    })
+                });
+
+                // Optimistic stat update
+                if (userStats) {
+                    if (parseInt(selectedItem.tokens) > 0) userStats.tokens  -= parseInt(selectedItem.tokens);
+                    if (parseInt(selectedItem.coins)  > 0) userStats.balance -= parseInt(selectedItem.coins);
+                    document.getElementById('tokenDisplay').textContent =
+                        `${userStats.tokens} Tokens | ${Number(userStats.balance).toLocaleString()} Coins | Lvl ${userStats.level}`;
+                }
+
+                // If this was a theme purchase: add to owned set and re-render
+                if (selectedItem.id.startsWith('theme_')) {
+                    const themeId = selectedItem.id.slice(6);
+                    ownedThemes.add(themeId);
+                    renderThemes(currentThemeCat);
+                }
+
+                closeModal();
+                alert(`Purchase submitted! The bot will process this within a few seconds and DM you on Discord.`);
+            } catch {
+                errEl.textContent = 'Error communicating with server. Try again.';
+                errEl.style.display = 'block';
+            } finally {
+                btn.textContent = 'Yes, I want to buy this';
+                btn.disabled    = false;
+            }
+        }
+
         document.getElementById('btnCancel').addEventListener('click', closeModal);
         document.getElementById('btnConfirm').addEventListener('click', purchaseItem);
 
-        // Bind buy buttons
-        document.querySelectorAll('.buy-btn').forEach(btn => {
+        // ── Tab switching ────────────────────────────────────────────────────────
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+                document.getElementById('itemsTab').style.display  = tab === 'items'  ? '' : 'none';
+                document.getElementById('themesTab').style.display = tab === 'themes' ? '' : 'none';
+                if (tab === 'themes') renderThemes(currentThemeCat);
+            });
+        });
+
+        // ── Category filter buttons ──────────────────────────────────────────────
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.addEventListener('click', () => renderThemes(btn.dataset.cat));
+        });
+
+        // ── Store item buy buttons ───────────────────────────────────────────────
+        document.querySelectorAll('#itemsTab .buy-btn').forEach(btn => {
             btn.addEventListener('click', () => openModal(btn.dataset));
         });
+
+        // ── Auth & init ──────────────────────────────────────────────────────────
+        function renderUser(user) {
+            document.getElementById('loginView').style.display    = 'none';
+            document.getElementById('settingsView').style.display = 'block';
+            document.getElementById('userName').textContent = user.global_name || user.username;
+            document.getElementById('userTag').textContent  = user.discriminator === '0' ? '@' + user.username : '#' + user.discriminator;
+            const av = document.getElementById('userAvatar');
+            av.innerHTML = `<img src="${avatarUrl(user)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+        }
+
+        function showLoggedOut() {
+            document.getElementById('loginView').style.display    = 'block';
+            document.getElementById('settingsView').style.display = 'none';
+        }
 
         async function init() {
             const fragment = new URLSearchParams(window.location.hash.slice(1));
@@ -547,24 +759,31 @@
             if (!token) return showLoggedOut();
 
             try {
-                const res = await fetch('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${token}` } });
+                const res  = await fetch('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${token}` } });
                 if (!res.ok) throw new Error('Token expired');
                 const user = await res.json();
                 localStorage.setItem(STORE_USER, JSON.stringify(user));
                 currentDiscordId = user.id;
                 renderUser(user);
 
-                await sbLoadStats(user.id);
+                await Promise.all([
+                    sbLoadStats(user.id),
+                    sbLoadThemeData(user.id)
+                ]);
+
                 document.querySelectorAll('#settingsView .reveal').forEach(el => {
                     el.classList.remove('visible');
                     requestAnimationFrame(() => io.observe(el));
                 });
-            } catch (err) {
+            } catch {
                 const cached = getUser();
                 if (cached) {
                     currentDiscordId = cached.id;
                     renderUser(cached);
-                    await sbLoadStats(cached.id);
+                    await Promise.all([
+                        sbLoadStats(cached.id),
+                        sbLoadThemeData(cached.id)
+                    ]);
                 } else {
                     localStorage.removeItem(STORE_TOKEN);
                     showLoggedOut();
@@ -577,6 +796,8 @@
             localStorage.removeItem(STORE_USER);
             localStorage.removeItem(STORE_TOKEN);
             currentDiscordId = null;
+            ownedThemes.clear();
+            activeTheme = 'default';
             showLoggedOut();
         });
 
