@@ -1,354 +1,565 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Incorp — Discord Economy Bot</title>
+    <meta
+      name="description"
+      content="150+ commands, 50+ games, economy, social systems, and more — all in one Discord bot."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3L2 8l10 5 10-5-10-5z'/><path d='M2 12l10 5 10-5'/><path d='M2 17l10 5 10-5'/></svg>"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Incorp — Discord Economy Bot</title>
-  <meta name="description"
-    content="150+ commands, 50+ games, economy, social systems, and more — all in one Discord bot.">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" type="image/svg+xml"
-    href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3L2 8l10 5 10-5-10-5z'/><path d='M2 12l10 5 10-5'/><path d='M2 17l10 5 10-5'/></svg>">
-</head>
-
-<body>
-
-  <header class="site-header">
-    <div class="site-header-container">
-      <a href="index.html" class="logo">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m12 3-10 5 10 5 10-5-10-5z" />
-          <path d="m2 12 10 5 10-5" />
-          <path d="m2 17 10 5 10-5" />
-        </svg>
-        incorp
-      </a>
-      <div class="header-actions">
-        <nav class="header-nav" aria-label="Social">
-          <a href="#" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path
-                d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4" />
-            </svg></a>
-          <a href="https://discord.com/users/1333972569014931466" aria-label="Discord" target="_blank"><svg width="18"
-              height="18" viewBox="0 0 127.14 96.36" fill="currentColor">
-              <path
-                d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2.04a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2.04a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15zM42.45 65.69C36.18 65.69 31 60 31 53.05s5-12.68 11.45-12.68S53.89 46 53.88 53.05 48.84 65.69 42.45 65.69zm42.24 0C78.41 65.69 73.25 60 73.25 53.05s5-12.68 11.44-12.68S96.23 46 96.12 53.05 91.08 65.69 84.69 65.69z" />
-            </svg></a>
-        </nav>
-        <button class="mobile-toggle" id="mobileToggle" aria-label="Menu" aria-expanded="false">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="4" x2="20" y1="12" y2="12" />
-            <line x1="4" x2="20" y1="6" y2="6" />
-            <line x1="4" x2="20" y1="18" y2="18" />
+  <body>
+    <header class="site-header">
+      <div class="site-header-container">
+        <a href="index.html" class="logo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m12 3-10 5 10 5 10-5-10-5z" />
+            <path d="m2 12 10 5 10-5" />
+            <path d="m2 17 10 5 10-5" />
           </svg>
-        </button>
+          incorp
+        </a>
+        <div class="header-actions">
+          <nav class="header-nav" aria-label="Social">
+            <a href="#" aria-label="GitHub"
+              ><svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4"
+                /></svg
+            ></a>
+            <a
+              href="https://discord.com/users/924317568242679859"
+              aria-label="Discord"
+              target="_blank"
+              ><svg width="18" height="18" viewBox="0 0 127.14 96.36" fill="currentColor">
+                <path
+                  d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2.04a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2.04a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15zM42.45 65.69C36.18 65.69 31 60 31 53.05s5-12.68 11.45-12.68S53.89 46 53.88 53.05 48.84 65.69 42.45 65.69zm42.24 0C78.41 65.69 73.25 60 73.25 53.05s5-12.68 11.44-12.68S96.23 46 96.12 53.05 91.08 65.69 84.69 65.69z"
+                /></svg
+            ></a>
+          </nav>
+          <button class="mobile-toggle" id="mobileToggle" aria-label="Menu" aria-expanded="false">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="4" x2="20" y1="12" y2="12" />
+              <line x1="4" x2="20" y1="6" y2="6" />
+              <line x1="4" x2="20" y1="18" y2="18" />
+            </svg>
+          </button>
+        </div>
       </div>
+    </header>
+
+    <div class="site-layout">
+      <aside class="site-sidebar" id="sidebar">
+        <div class="sidebar-group">
+          <h4>Overview</h4>
+          <nav class="nav-links" id="homeNav">
+            <a href="#home" class="active">Home</a>
+            <a href="#features">Features</a>
+            <a href="#updates">Updates</a>
+            <a href="#stats">Stats</a>
+          </nav>
+        </div>
+        <div class="sidebar-group">
+          <h4>Resources</h4>
+          <nav class="nav-links">
+            <a href="changelog.html">Changelog</a>
+            <a href="settings.html">Settings</a>
+            <a href="marketplace.html">Marketplace</a>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="site-main">
+        <section class="hero" id="home">
+          <svg
+            class="hero-svg reveal"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m12 3-10 5 10 5 10-5-10-5z" />
+            <path d="m2 12 10 5 10-5" />
+            <path d="m2 17 10 5 10-5" />
+          </svg>
+          <div class="reveal" style="transition-delay: 0.06s; margin-bottom: 1.5rem">
+            <span class="badge">v3.5.0 Release</span>
+          </div>
+          <h1 class="reveal" style="transition-delay: 0.12s">
+            The bot your server actually needs.
+          </h1>
+          <p class="hero-sub reveal" style="transition-delay: 0.18s">
+            150+ commands spanning economy, games, social systems, media tools, and administration
+            utilities. All without the bloat.
+          </p>
+          <div class="reveal" style="transition-delay: 0.24s; display: flex; gap: 0.75rem">
+            <a
+              href="https://discord.com/users/924317568242679859"
+              class="btn btn-primary"
+              target="_blank"
+              >Add to Discord</a
+            >
+            <a
+              href="#features"
+              class="btn"
+              style="border: 1px solid var(--border); background: var(--card)"
+              >Explore Features</a
+            >
+          </div>
+        </section>
+
+        <div style="border-top: 1px solid var(--border); margin: 2rem 0"></div>
+
+        <section class="section" id="features">
+          <h2 class="reveal">Everything in one bot.</h2>
+          <p class="reveal">No bloat, just precisely what your server needs to thrive.</p>
+          <div class="feat-grid reveal" style="transition-delay: 0.08s">
+            <div class="feat-cell">
+              <svg
+                class="feat-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 2v20" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+              <h3>Economy</h3>
+              <p>Banking, investments, companies, and a live marketplace.</p>
+              <ul>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Bank accounts with interest
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Company management
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Investment system
+                </li>
+              </ul>
+            </div>
+
+            <div class="feat-cell">
+              <svg
+                class="feat-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 12h12" />
+                <path d="M12 6v12" />
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+              </svg>
+              <h3>Games</h3>
+              <p>50+ games including battles, casino, puzzles, and competitions.</p>
+              <ul>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Arena battles
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Casino &amp; gambling
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Multiplayer games
+                </li>
+              </ul>
+            </div>
+
+            <div class="feat-cell">
+              <svg
+                class="feat-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <h3>Social</h3>
+              <p>Marriage, relationships, families, and social interactions.</p>
+              <ul>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Marriage &amp; divorce
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Family system
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Relationship drama
+                </li>
+              </ul>
+            </div>
+
+            <div class="feat-cell">
+              <svg
+                class="feat-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <path d="M9 3v18" />
+                <path d="M15 3v18" />
+                <path d="M3 9h18" />
+                <path d="M3 15h18" />
+              </svg>
+              <h3>Media</h3>
+              <p>Music, image editing, GIF creation, and voice features.</p>
+              <ul>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  YouTube streaming
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Image manipulation
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  GIF creation
+                </li>
+              </ul>
+            </div>
+
+            <div class="feat-cell">
+              <svg
+                class="feat-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+              </svg>
+              <h3>Admin</h3>
+              <p>Server management and moderation for any size.</p>
+              <ul>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  User management
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Economy control
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Auto moderation
+                </li>
+              </ul>
+            </div>
+
+            <div class="feat-cell">
+              <svg
+                class="feat-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 3v18h18" />
+                <path d="m19 9-5 5-4-4-3 3" />
+              </svg>
+              <h3>Upgrades</h3>
+              <p>7 unique upgrades to supercharge your gameplay progression.</p>
+              <ul>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Lucky Gambler +12%
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Energy Booster -10% cd
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                  Security Vault
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="updates">
+          <h2 class="reveal">What shipped recently.</h2>
+          <p class="reveal">Constant iterations. See what's new in v3.5.0</p>
+
+          <div class="ver-box reveal" style="padding: 1.5rem; transition-delay: 0.08s">
+            <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.5rem">
+              <span class="badge">v3.5.0</span>
+              <h3 style="font-size: 1.125rem">Economy Overhaul</h3>
+            </div>
+            <span class="ver-date">February 2026</span>
+
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 2rem;
+                margin-top: 1.5rem;
+              "
+            >
+              <div>
+                <h4 style="font-size: 0.75rem; color: var(--fg); text-transform: uppercase">
+                  Highlights
+                </h4>
+                <ul
+                  style="
+                    list-style: none;
+                    margin-top: 0.5rem;
+                    color: var(--fg-3);
+                    font-size: 0.8125rem;
+                  "
+                >
+                  <li style="padding: 0.25rem 0">
+                    Gambling fixes — slots, coinflip, blackjack, spin
+                  </li>
+                  <li style="padding: 0.25rem 0">Rob — 70% success rate, catch penalty</li>
+                  <li style="padding: 0.25rem 0">Pet system, job levels, Arena ELO</li>
+                  <li style="padding: 0.25rem 0">Leaderboard — total wealth + rebirth tags</li>
+                  <li style="padding: 0.25rem 0">Mines idle timeout, cashout bonuses</li>
+                </ul>
+              </div>
+              <div>
+                <h4 style="font-size: 0.75rem; color: var(--fg); text-transform: uppercase">
+                  New Commands
+                </h4>
+                <ul
+                  style="
+                    list-style: none;
+                    margin-top: 0.5rem;
+                    color: var(--fg-3);
+                    font-size: 0.8125rem;
+                  "
+                >
+                  <li style="padding: 0.25rem 0; font-family: var(--mono)">
+                    .adopt / .mypet / .trainpet
+                  </li>
+                  <li style="padding: 0.25rem 0; font-family: var(--mono)">.job</li>
+                  <li style="padding: 0.25rem 0; font-family: var(--mono)">.arenaelo / .arenalb</li>
+                  <li style="padding: 0.25rem 0; font-family: var(--mono)">.fishbook</li>
+                </ul>
+              </div>
+            </div>
+
+            <div style="margin-top: 2rem">
+              <a
+                href="changelog.html"
+                style="font-size: 0.8125rem; color: var(--fg); font-weight: 500"
+                >View full changelog →</a
+              >
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="stats">
+          <h2 class="reveal">Built for scale.</h2>
+          <p class="reveal">Robust architecture to handle servers of any size.</p>
+          <div class="stats-grid reveal" style="transition-delay: 0.08s">
+            <div class="stat-cell">
+              <div class="stat-n">150+</div>
+              <div class="stat-l">Commands</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-n">50+</div>
+              <div class="stat-l">Games</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-n">7</div>
+              <div class="stat-l">Upgrades</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-n">99.9%</div>
+              <div class="stat-l">Uptime</div>
+            </div>
+          </div>
+        </section>
+
+        <div style="border-top: 1px solid var(--border); margin: 2rem 0; padding-bottom: 2rem">
+          <span style="font-size: 0.75rem; color: var(--fg-4)"
+            >© 2026 Incorp. All rights reserved.</span
+          >
+        </div>
+      </main>
     </div>
-  </header>
 
-  <div class="site-layout">
-    <aside class="site-sidebar" id="sidebar">
-      <div class="sidebar-group">
-        <h4>Overview</h4>
-        <nav class="nav-links" id="homeNav">
-          <a href="#home" class="active">Home</a>
-          <a href="#features">Features</a>
-          <a href="#updates">Updates</a>
-          <a href="#stats">Stats</a>
-        </nav>
-      </div>
-      <div class="sidebar-group">
-        <h4>Resources</h4>
-        <nav class="nav-links">
-          <a href="changelog.html">Changelog</a>
-          <a href="settings.html">Settings</a>
-          <a href="marketplace.html">Marketplace</a>
-        </nav>
-      </div>
-    </aside>
+    <script>
+      const toggle = document.getElementById("mobileToggle");
+      const sidebar = document.getElementById("sidebar");
 
-    <main class="site-main">
-      <section class="hero" id="home">
-        <svg class="hero-svg reveal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m12 3-10 5 10 5 10-5-10-5z" />
-          <path d="m2 12 10 5 10-5" />
-          <path d="m2 17 10 5 10-5" />
-        </svg>
-        <div class="reveal" style="transition-delay:.06s; margin-bottom: 1.5rem;"><span class="badge">v3.5.0
-            Release</span></div>
-        <h1 class="reveal" style="transition-delay:.12s">The bot your server actually needs.</h1>
-        <p class="hero-sub reveal" style="transition-delay:.18s">
-          150+ commands spanning economy, games, social systems, media tools, and administration utilities.
-          All without the bloat.
-        </p>
-        <div class="reveal" style="transition-delay:.24s; display: flex; gap: 0.75rem;">
-          <a href="https://discord.com/users/1333972569014931466" class="btn btn-primary" target="_blank">Add to
-            Discord</a>
-          <a href="#features" class="btn" style="border: 1px solid var(--border); background: var(--card);">Explore
-            Features</a>
-        </div>
-      </section>
-
-      <div style="border-top: 1px solid var(--border); margin: 2rem 0;"></div>
-
-      <section class="section" id="features">
-        <h2 class="reveal">Everything in one bot.</h2>
-        <p class="reveal">No bloat, just precisely what your server needs to thrive.</p>
-        <div class="feat-grid reveal" style="transition-delay:.08s">
-
-          <div class="feat-cell">
-            <svg class="feat-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v20" />
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
-            <h3>Economy</h3>
-            <p>Banking, investments, companies, and a live marketplace.</p>
-            <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Bank accounts with interest</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Company management</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Investment system</li>
-            </ul>
-          </div>
-
-          <div class="feat-cell">
-            <svg class="feat-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 12h12" />
-              <path d="M12 6v12" />
-              <rect width="18" height="18" x="3" y="3" rx="2" />
-            </svg>
-            <h3>Games</h3>
-            <p>50+ games including battles, casino, puzzles, and competitions.</p>
-            <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Arena battles</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Casino &amp; gambling</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Multiplayer games</li>
-            </ul>
-          </div>
-
-          <div class="feat-cell">
-            <svg class="feat-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-            <h3>Social</h3>
-            <p>Marriage, relationships, families, and social interactions.</p>
-            <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Marriage &amp; divorce</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Family system</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Relationship drama</li>
-            </ul>
-          </div>
-
-          <div class="feat-cell">
-            <svg class="feat-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect width="18" height="18" x="3" y="3" rx="2" />
-              <path d="M9 3v18" />
-              <path d="M15 3v18" />
-              <path d="M3 9h18" />
-              <path d="M3 15h18" />
-            </svg>
-            <h3>Media</h3>
-            <p>Music, image editing, GIF creation, and voice features.</p>
-            <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> YouTube streaming</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Image manipulation</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> GIF creation</li>
-            </ul>
-          </div>
-
-          <div class="feat-cell">
-            <svg class="feat-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-            </svg>
-            <h3>Admin</h3>
-            <p>Server management and moderation for any size.</p>
-            <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> User management</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Economy control</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Auto moderation</li>
-            </ul>
-          </div>
-
-          <div class="feat-cell">
-            <svg class="feat-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 3v18h18" />
-              <path d="m19 9-5 5-4-4-3 3" />
-            </svg>
-            <h3>Upgrades</h3>
-            <p>7 unique upgrades to supercharge your gameplay progression.</p>
-            <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Lucky Gambler +12%</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Energy Booster -10% cd</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m9 18 6-6-6-6" />
-                </svg> Security Vault</li>
-            </ul>
-          </div>
-
-        </div>
-      </section>
-
-      <section class="section" id="updates">
-        <h2 class="reveal">What shipped recently.</h2>
-        <p class="reveal">Constant iterations. See what's new in v3.5.0</p>
-
-        <div class="ver-box reveal" style="padding: 1.5rem; transition-delay:.08s;">
-          <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.5rem;">
-            <span class="badge">v3.5.0</span>
-            <h3 style="font-size: 1.125rem;">Economy Overhaul</h3>
-          </div>
-          <span class="ver-date">February 2026</span>
-
-          <div
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
-            <div>
-              <h4 style="font-size: 0.75rem; color: var(--fg); text-transform: uppercase;">Highlights</h4>
-              <ul style="list-style: none; margin-top: 0.5rem; color: var(--fg-3); font-size: 0.8125rem;">
-                <li style="padding: 0.25rem 0;">Gambling fixes — slots, coinflip, blackjack, spin</li>
-                <li style="padding: 0.25rem 0;">Rob — 70% success rate, catch penalty</li>
-                <li style="padding: 0.25rem 0;">Pet system, job levels, Arena ELO</li>
-                <li style="padding: 0.25rem 0;">Leaderboard — total wealth + rebirth tags</li>
-                <li style="padding: 0.25rem 0;">Mines idle timeout, cashout bonuses</li>
-              </ul>
-            </div>
-            <div>
-              <h4 style="font-size: 0.75rem; color: var(--fg); text-transform: uppercase;">New Commands</h4>
-              <ul style="list-style: none; margin-top: 0.5rem; color: var(--fg-3); font-size: 0.8125rem;">
-                <li style="padding: 0.25rem 0; font-family: var(--mono);">.adopt / .mypet / .trainpet</li>
-                <li style="padding: 0.25rem 0; font-family: var(--mono);">.job</li>
-                <li style="padding: 0.25rem 0; font-family: var(--mono);">.arenaelo / .arenalb</li>
-                <li style="padding: 0.25rem 0; font-family: var(--mono);">.fishbook</li>
-              </ul>
-            </div>
-          </div>
-
-          <div style="margin-top: 2rem;">
-            <a href="changelog.html" style="font-size: 0.8125rem; color: var(--fg); font-weight: 500;">View full
-              changelog →</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="stats">
-        <h2 class="reveal">Built for scale.</h2>
-        <p class="reveal">Robust architecture to handle servers of any size.</p>
-        <div class="stats-grid reveal" style="transition-delay:.08s">
-          <div class="stat-cell">
-            <div class="stat-n">150+</div>
-            <div class="stat-l">Commands</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-n">50+</div>
-            <div class="stat-l">Games</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-n">7</div>
-            <div class="stat-l">Upgrades</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-n">99.9%</div>
-            <div class="stat-l">Uptime</div>
-          </div>
-        </div>
-      </section>
-
-      <div style="border-top: 1px solid var(--border); margin: 2rem 0; padding-bottom: 2rem;">
-        <span style="font-size: .75rem; color: var(--fg-4);">© 2026 Incorp. All rights reserved.</span>
-      </div>
-    </main>
-  </div>
-
-  <script>
-    const toggle = document.getElementById('mobileToggle');
-    const sidebar = document.getElementById('sidebar');
-
-    toggle?.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
-    });
-
-    sidebar.addEventListener('click', (e) => {
-      if (e.target.tagName === 'A' && window.innerWidth <= 768) {
-        sidebar.classList.remove('open');
-        document.body.style.overflow = '';
-      }
-    });
-
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        const id = a.getAttribute('href');
-        if (id === '#') return;
-        e.preventDefault();
-        document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      toggle?.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        document.body.style.overflow = sidebar.classList.contains("open") ? "hidden" : "";
       });
-    });
 
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-    }, { threshold: 0.05 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-    const navAs = document.querySelectorAll('#homeNav a[href^="#"]');
-    const sects = [...navAs].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-    window.addEventListener('scroll', () => {
-      let idx = sects.length - 1;
-      for (let i = 0; i < sects.length; i++) {
-        if (sects[i].getBoundingClientRect().top > 150) {
-          idx = i - 1;
-          break;
+      sidebar.addEventListener("click", (e) => {
+        if (e.target.tagName === "A" && window.innerWidth <= 768) {
+          sidebar.classList.remove("open");
+          document.body.style.overflow = "";
         }
-      }
-      idx = Math.max(0, idx);
-      navAs.forEach((a, i) => a.classList.toggle('active', i === idx));
-    }, { passive: true });
-  </script>
-</body>
+      });
 
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          const id = a.getAttribute("href");
+          if (id === "#") return;
+          e.preventDefault();
+          document.querySelector(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.05 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+      const navAs = document.querySelectorAll('#homeNav a[href^="#"]');
+      const sects = [...navAs]
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      window.addEventListener(
+        "scroll",
+        () => {
+          let idx = sects.length - 1;
+          for (let i = 0; i < sects.length; i++) {
+            if (sects[i].getBoundingClientRect().top > 150) {
+              idx = i - 1;
+              break;
+            }
+          }
+          idx = Math.max(0, idx);
+          navAs.forEach((a, i) => a.classList.toggle("active", i === idx));
+        },
+        { passive: true },
+      );
+    </script>
+  </body>
 </html>
