@@ -1,617 +1,2168 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Incorp — Marketplace</title>
-    <meta name="description" content="Use your earned Tokens to buy exclusive items on the Incorp Marketplace.">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m12 3-10 5 10 5 10-5-10-5z'/><path d='m2 12 10 5 10-5'/><path d='m2 17 10 5 10-5'/></svg>">
+    <meta
+      name="description"
+      content="Use your earned Tokens to buy exclusive items on the Incorp Marketplace."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m12 3-10 5 10 5 10-5-10-5z'/><path d='m2 12 10 5 10-5'/><path d='m2 17 10 5 10-5'/></svg>"
+    />
     <style>
-        /* ── Modal ── */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
-        .modal-overlay.active { opacity: 1; pointer-events: all; }
-        .modal {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 400px;
-            transform: scale(0.95);
-            transition: transform 0.2s ease;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-        .modal-overlay.active .modal { transform: scale(1); }
-        .modal h3 { margin-top: 0; font-size: 1.25rem; margin-bottom: 0.5rem; }
-        .modal p { color: var(--fg-3); margin-bottom: 1.5rem; line-height: 1.5; }
-        .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; }
-        .btn-cancel {
-            background: rgba(255,255,255,0.1); color: var(--fg);
-            border: none; padding: 0.75rem 1.25rem; border-radius: 6px;
-            cursor: pointer; font-weight: 500; transition: background 0.2s;
-        }
-        .btn-cancel:hover { background: rgba(255,255,255,0.15); }
-        .btn-confirm {
-            background: #a78bfa; color: #111827;
-            border: none; padding: 0.75rem 1.25rem; border-radius: 6px;
-            cursor: pointer; font-weight: 600; transition: filter 0.2s;
-        }
-        .btn-confirm:hover { filter: brightness(1.1); }
-        .btn-confirm:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
+      /* ── Modal ── */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .modal {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 2rem;
+        width: 90%;
+        max-width: 400px;
+        transform: scale(0.95);
+        transition: transform 0.2s ease;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      }
+      .modal-overlay.active .modal {
+        transform: scale(1);
+      }
+      .modal h3 {
+        margin-top: 0;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+      }
+      .modal p {
+        color: var(--fg-3);
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+      }
+      .btn-cancel {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--fg);
+        border: none;
+        padding: 0.75rem 1.25rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
+      .btn-cancel:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .btn-confirm {
+        background: #a78bfa;
+        color: #111827;
+        border: none;
+        padding: 0.75rem 1.25rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: filter 0.2s;
+      }
+      .btn-confirm:hover {
+        filter: brightness(1.1);
+      }
+      .btn-confirm:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        filter: none;
+      }
 
-        /* ── User bar badge ── */
-        .tokens-badge {
-            background: rgba(167,139,250,0.15); color: #c4b5fd;
-            padding: 0.25rem 0.5rem; border-radius: 4px;
-            font-size: 0.85rem; font-weight: 600;
-            border: 1px solid rgba(167,139,250,0.3);
-        }
+      /* ── User bar badge ── */
+      .tokens-badge {
+        background: rgba(167, 139, 250, 0.15);
+        color: #c4b5fd;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid rgba(167, 139, 250, 0.3);
+      }
 
-        /* ── Tabs ── */
-        .store-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
-            gap: 0;
-        }
-        .tab-btn {
-            background: none; border: none;
-            border-bottom: 2px solid transparent;
-            color: var(--fg-3);
-            font-size: 0.875rem; font-weight: 500;
-            padding: 0.625rem 1.25rem;
-            cursor: pointer;
-            margin-bottom: -1px;
-            transition: color 0.15s, border-color 0.15s;
-            font-family: var(--font);
-        }
-        .tab-btn:hover { color: var(--fg-2); }
-        .tab-btn.active { color: var(--fg); border-bottom-color: var(--fg); }
+      /* ── Tabs ── */
+      .store-tabs {
+        display: flex;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2rem;
+        gap: 0;
+      }
+      .tab-btn {
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: var(--fg-3);
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 0.625rem 1.25rem;
+        cursor: pointer;
+        margin-bottom: -1px;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+        font-family: var(--font);
+      }
+      .tab-btn:hover {
+        color: var(--fg-2);
+      }
+      .tab-btn.active {
+        color: var(--fg);
+        border-bottom-color: var(--fg);
+      }
 
-        /* ── Category filter pills ── */
-        .cat-filter-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-        .cat-btn {
-            background: #18181b; border: 1px solid var(--border);
-            color: var(--fg-3); font-size: 0.75rem; font-weight: 500;
-            padding: 0.3rem 0.75rem; border-radius: 999px;
-            cursor: pointer; transition: all 0.15s; font-family: var(--font);
-        }
-        .cat-btn.active, .cat-btn:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+      /* ── Category filter pills ── */
+      .cat-filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .cat-btn {
+        background: #18181b;
+        border: 1px solid var(--border);
+        color: var(--fg-3);
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.3rem 0.75rem;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: var(--font);
+      }
+      .cat-btn.active,
+      .cat-btn:hover {
+        background: var(--fg);
+        color: var(--bg);
+        border-color: var(--fg);
+      }
 
-        /* ── Theme grid + cards ── */
-        .themes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-            gap: 1rem;
-        }
-        .theme-card {
-            border-radius: 12px; overflow: hidden;
-            display: flex; flex-direction: column;
-            border: 1px solid var(--border);
-            transition: border-color 0.2s, transform 0.2s;
-            position: relative;
-            background: #111113;
-        }
-        .theme-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
-        .theme-card.is-active {
-            border-color: rgba(167,139,250,0.55);
-            box-shadow: 0 0 0 1px rgba(167,139,250,0.25);
-        }
-        .theme-palette { height: 72px; display: flex; }
-        .theme-palette-swatch { flex: 1; }
-        .theme-body { padding: 0.875rem; flex: 1; display: flex; flex-direction: column; gap: 0.375rem; }
-        .theme-cat-badge {
-            font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.06em; padding: 0.15rem 0.5rem; border-radius: 999px;
-            display: inline-flex; align-self: flex-start;
-        }
-        .theme-name { font-size: 0.9375rem; font-weight: 600; margin-top: 0.1rem; }
-        .theme-desc { font-size: 0.75rem; color: var(--fg-3); line-height: 1.5; flex: 1; }
-        .theme-footer { margin-top: 0.625rem; display: flex; gap: 0.5rem; align-items: center; }
-        .theme-price { font-size: 0.75rem; color: var(--fg-4); flex: 1; }
-        .btn-theme-action {
-            font-size: 0.8rem; font-weight: 600; padding: 0.45rem 0.9rem;
-            border-radius: 6px; border: none; cursor: pointer;
-            transition: filter 0.2s; font-family: var(--font); white-space: nowrap;
-        }
-        .btn-theme-action.state-active {
-            background: rgba(167,139,250,0.15); color: #a78bfa;
-            border: 1px solid rgba(167,139,250,0.35); cursor: default;
-        }
-        .btn-theme-action.state-equip {
-            background: #a78bfa; color: #111827;
-        }
-        .btn-theme-action.state-equip:hover { filter: brightness(1.1); }
-        .btn-theme-action.state-buy {
-            background: rgba(167,139,250,0.1);
-            border: 1px solid rgba(167,139,250,0.3); color: #a78bfa;
-        }
-        .btn-theme-action.state-buy:hover { background: rgba(167,139,250,0.18); }
-        .btn-theme-action.state-locked {
-            background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-            color: var(--fg-4); cursor: default;
-        }
-        .theme-owned-badge {
-            position: absolute; top: 0.5rem; right: 0.5rem;
-            background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.12);
-            color: #a78bfa; font-size: 0.6rem; font-weight: 700;
-            padding: 0.125rem 0.4rem; border-radius: 4px; text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+      /* ── Theme grid + cards ── */
+      .themes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        gap: 1rem;
+      }
+      .theme-card {
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--border);
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+        position: relative;
+        background: #111113;
+      }
+      .theme-card:hover {
+        border-color: var(--border-2);
+        transform: translateY(-2px);
+      }
+      .theme-card.is-active {
+        border-color: rgba(167, 139, 250, 0.55);
+        box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.25);
+      }
+      .theme-palette {
+        height: 72px;
+        display: flex;
+      }
+      .theme-palette-swatch {
+        flex: 1;
+      }
+      .theme-body {
+        padding: 0.875rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+      }
+      .theme-cat-badge {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-self: flex-start;
+      }
+      .theme-name {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        margin-top: 0.1rem;
+      }
+      .theme-desc {
+        font-size: 0.75rem;
+        color: var(--fg-3);
+        line-height: 1.5;
+        flex: 1;
+      }
+      .theme-footer {
+        margin-top: 0.625rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .theme-price {
+        font-size: 0.75rem;
+        color: var(--fg-4);
+        flex: 1;
+      }
+      .btn-theme-action {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.45rem 0.9rem;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: filter 0.2s;
+        font-family: var(--font);
+        white-space: nowrap;
+      }
+      .btn-theme-action.state-active {
+        background: rgba(167, 139, 250, 0.15);
+        color: #a78bfa;
+        border: 1px solid rgba(167, 139, 250, 0.35);
+        cursor: default;
+      }
+      .btn-theme-action.state-equip {
+        background: #a78bfa;
+        color: #111827;
+      }
+      .btn-theme-action.state-equip:hover {
+        filter: brightness(1.1);
+      }
+      .btn-theme-action.state-buy {
+        background: rgba(167, 139, 250, 0.1);
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        color: #a78bfa;
+      }
+      .btn-theme-action.state-buy:hover {
+        background: rgba(167, 139, 250, 0.18);
+      }
+      .btn-theme-action.state-locked {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        color: var(--fg-4);
+        cursor: default;
+      }
+      .theme-owned-badge {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: rgba(0, 0, 0, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #a78bfa;
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 0.125rem 0.4rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
 
-        /* ── Store item cards ── */
-        .item-card {
-            background: linear-gradient(145deg, rgba(20,20,24,1) 0%, rgba(30,30,36,1) 100%);
-            padding: 1.5rem; border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.05);
-            display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative; overflow: hidden;
-        }
-        .item-card-tag {
-            position: absolute; top: 0; right: 0;
-            padding: 0.25rem 0.75rem;
-            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
-            border-bottom-left-radius: 8px;
-        }
+      /* ── AI Voice cards ── */
+      .voices-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+      .voice-card {
+        background: #111113;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.125rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+        position: relative;
+      }
+      .voice-card:hover {
+        border-color: var(--border-2);
+        transform: translateY(-2px);
+      }
+      .voice-card.is-owned {
+        border-color: rgba(167, 139, 250, 0.45);
+      }
+      .voice-card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(167, 139, 250, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+      .voice-card-name {
+        font-size: 0.9375rem;
+        font-weight: 600;
+      }
+      .voice-card-meta {
+        font-size: 0.75rem;
+        color: var(--fg-3);
+      }
+      .voice-card-desc {
+        font-size: 0.75rem;
+        color: var(--fg-3);
+        flex: 1;
+        line-height: 1.4;
+      }
+      .voice-card-footer {
+        margin-top: 0.5rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .voice-price {
+        font-size: 0.75rem;
+        color: var(--fg-4);
+        flex: 1;
+      }
+      .voice-badge {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: rgba(167, 139, 250, 0.15);
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        color: #a78bfa;
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 0.125rem 0.4rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .voice-cat-pill {
+        display: inline-flex;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+        align-self: flex-start;
+      }
+      .btn-voice-action {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.45rem 0.9rem;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: filter 0.2s;
+        font-family: var(--font);
+        white-space: nowrap;
+      }
+      .btn-voice-owned {
+        background: rgba(167, 139, 250, 0.15);
+        color: #a78bfa;
+        border: 1px solid rgba(167, 139, 250, 0.35);
+        cursor: default;
+      }
+      .btn-voice-buy {
+        background: rgba(167, 139, 250, 0.1);
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        color: #a78bfa;
+      }
+      .btn-voice-buy:hover {
+        background: rgba(167, 139, 250, 0.18);
+      }
+
+      /* ── Store item cards ── */
+      .item-card {
+        background: linear-gradient(145deg, rgba(20, 20, 24, 1) 0%, rgba(30, 30, 36, 1) 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+      .item-card-tag {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        border-bottom-left-radius: 8px;
+      }
+
+      /* ── Card kebab menu ── */
+      .card-menu-wrap {
+        position: relative;
+        display: inline-flex;
+      }
+      .card-menu-btn {
+        background: none;
+        border: none;
+        color: var(--fg-3);
+        cursor: pointer;
+        padding: 0.3rem 0.5rem;
+        border-radius: 4px;
+        font-size: 1.1rem;
+        line-height: 1;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .card-menu-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--fg);
+      }
+      .card-dropdown {
+        position: absolute;
+        right: 0;
+        bottom: calc(100% + 4px);
+        background: #1a1a1f;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        min-width: 130px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        z-index: 200;
+        display: none;
+      }
+      .card-dropdown.open {
+        display: block;
+      }
+      .card-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 0.875rem;
+        font-size: 0.85rem;
+        color: var(--fg-2);
+        cursor: pointer;
+        transition: background 0.15s;
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        font-family: var(--font);
+        border-radius: 7px;
+        white-space: nowrap;
+      }
+      .card-dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: var(--fg);
+      }
+
+      /* ── Gift modal input + autocomplete ── */
+      .gift-input-wrap {
+        position: relative;
+      }
+      .gift-input {
+        width: 100%;
+        box-sizing: border-box;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        color: var(--fg);
+        padding: 0.65rem 0.875rem;
+        font-size: 0.9rem;
+        font-family: var(--font);
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .gift-input:focus {
+        border-color: rgba(167, 139, 250, 0.5);
+      }
+      .gift-suggestions {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: #1a1a1f;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        max-height: 180px;
+        overflow-y: auto;
+        z-index: 300;
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0.25rem 0;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      }
+      .gift-suggestions.open {
+        display: block;
+      }
+      .gift-suggestion-item {
+        padding: 0.55rem 0.875rem;
+        font-size: 0.875rem;
+        color: var(--fg-2);
+        cursor: pointer;
+        transition: background 0.15s;
+        list-style: none;
+      }
+      .gift-suggestion-item:hover,
+      .gift-suggestion-item.active {
+        background: rgba(255, 255, 255, 0.07);
+        color: var(--fg);
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <header class="site-header">
-        <div class="site-header-container">
-            <a href="index.html" class="logo">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m12 3-10 5 10 5 10-5-10-5z" />
-                    <path d="m2 12 10 5 10-5" />
-                    <path d="m2 17 10 5 10-5" />
-                </svg>
-                incorp
-            </a>
-            <div class="header-actions">
-                <nav class="header-nav" aria-label="Social">
-                    <a href="#" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4" />
-                        </svg></a>
-                    <a href="https://discord.com/users/924317568242679859" aria-label="Discord" target="_blank"><svg
-                            width="18" height="18" viewBox="0 0 127.14 96.36" fill="currentColor">
-                            <path
-                                d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2.04a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2.04a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15zM42.45 65.69C36.18 65.69 31 60 31 53.05s5-12.68 11.45-12.68S53.89 46 53.88 53.05 48.84 65.69 42.45 65.69zm42.24 0C78.41 65.69 73.25 60 73.25 53.05s5-12.68 11.44-12.68S96.23 46 96.12 53.05 91.08 65.69 84.69 65.69z" />
-                        </svg></a>
-                </nav>
-                <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="4" x2="20" y1="12" y2="12" />
-                        <line x1="4" x2="20" y1="6" y2="6" />
-                        <line x1="4" x2="20" y1="18" y2="18" />
-                    </svg>
-                </button>
-            </div>
+      <div class="site-header-container">
+        <a href="index.html" class="logo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m12 3-10 5 10 5 10-5-10-5z" />
+            <path d="m2 12 10 5 10-5" />
+            <path d="m2 17 10 5 10-5" />
+          </svg>
+          incorp
+        </a>
+        <div class="header-actions">
+          <nav class="header-nav" aria-label="Social">
+            <a href="#" aria-label="GitHub"
+              ><svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4"
+                /></svg
+            ></a>
+            <a
+              href="https://discord.com/users/924317568242679859"
+              aria-label="Discord"
+              target="_blank"
+              ><svg width="18" height="18" viewBox="0 0 127.14 96.36" fill="currentColor">
+                <path
+                  d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2.04a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2.04a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15zM42.45 65.69C36.18 65.69 31 60 31 53.05s5-12.68 11.45-12.68S53.89 46 53.88 53.05 48.84 65.69 42.45 65.69zm42.24 0C78.41 65.69 73.25 60 73.25 53.05s5-12.68 11.44-12.68S96.23 46 96.12 53.05 91.08 65.69 84.69 65.69z"
+                /></svg
+            ></a>
+          </nav>
+          <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="4" x2="20" y1="12" y2="12" />
+              <line x1="4" x2="20" y1="6" y2="6" />
+              <line x1="4" x2="20" y1="18" y2="18" />
+            </svg>
+          </button>
         </div>
+      </div>
     </header>
 
     <div class="site-layout">
-        <aside class="site-sidebar" id="sidebar"></aside>
-        <script src="sidebar.js"></script>
+      <aside class="site-sidebar" id="sidebar"></aside>
+      <script src="sidebar.js"></script>
 
-        <main class="site-main">
+      <main class="site-main">
+        <section class="settings-head reveal">
+          <h1>Marketplace</h1>
+          <p>Spend your hard-earned Tokens on exclusive items, themes, and perks.</p>
+        </section>
 
-            <section class="settings-head reveal">
-                <h1>Marketplace</h1>
-                <p>Spend your hard-earned Tokens on exclusive items, themes, and perks.</p>
-            </section>
+        <!-- Login State -->
+        <div id="loginView" class="reveal" style="transition-delay: 0.06s">
+          <div class="login-card">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="color: var(--fg-3); margin-bottom: 0.5rem"
+            >
+              <circle cx="12" cy="8" r="5" />
+              <path d="M20 21a8 8 0 0 0-16 0" />
+            </svg>
+            <h3 style="font-size: 1rem; font-weight: 600">Sign in to access the marketplace</h3>
+            <p>Connect your Discord account to view your Tokens and proceed with purchases.</p>
+            <button class="btn-discord" id="loginBtn">
+              <svg width="20" height="20" viewBox="0 0 71 55" fill="currentColor">
+                <path
+                  d="M60.1 4.9A58.5 58.5 0 0 0 45.5.2a.2.2 0 0 0-.2.1 40.8 40.8 0 0 0-1.8 3.7 54 54 0 0 0-16.2 0A37.4 37.4 0 0 0 25.5.3a.2.2 0 0 0-.2-.1A58.4 58.4 0 0 0 10.7 4.9a.2.2 0 0 0-.1.1C1.5 18.7-.9 32.2.3 45.4v.2a58.7 58.7 0 0 0 17.7 9 .2.2 0 0 0 .3-.1 42 42 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.6 38.6 0 0 1-5.5-2.6.2.2 0 0 1 0-.4l1.1-.9a.2.2 0 0 1 .2 0 41.9 41.9 0 0 0 35.6 0 .2.2 0 0 1 .2 0l1.1.9a.2.2 0 0 1 0 .4 36.4 36.4 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47.2 47.2 0 0 0 3.6 5.9.2.2 0 0 0 .3.1 58.5 58.5 0 0 0 17.7-9 .2.2 0 0 0 .1-.2c1.4-15-2.3-28-9.9-39.6a.2.2 0 0 0-.1-.1zM23.7 37.3c-3.4 0-6.3-3.2-6.3-7s2.8-7 6.3-7 6.4 3.2 6.3 7-2.8 7-6.3 7zm23.3 0c-3.4 0-6.3-3.2-6.3-7s2.8-7 6.3-7 6.4 3.2 6.3 7-2.8 7-6.3 7z"
+                />
+              </svg>
+              Continue with Discord
+            </button>
+          </div>
+        </div>
 
-            <!-- Login State -->
-            <div id="loginView" class="reveal" style="transition-delay:.06s">
-                <div class="login-card">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                        style="color:var(--fg-3); margin-bottom: 0.5rem">
-                        <circle cx="12" cy="8" r="5" />
-                        <path d="M20 21a8 8 0 0 0-16 0" />
-                    </svg>
-                    <h3 style="font-size: 1rem; font-weight: 600;">Sign in to access the marketplace</h3>
-                    <p>Connect your Discord account to view your Tokens and proceed with purchases.</p>
-                    <button class="btn-discord" id="loginBtn">
-                        <svg width="20" height="20" viewBox="0 0 71 55" fill="currentColor">
-                            <path
-                                d="M60.1 4.9A58.5 58.5 0 0 0 45.5.2a.2.2 0 0 0-.2.1 40.8 40.8 0 0 0-1.8 3.7 54 54 0 0 0-16.2 0A37.4 37.4 0 0 0 25.5.3a.2.2 0 0 0-.2-.1A58.4 58.4 0 0 0 10.7 4.9a.2.2 0 0 0-.1.1C1.5 18.7-.9 32.2.3 45.4v.2a58.7 58.7 0 0 0 17.7 9 .2.2 0 0 0 .3-.1 42 42 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.6 38.6 0 0 1-5.5-2.6.2.2 0 0 1 0-.4l1.1-.9a.2.2 0 0 1 .2 0 41.9 41.9 0 0 0 35.6 0 .2.2 0 0 1 .2 0l1.1.9a.2.2 0 0 1 0 .4 36.4 36.4 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47.2 47.2 0 0 0 3.6 5.9.2.2 0 0 0 .3.1 58.5 58.5 0 0 0 17.7-9 .2.2 0 0 0 .1-.2c1.4-15-2.3-28-9.9-39.6a.2.2 0 0 0-.1-.1zM23.7 37.3c-3.4 0-6.3-3.2-6.3-7s2.8-7 6.3-7 6.4 3.2 6.3 7-2.8 7-6.3 7zm23.3 0c-3.4 0-6.3-3.2-6.3-7s2.8-7 6.3-7 6.4 3.2 6.3 7-2.8 7-6.3 7z" />
-                        </svg>
-                        Continue with Discord
-                    </button>
-                </div>
+        <!-- Logged-in State -->
+        <div id="settingsView" style="display: none">
+          <div class="user-bar reveal" style="justify-content: space-between">
+            <div style="display: flex; align-items: center; gap: 1rem">
+              <div class="user-avatar" id="userAvatar">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="8" r="5" />
+                  <path d="M20 21a8 8 0 0 0-16 0" />
+                </svg>
+              </div>
+              <div class="user-info">
+                <strong id="userName">User</strong>
+                <span id="userTag">#0000</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center">
+              <span
+                class="tokens-badge"
+                id="tokenDisplay"
+                title="Earned by leveling up and streaks!"
+              >
+                Loading...
+              </span>
+              <button class="btn-logout" id="logoutBtn" style="padding: 0.4rem 0.75rem">
+                Sign out
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-section reveal" id="storeArea" style="margin-top: 2rem">
+            <!-- Tab nav -->
+            <div class="store-tabs">
+              <button class="tab-btn active" data-tab="items">Store Items</button>
+              <button class="tab-btn" data-tab="fishing">Fishing Rod</button>
+              <button class="tab-btn" data-tab="themes">Profile Themes</button>
+              <button class="tab-btn" data-tab="voices">AI Voices</button>
+              <button class="tab-btn" data-tab="profile">Profile Settings</button>
             </div>
 
-            <!-- Logged-in State -->
-            <div id="settingsView" style="display:none">
+            <!-- ── STORE ITEMS TAB ── -->
+            <div id="itemsTab">
+              <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.5rem">
+                You earn 1 Token for every level you achieve, and more tokens for claiming your
+                <code>.daily</code> streak. Some items require you to be a certain Level before you
+                can buy them.
+              </p>
 
-                <div class="user-bar reveal" style="justify-content: space-between;">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div class="user-avatar" id="userAvatar">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <circle cx="12" cy="8" r="5" />
-                                <path d="M20 21a8 8 0 0 0-16 0" />
-                            </svg>
-                        </div>
-                        <div class="user-info">
-                            <strong id="userName">User</strong>
-                            <span id="userTag">#0000</span>
-                        </div>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                  gap: 1rem;
+                "
+              >
+                <!-- 1M Coins -->
+                <div class="item-card">
+                  <div>
+                    <h4
+                      style="
+                        margin: 0 0 0.5rem 0;
+                        color: var(--fg);
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        font-size: 1.1rem;
+                      "
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fcd34d"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                        <path d="M12 18V6"></path>
+                      </svg>
+                      1,000,000 Coins
+                    </h4>
+                    <p
+                      style="
+                        font-size: 0.9rem;
+                        color: var(--fg-3);
+                        margin: 0 0 1.5rem 0;
+                        line-height: 1.4;
+                      "
+                    >
+                      Trade in your Tokens for a massive deposit directly into your bot wallet.
+                    </p>
+                    <p
+                      style="
+                        font-size: 0.85rem;
+                        color: #a78bfa;
+                        margin-bottom: 1rem;
+                        font-weight: 500;
+                      "
+                    >
+                      Req: Level 2
+                    </p>
+                  </div>
+                  <div style="display: flex; gap: 0.5rem; align-items: stretch">
+                    <button
+                      class="buy-btn"
+                      data-id="1m_coins"
+                      data-name="1,000,000 Coins"
+                      data-tokens="2"
+                      data-coins="0"
+                      data-req-level="2"
+                      style="
+                        flex: 1;
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        color: var(--fg);
+                        padding: 0.75rem;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        transition: background 0.2s;
+                      "
+                    >
+                      Purchase — 2 Tokens
+                    </button>
+                    <div class="card-menu-wrap">
+                      <button
+                        class="card-menu-btn"
+                        onclick="toggleCardMenu(event, 'im-1m_coins')"
+                        style="
+                          padding: 0.5rem 0.6rem;
+                          border: 1px solid rgba(255, 255, 255, 0.1);
+                          border-radius: 8px;
+                        "
+                      >
+                        ⋯
+                      </button>
+                      <div class="card-dropdown" id="im-1m_coins">
+                        <button
+                          class="card-dropdown-item"
+                          onclick="
+                            openGiftModal({
+                              id: '1m_coins',
+                              name: '1,000,000 Coins',
+                              tokens: '2',
+                              coins: '0',
+                              reqLevel: '2',
+                            });
+                            closeAllMenus();
+                          "
+                        >
+                          🎁 Gift
+                        </button>
+                      </div>
                     </div>
-                    <div style="display: flex; gap: 1rem; align-items: center;">
-                        <span class="tokens-badge" id="tokenDisplay" title="Earned by leveling up and streaks!">
-                            Loading...
-                        </span>
-                        <button class="btn-logout" id="logoutBtn" style="padding: 0.4rem 0.75rem;">Sign out</button>
-                    </div>
+                  </div>
                 </div>
 
-                <div class="settings-section reveal" id="storeArea" style="margin-top: 2rem;">
+                <!-- VIP Badge -->
+                <div class="item-card">
+                  <div>
+                    <h4
+                      style="
+                        margin: 0 0 0.5rem 0;
+                        color: #ef4444;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        font-size: 1.1rem;
+                      "
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ef4444"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="m12 14 4-4" />
+                        <path d="M3.34 19a10 10 0 1 1 17.32 0" />
+                      </svg>
+                      VIP Status Badge
+                    </h4>
+                    <p
+                      style="
+                        font-size: 0.9rem;
+                        color: var(--fg-3);
+                        margin: 0 0 1.5rem 0;
+                        line-height: 1.4;
+                      "
+                    >
+                      A shiny VIP badge on your profile. Costs a ton of coins to prove your wealth.
+                    </p>
+                    <p
+                      style="
+                        font-size: 0.85rem;
+                        color: #a78bfa;
+                        margin-bottom: 1rem;
+                        font-weight: 500;
+                      "
+                    >
+                      Req: Level 10
+                    </p>
+                  </div>
+                  <button
+                    class="buy-btn"
+                    data-id="vip_role"
+                    data-name="VIP Status Badge"
+                    data-tokens="10"
+                    data-coins="5000000"
+                    data-req-level="10"
+                    style="
+                      background: rgba(239, 68, 68, 0.1);
+                      border: 1px solid rgba(239, 68, 68, 0.3);
+                      color: #ef4444;
+                      padding: 0.75rem;
+                      border-radius: 8px;
+                      font-weight: 500;
+                      font-size: 0.9rem;
+                      cursor: pointer;
+                      transition: background 0.2s;
+                    "
+                  >
+                    Purchase — 10 Tokens + 5M Coins
+                  </button>
+                </div>
 
-                    <!-- Tab nav -->
-                    <div class="store-tabs">
-                        <button class="tab-btn active" data-tab="items">Store Items</button>
-                        <button class="tab-btn" data-tab="themes">Profile Themes</button>
-                        <button class="tab-btn" data-tab="profile">Profile Settings</button>
+                <!-- Autofish Access -->
+                <div class="item-card">
+                  <div>
+                    <h4
+                      style="
+                        margin: 0 0 0.5rem 0;
+                        color: #14b8a6;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        font-size: 1.1rem;
+                      "
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#14b8a6"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                        <line x1="4" y1="22" x2="4" y2="15"></line>
+                      </svg>
+                      Autofish Access
+                    </h4>
+                    <p
+                      style="
+                        font-size: 0.9rem;
+                        color: var(--fg-3);
+                        margin: 0 0 1.5rem 0;
+                        line-height: 1.4;
+                      "
+                    >
+                      Gain access to the <code>.autofish</code> command. Automatically fishes for
+                      you when you're active, up to 2 hours every day.
+                    </p>
+                    <p
+                      style="
+                        font-size: 0.85rem;
+                        color: #a78bfa;
+                        margin-bottom: 1rem;
+                        font-weight: 500;
+                      "
+                    >
+                      Req: Level 3
+                    </p>
+                  </div>
+                  <div style="display: flex; gap: 0.5rem; align-items: stretch">
+                    <button
+                      class="buy-btn"
+                      data-id="autofish_access"
+                      data-name="Autofish Access"
+                      data-tokens="15"
+                      data-coins="0"
+                      data-req-level="3"
+                      style="
+                        flex: 1;
+                        background: rgba(20, 184, 166, 0.1);
+                        border: 1px solid rgba(20, 184, 166, 0.3);
+                        color: #14b8a6;
+                        padding: 0.75rem;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        transition: background 0.2s;
+                      "
+                    >
+                      Purchase — 15 Tokens
+                    </button>
+                    <div class="card-menu-wrap">
+                      <button
+                        class="card-menu-btn"
+                        onclick="toggleCardMenu(event, 'im-autofish')"
+                        style="
+                          padding: 0.5rem 0.6rem;
+                          border: 1px solid rgba(20, 184, 166, 0.3);
+                          border-radius: 8px;
+                          color: #14b8a6;
+                        "
+                      >
+                        ⋯
+                      </button>
+                      <div class="card-dropdown" id="im-autofish">
+                        <button
+                          class="card-dropdown-item"
+                          onclick="
+                            openGiftModal({
+                              id: 'autofish_access',
+                              name: 'Autofish Access',
+                              tokens: '15',
+                              coins: '0',
+                              reqLevel: '3',
+                            });
+                            closeAllMenus();
+                          "
+                        >
+                          🎁 Gift
+                        </button>
+                      </div>
                     </div>
+                  </div>
+                </div>
+                <!-- /item-card autofish -->
+              </div>
+              <!-- /items grid -->
 
-                    <!-- ── STORE ITEMS TAB ── -->
-                    <div id="itemsTab">
-                        <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.5rem;">
-                            You earn 1 Token for every level you achieve, and more tokens for claiming your
-                            <code>.daily</code> streak. Some items require you to be a certain Level before you can buy
-                            them.
-                        </p>
+              <!-- ── ROD ATTACHMENTS ── -->
+              <div style="margin-top: 2.5rem">
+                <div
+                  style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem"
+                >
+                  <span style="font-size: 1.4rem">🎣</span>
+                  <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--fg)">
+                    Rod Attachments
+                  </h3>
+                </div>
+                <p
+                  style="
+                    font-size: 0.875rem;
+                    color: var(--fg-3);
+                    margin: 0 0 1.25rem 0;
+                    line-height: 1.5;
+                  "
+                >
+                  Permanent passive upgrades for your fishing rod — active on every cast, forever.
+                  Stack them all for maximum output. Use
+                  <code
+                    style="
+                      background: rgba(255, 255, 255, 0.08);
+                      padding: 0.1rem 0.3rem;
+                      border-radius: 3px;
+                    "
+                    >.rodattach</code
+                  >
+                  in Discord to view equipped bonuses.
+                </p>
+                <div
+                  id="attachmentsGrid"
+                  style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                    gap: 1rem;
+                  "
+                ></div>
+              </div>
+            </div>
+            <!-- /itemsTab -->
 
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+            <!-- ── FISHING ROD TAB ── -->
+            <div id="fishingTab" style="display: none">
+              <div id="rodUpgradeContent">
+                <p style="color: var(--fg-4); font-size: 0.875rem">Loading rod data...</p>
+              </div>
+            </div>
+            <!-- /fishingTab -->
 
-                            <!-- 1M Coins -->
-                            <div class="item-card">
-                                <div>
-                                    <h4 style="margin: 0 0 0.5rem 0; color: var(--fg); display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
-                                            <path d="M12 18V6"></path>
-                                        </svg>
-                                        1,000,000 Coins
-                                    </h4>
-                                    <p style="font-size: 0.9rem; color: var(--fg-3); margin: 0 0 1.5rem 0; line-height: 1.4;">
-                                        Trade in your Tokens for a massive deposit directly into your bot wallet.
-                                    </p>
-                                    <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">Req: Level 2</p>
-                                </div>
-                                <button class="buy-btn" data-id="1m_coins" data-name="1,000,000 Coins" data-tokens="2" data-coins="0" data-req-level="2"
-                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--fg); padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
-                                    Purchase — 2 Tokens
-                                </button>
-                            </div>
+            <!-- ── THEMES TAB ── -->
+            <div id="themesTab" style="display: none">
+              <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.25rem">
+                Customize your <code>.profile</code> card with a theme. Standard themes are free —
+                Premium and Seasonal themes require Tokens. Exclusive themes are earned, not
+                bought.<br />
+                After purchasing, click <strong>Equip</strong> to activate a theme on your profile.
+              </p>
 
-                            <!-- VIP Badge -->
-                            <div class="item-card">
-                                <div>
-                                    <h4 style="margin: 0 0 0.5rem 0; color: #ef4444; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="m12 14 4-4" /><path d="M3.34 19a10 10 0 1 1 17.32 0" />
-                                        </svg>
-                                        VIP Status Badge
-                                    </h4>
-                                    <p style="font-size: 0.9rem; color: var(--fg-3); margin: 0 0 1.5rem 0; line-height: 1.4;">
-                                        A shiny VIP badge on your profile. Costs a ton of coins to prove your wealth.
-                                    </p>
-                                    <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">Req: Level 10</p>
-                                </div>
-                                <button class="buy-btn" data-id="vip_role" data-name="VIP Status Badge" data-tokens="10" data-coins="5000000" data-req-level="10"
-                                    style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
-                                    Purchase — 10 Tokens + 5M Coins
-                                </button>
-                            </div>
+              <div class="cat-filter-bar" id="themeCatBar">
+                <button class="cat-btn active" data-cat="all">All</button>
+                <button class="cat-btn" data-cat="standard">Standard</button>
+                <button class="cat-btn" data-cat="premium">Premium</button>
+                <button class="cat-btn" data-cat="seasonal">Seasonal</button>
+                <button class="cat-btn" data-cat="exclusive">Exclusive</button>
+              </div>
 
-                            <!-- Autofish Access -->
-                            <div class="item-card">
-                                <div>
-                                    <h4 style="margin: 0 0 0.5rem 0; color: #14b8a6; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                                            <line x1="4" y1="22" x2="4" y2="15"></line>
-                                        </svg>
-                                        Autofish Access
-                                    </h4>
-                                    <p style="font-size: 0.9rem; color: var(--fg-3); margin: 0 0 1.5rem 0; line-height: 1.4;">
-                                        Gain access to the <code>.autofish</code> command. Automatically fishes for you when you're active, up to 2 hours every day.
-                                    </p>
-                                    <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">Req: Level 3</p>
-                                </div>
-                                <button class="buy-btn" data-id="autofish_access" data-name="Autofish Access" data-tokens="15" data-coins="0" data-req-level="3"
-                                    style="background: rgba(20,184,166,0.1); border: 1px solid rgba(20,184,166,0.3); color: #14b8a6; padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
-                                    Purchase — 15 Tokens
-                                </button>
-                            </div>
+              <div class="themes-grid" id="themesGrid">
+                <p style="color: var(--fg-4); font-size: 0.875rem">Loading themes...</p>
+              </div>
+            </div>
+            <!-- /themesTab -->
 
-                        </div>
-                    </div><!-- /itemsTab -->
+            <!-- ── AI VOICES TAB ── -->
+            <div id="voicesTab" style="display: none">
+              <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 0.75rem">
+                Purchase AI voices powered by <strong>ElevenLabs</strong> for use in the
+                <code>.ttsbot</code> feature. Once bought, set yours with
+                <code>.changevoice &lt;name&gt;</code>. Daily limit:
+                <strong>3,000 chars/user</strong>.
+              </p>
+              <p style="color: var(--fg-3); font-size: 0.825rem; margin-bottom: 1rem">
+                Standard voices cost <strong>1 Token</strong>. Premium voices cost
+                <strong>2 Tokens</strong>.
+              </p>
 
-                    <!-- ── THEMES TAB ── -->
-                    <div id="themesTab" style="display:none">
-                        <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.25rem;">
-                            Customize your <code>.profile</code> card with a theme. Standard themes are free — Premium
-                            and Seasonal themes require Tokens. Exclusive themes are earned, not bought.<br>
-                            After purchasing, click <strong>Equip</strong> to activate a theme on your profile.
-                        </p>
+              <div
+                style="
+                  display: flex;
+                  gap: 0.75rem;
+                  align-items: center;
+                  margin-bottom: 1rem;
+                  flex-wrap: wrap;
+                "
+              >
+                <input
+                  type="text"
+                  id="voiceSearch"
+                  placeholder="Search voices..."
+                  autocomplete="off"
+                  style="
+                    flex: 1;
+                    min-width: 180px;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 8px;
+                    color: var(--fg);
+                    padding: 0.55rem 0.875rem;
+                    font-size: 0.875rem;
+                    font-family: var(--font);
+                    outline: none;
+                    transition: border-color 0.15s;
+                  "
+                  onfocus="this.style.borderColor = 'rgba(167,139,250,0.5)'"
+                  onblur="this.style.borderColor = 'rgba(255,255,255,0.1)'"
+                />
+                <div
+                  class="cat-filter-bar"
+                  id="voiceCatBar"
+                  style="margin-bottom: 0; flex-wrap: nowrap"
+                >
+                  <button class="cat-btn active" data-vcat="all">All</button>
+                  <button class="cat-btn" data-vcat="standard">Standard</button>
+                  <button class="cat-btn" data-vcat="premium">Premium</button>
+                  <button class="cat-btn" data-vcat="owned">Owned</button>
+                </div>
+              </div>
+              <p
+                id="voiceCount"
+                style="color: var(--fg-4); font-size: 0.75rem; margin-bottom: 1rem"
+              ></p>
 
-                        <div class="cat-filter-bar">
-                            <button class="cat-btn active" data-cat="all">All</button>
-                            <button class="cat-btn" data-cat="standard">Standard</button>
-                            <button class="cat-btn" data-cat="premium">Premium</button>
-                            <button class="cat-btn" data-cat="seasonal">Seasonal</button>
-                            <button class="cat-btn" data-cat="exclusive">Exclusive</button>
-                        </div>
+              <div class="voices-grid" id="voicesGrid">
+                <p style="color: var(--fg-4); font-size: 0.875rem">Loading voices...</p>
+              </div>
+              <button
+                id="voicesLoadMore"
+                style="
+                  display: none;
+                  margin: 1.5rem auto 0;
+                  display: none;
+                  background: rgba(255, 255, 255, 0.05);
+                  border: 1px solid var(--border);
+                  color: var(--fg-2);
+                  padding: 0.6rem 1.5rem;
+                  border-radius: 8px;
+                  cursor: pointer;
+                  font-family: var(--font);
+                  font-size: 0.875rem;
+                "
+              >
+                Load more
+              </button>
+            </div>
+            <!-- /voicesTab -->
 
-                        <div class="themes-grid" id="themesGrid">
-                            <p style="color:var(--fg-4); font-size:0.875rem;">Loading themes...</p>
-                        </div>
-                    </div><!-- /themesTab -->
+            <!-- ── PROFILE SETTINGS TAB ── -->
+            <div id="profileTab" style="display: none">
+              <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.75rem">
+                Customize how your <code>.profile</code> card looks. Changes save instantly.
+              </p>
 
-                    <!-- ── PROFILE SETTINGS TAB ── -->
-                    <div id="profileTab" style="display:none">
-                        <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.75rem;">
-                            Customize how your <code>.profile</code> card looks. Changes save instantly.
-                        </p>
-
-                        <!-- Bio -->
-                        <div style="margin-bottom: 1.75rem;">
-                            <label style="display:block; font-size:0.875rem; font-weight:600; color:var(--fg-2); margin-bottom:0.5rem;">
-                                About / Bio
-                            </label>
-                            <textarea id="bioInput" maxlength="120" rows="3" placeholder="Write something about yourself... (max 120 chars)"
-                                style="width:100%; box-sizing:border-box; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--fg); padding:0.75rem; font-size:0.9rem; resize:vertical; font-family:inherit; outline:none;"></textarea>
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
-                                <span id="bioCharCount" style="font-size:0.75rem; color:var(--fg-4);">0 / 120</span>
-                                <button id="saveBioBtn"
-                                    style="background:rgba(88,101,242,0.2); border:1px solid rgba(88,101,242,0.4); color:#a5b4fc; padding:0.45rem 1.1rem; border-radius:6px; font-size:0.85rem; font-weight:600; cursor:pointer;">
-                                    Save Bio
-                                </button>
-                            </div>
-                            <p id="bioStatus" style="font-size:0.8rem; color:var(--fg-4); margin-top:0.4rem; min-height:1rem;"></p>
-                        </div>
-                    </div><!-- /profileTab -->
-
-                </div><!-- /storeArea -->
-
-            </div><!-- /settingsView -->
-
-        </main>
+              <!-- Bio -->
+              <div style="margin-bottom: 1.75rem">
+                <label
+                  style="
+                    display: block;
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    color: var(--fg-2);
+                    margin-bottom: 0.5rem;
+                  "
+                >
+                  About / Bio
+                </label>
+                <textarea
+                  id="bioInput"
+                  maxlength="120"
+                  rows="3"
+                  placeholder="Write something about yourself... (max 120 chars)"
+                  style="
+                    width: 100%;
+                    box-sizing: border-box;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 8px;
+                    color: var(--fg);
+                    padding: 0.75rem;
+                    font-size: 0.9rem;
+                    resize: vertical;
+                    font-family: inherit;
+                    outline: none;
+                  "
+                ></textarea>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 0.5rem;
+                  "
+                >
+                  <span id="bioCharCount" style="font-size: 0.75rem; color: var(--fg-4)"
+                    >0 / 120</span
+                  >
+                  <button
+                    id="saveBioBtn"
+                    style="
+                      background: rgba(88, 101, 242, 0.2);
+                      border: 1px solid rgba(88, 101, 242, 0.4);
+                      color: #a5b4fc;
+                      padding: 0.45rem 1.1rem;
+                      border-radius: 6px;
+                      font-size: 0.85rem;
+                      font-weight: 600;
+                      cursor: pointer;
+                    "
+                  >
+                    Save Bio
+                  </button>
+                </div>
+                <p
+                  id="bioStatus"
+                  style="
+                    font-size: 0.8rem;
+                    color: var(--fg-4);
+                    margin-top: 0.4rem;
+                    min-height: 1rem;
+                  "
+                ></p>
+              </div>
+            </div>
+            <!-- /profileTab -->
+          </div>
+          <!-- /storeArea -->
+        </div>
+        <!-- /settingsView -->
+      </main>
     </div>
 
     <!-- Confirmation Modal -->
     <div class="modal-overlay" id="confirmModal">
-        <div class="modal">
-            <h3 id="modalTitle">Confirm Purchase</h3>
-            <p id="modalDesc">Are you sure you want to buy <strong>Item</strong> for <span id="modalCost"></span>?</p>
-            <div id="modalError" style="color: #ef4444; font-size: 0.85rem; margin-bottom: 1rem; display: none;"></div>
-            <div class="modal-actions">
-                <button class="btn-cancel" id="btnCancel">Cancel</button>
-                <button class="btn-confirm" id="btnConfirm">Yes, I want to buy this</button>
-            </div>
+      <div class="modal">
+        <h3 id="modalTitle">Confirm Purchase</h3>
+        <p id="modalDesc">
+          Are you sure you want to buy <strong>Item</strong> for <span id="modalCost"></span>?
+        </p>
+        <div
+          id="modalError"
+          style="color: #ef4444; font-size: 0.85rem; margin-bottom: 1rem; display: none"
+        ></div>
+        <div class="modal-actions">
+          <button class="btn-cancel" id="btnCancel">Cancel</button>
+          <button class="btn-confirm" id="btnConfirm">Yes, I want to buy this</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Gift Modal -->
+    <div class="modal-overlay" id="giftModal">
+      <div class="modal">
+        <h3>🎁 Gift Item</h3>
+        <p>
+          You're gifting <strong id="giftItemName">Item</strong>.<br />Search by username or paste
+          their Discord ID.
+        </p>
+        <div class="gift-input-wrap">
+          <input
+            type="text"
+            class="gift-input"
+            id="giftRecipientInput"
+            placeholder="Search username or paste Discord ID…"
+            autocomplete="off"
+          />
+          <ul class="gift-suggestions" id="giftSuggestions"></ul>
+        </div>
+        <div
+          id="giftError"
+          style="color: #ef4444; font-size: 0.85rem; margin-top: 0.5rem; display: none"
+        ></div>
+        <div
+          id="giftSuccess"
+          style="color: #86efac; font-size: 0.85rem; margin-top: 0.5rem; display: none"
+        ></div>
+        <div class="modal-actions" style="margin-top: 1.5rem">
+          <button class="btn-cancel" onclick="closeGiftModal()">Cancel</button>
+          <button class="btn-confirm" id="btnGiftConfirm" style="background: #16a34a; color: #fff">
+            Send Gift
+          </button>
+        </div>
+      </div>
     </div>
 
     <script>
-        const CLIENT_ID = '1474880055980195953';
-        const REDIRECT_URI = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-            ? location.origin + '/marketplace.html'
-            : 'https://incorp.live/marketplace.html';
-        const OAUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+      const CLIENT_ID = "1474880055980195953";
+      const REDIRECT_URI =
+        location.hostname === "localhost" || location.hostname === "127.0.0.1"
+          ? location.origin + "/marketplace.html"
+          : "https://incorp.live/marketplace.html";
+      const OAUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
 
-        const SB_URL = 'https://pwbvvzskdzuccnskduiz.supabase.co';
-        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3YnZ2enNrZHp1Y2Nuc2tkdWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3MDcyMTMsImV4cCI6MjA4NzI4MzIxM30.r5G_RQgEkudLkSLn4QUBviJAzum3tHm2Z4zqytxl1kQ';
+      const SB_URL = "https://pwbvvzskdzuccnskduiz.supabase.co";
+      const SB_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3YnZ2enNrZHp1Y2Nuc2tkdWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3MDcyMTMsImV4cCI6MjA4NzI4MzIxM30.r5G_RQgEkudLkSLn4QUBviJAzum3tHm2Z4zqytxl1kQ";
 
-        const STORE_TOKEN = 'incorp_token';
-        const STORE_USER  = 'incorp_user';
+      const STORE_TOKEN = "incorp_token";
+      const STORE_USER = "incorp_user";
 
-        const sbHeaders = {
-            apikey: SB_KEY,
-            Authorization: `Bearer ${SB_KEY}`,
-            'Content-Type': 'application/json',
-            Prefer: 'return=representation'
-        };
+      const sbHeaders = {
+        apikey: SB_KEY,
+        Authorization: `Bearer ${SB_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      };
 
-        // ── Theme catalog (mirrors ./data/themes_catalog.json) ──────────────────
-        const THEMES_CATALOG = {
-            categories: {
-                standard:  { label: 'Standard',  color: '#71717a' },
-                premium:   { label: 'Premium',   color: '#a78bfa' },
-                seasonal:  { label: 'Seasonal',  color: '#34d399' },
-                exclusive: { label: 'Exclusive', color: '#fbbf24' }
-            },
-            themes: {
-                default:      { id: 'default',      name: 'Default',      category: 'standard',  tokens: 0, coins: 0, reqLevel: 0, desc: 'The classic Incorp look.',                        colors: ['#5865F2','#7289DA','#2C2F33','#4F545C'] },
-                midnight:     { id: 'midnight',     name: 'Midnight',     category: 'standard',  tokens: 0, coins: 0, reqLevel: 0, desc: 'Deep navy, built for night owls.',               colors: ['#1A3A5C','#2D6080','#040C16','#0A1828'] },
-                sakura:       { id: 'sakura',       name: 'Sakura',       category: 'premium',   tokens: 4, coins: 0, reqLevel: 3, desc: 'Cherry blossom season, forever.',                colors: ['#E8A0BF','#F4C2D5','#2D1A24','#3D2230'] },
-                inferno:      { id: 'inferno',      name: 'Inferno',      category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'The market burns. So do you.',                    colors: ['#CC2200','#FF5500','#0A0000','#2A0500'] },
-                ocean:        { id: 'ocean',        name: 'Ocean',        category: 'premium',   tokens: 4, coins: 0, reqLevel: 3, desc: 'Depths unknown. Riches immeasurable.',            colors: ['#00A896','#40E8C8','#002030','#003840'] },
-                arctic:       { id: 'arctic',       name: 'Arctic',       category: 'premium',   tokens: 3, coins: 0, reqLevel: 3, desc: 'Cold, clean, untouchable.',                       colors: ['#B0C4DE','#E8F4FD','#0F1923','#1A2D40'] },
-                neon:         { id: 'neon',         name: 'Neon',         category: 'premium',   tokens: 6, coins: 0, reqLevel: 8, desc: 'Cyberpunk grid, flickering economy.',             colors: ['#00FF41','#FF00FF','#0D0D0D','#001A00'] },
-                sunset:       { id: 'sunset',       name: 'Sunset',       category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Everything ends. Make it beautiful.',              colors: ['#FF6B35','#FF9E4A','#1A0A14','#2D1020'] },
-                emerald:      { id: 'emerald',      name: 'Emerald',      category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Old money energy.',                               colors: ['#2ECC71','#27AE60','#0D1F10','#143020'] },
-                obsidian:     { id: 'obsidian',     name: 'Obsidian',     category: 'premium',   tokens: 5, coins: 0, reqLevel: 5, desc: 'Dark feather mystique. Darkness given form.',     colors: ['#7040B0','#9060D0','#080618','#1E0838'] },
-                winter:       { id: 'winter',       name: 'Winter',       category: 'seasonal',  tokens: 3, coins: 0, reqLevel: 2, desc: 'Limited seasonal drop. Frosty.',                  colors: ['#A8D8EA','#CBE8F5','#0F1F2E','#1A2E3D'] },
-                halloween:    { id: 'halloween',    name: 'Halloween',    category: 'seasonal',  tokens: 2, coins: 0, reqLevel: 2, desc: 'Limited seasonal drop. Spooky.',                  colors: ['#FF6600','#CC00CC','#0D0D0D','#1A0000'] },
-                legend_gold:  { id: 'legend_gold',  name: 'Legend Gold',  category: 'exclusive', tokens: 0, coins: 0, reqLevel: 999, desc: 'Top 10 all-time. Cannot be purchased.',         colors: ['#FFD700','#FFA500','#1A1200','#2D2000'] },
-                founders:     { id: 'founders',     name: 'Founders',     category: 'exclusive', tokens: 0, coins: 0, reqLevel: 999, desc: 'Early Incorp supporter. You were here first.',  colors: ['#8B5CF6','#A78BFA','#0F0A1E','#1E1040'] }
+      // ── Theme catalog (mirrors ./data/themes_catalog.json) ──────────────────
+      const THEMES_CATALOG = {
+        categories: {
+          standard: { label: "Standard", color: "#71717a" },
+          premium: { label: "Premium", color: "#a78bfa" },
+          seasonal: { label: "Seasonal", color: "#34d399" },
+          exclusive: { label: "Exclusive", color: "#fbbf24" },
+        },
+        themes: {
+          default: {
+            id: "default",
+            name: "Default",
+            category: "standard",
+            tokens: 0,
+            coins: 0,
+            reqLevel: 0,
+            desc: "The classic Incorp look.",
+            colors: ["#5865F2", "#7289DA", "#2C2F33", "#4F545C"],
+          },
+          midnight: {
+            id: "midnight",
+            name: "Midnight",
+            category: "standard",
+            tokens: 0,
+            coins: 0,
+            reqLevel: 0,
+            desc: "Deep navy, built for night owls.",
+            colors: ["#1A3A5C", "#2D6080", "#040C16", "#0A1828"],
+          },
+          sakura: {
+            id: "sakura",
+            name: "Sakura",
+            category: "premium",
+            tokens: 4,
+            coins: 0,
+            reqLevel: 3,
+            desc: "Cherry blossom season, forever.",
+            colors: ["#E8A0BF", "#F4C2D5", "#2D1A24", "#3D2230"],
+          },
+          inferno: {
+            id: "inferno",
+            name: "Inferno",
+            category: "premium",
+            tokens: 5,
+            coins: 0,
+            reqLevel: 5,
+            desc: "The market burns. So do you.",
+            colors: ["#CC2200", "#FF5500", "#0A0000", "#2A0500"],
+          },
+          ocean: {
+            id: "ocean",
+            name: "Ocean",
+            category: "premium",
+            tokens: 4,
+            coins: 0,
+            reqLevel: 3,
+            desc: "Depths unknown. Riches immeasurable.",
+            colors: ["#00A896", "#40E8C8", "#002030", "#003840"],
+          },
+          arctic: {
+            id: "arctic",
+            name: "Arctic",
+            category: "premium",
+            tokens: 3,
+            coins: 0,
+            reqLevel: 3,
+            desc: "Cold, clean, untouchable.",
+            colors: ["#B0C4DE", "#E8F4FD", "#0F1923", "#1A2D40"],
+          },
+          neon: {
+            id: "neon",
+            name: "Neon",
+            category: "premium",
+            tokens: 6,
+            coins: 0,
+            reqLevel: 8,
+            desc: "Cyberpunk grid, flickering economy.",
+            colors: ["#00FF41", "#FF00FF", "#0D0D0D", "#001A00"],
+          },
+          sunset: {
+            id: "sunset",
+            name: "Sunset",
+            category: "premium",
+            tokens: 5,
+            coins: 0,
+            reqLevel: 5,
+            desc: "Everything ends. Make it beautiful.",
+            colors: ["#FF6B35", "#FF9E4A", "#1A0A14", "#2D1020"],
+          },
+          emerald: {
+            id: "emerald",
+            name: "Emerald",
+            category: "premium",
+            tokens: 5,
+            coins: 0,
+            reqLevel: 5,
+            desc: "Old money energy.",
+            colors: ["#2ECC71", "#27AE60", "#0D1F10", "#143020"],
+          },
+          obsidian: {
+            id: "obsidian",
+            name: "Obsidian",
+            category: "premium",
+            tokens: 5,
+            coins: 0,
+            reqLevel: 5,
+            desc: "Dark feather mystique. Darkness given form.",
+            colors: ["#7040B0", "#9060D0", "#080618", "#1E0838"],
+          },
+          winter: {
+            id: "winter",
+            name: "Winter",
+            category: "seasonal",
+            tokens: 3,
+            coins: 0,
+            reqLevel: 2,
+            desc: "Limited seasonal drop. Frosty.",
+            colors: ["#A8D8EA", "#CBE8F5", "#0F1F2E", "#1A2E3D"],
+          },
+          halloween: {
+            id: "halloween",
+            name: "Halloween",
+            category: "seasonal",
+            tokens: 2,
+            coins: 0,
+            reqLevel: 2,
+            desc: "Limited seasonal drop. Spooky.",
+            colors: ["#FF6600", "#CC00CC", "#0D0D0D", "#1A0000"],
+          },
+          legend_gold: {
+            id: "legend_gold",
+            name: "Legend Gold",
+            category: "exclusive",
+            tokens: 0,
+            coins: 0,
+            reqLevel: 999,
+            desc: "Top 10 all-time. Cannot be purchased.",
+            colors: ["#FFD700", "#FFA500", "#1A1200", "#2D2000"],
+          },
+          founders: {
+            id: "founders",
+            name: "Founders",
+            category: "exclusive",
+            tokens: 0,
+            coins: 0,
+            reqLevel: 999,
+            desc: "Early Incorp supporter. You were here first.",
+            colors: ["#8B5CF6", "#A78BFA", "#0F0A1E", "#1E1040"],
+          },
+        },
+      };
+
+      // ── ElevenLabs Voice Catalog (fetched dynamically) ───────────────────────
+      let EL_CATALOG = [];
+      let elCatalogLoaded = false;
+      async function loadElCatalog() {
+        if (elCatalogLoaded) return;
+        try {
+          const res = await fetch("el_voices.json");
+          const raw = await res.json();
+          // raw entries: {id, name, desc, p (price_tokens), c (1=standard/2=premium)}
+          EL_CATALOG = raw.map((v) => ({
+            id: v.id,
+            name: v.name,
+            desc: v.desc || "",
+            price_tokens: v.p || 1,
+            category: v.c === 2 || v.p === 2 ? "premium" : "standard",
+          }));
+          elCatalogLoaded = true;
+        } catch (e) {
+          console.error("Failed to load voice catalog:", e);
+        }
+      }
+
+      // ── State ────────────────────────────────────────────────────────────────
+      const toggle = document.getElementById("mobileToggle");
+      const sidebar = document.getElementById("sidebar");
+      toggle?.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        document.body.style.overflow = sidebar.classList.contains("open") ? "hidden" : "";
+      });
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              io.unobserve(e.target);
             }
-        };
+          });
+        },
+        { threshold: 0.05 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
 
-        // ── State ────────────────────────────────────────────────────────────────
-        const toggle   = document.getElementById('mobileToggle');
-        const sidebar  = document.getElementById('sidebar');
-        toggle?.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+      function getToken() {
+        return localStorage.getItem(STORE_TOKEN);
+      }
+      function getUser() {
+        try {
+          return JSON.parse(localStorage.getItem(STORE_USER));
+        } catch {
+          return null;
+        }
+      }
+
+      function avatarUrl(user) {
+        if (user.avatar)
+          return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar.startsWith("a_") ? "gif" : "webp"}?size=80`;
+        const idx =
+          user.discriminator === "0"
+            ? (BigInt(user.id) >> 22n) % 6n
+            : parseInt(user.discriminator) % 5;
+        return `https://cdn.discordapp.com/embed/avatars/${idx}.png`;
+      }
+
+      let currentDiscordId = null;
+      let userStats = null;
+      let selectedItem = null;
+      let ownedThemes = new Set();
+      let activeTheme = "default";
+      let currentThemeCat = "all";
+      let ownedVoiceIds = new Set();
+      let currentVoiceCat = "all";
+      let ownedAttachments = new Set();
+      let currentRodLevel = 1;
+
+      // ── Fishing Rod tiers ───────────────────
+      const FISHING_RODS = {
+        1: { name: "Wooden Rod", catchRate: 1.0, rareChance: 1.0, cost: 0 },
+        2: { name: "Bronze Rod", catchRate: 1.2, rareChance: 1.05, cost: 50000 },
+        3: { name: "Silver Rod", catchRate: 1.5, rareChance: 1.1, cost: 200000 },
+        4: { name: "Gold Rod", catchRate: 2.0, rareChance: 1.15, cost: 1000000 },
+        5: { name: "Diamond Rod", catchRate: 3.0, rareChance: 1.2, cost: 5000000 },
+        6: { name: "Platinum Rod", catchRate: 3.5, rareChance: 1.25, cost: 10000000 },
+        7: { name: "Emerald Rod", catchRate: 4.0, rareChance: 1.3, cost: 20000000 },
+        8: { name: "Ruby Rod", catchRate: 4.5, rareChance: 1.35, cost: 30000000 },
+        9: { name: "Obsidian Rod", catchRate: 5.0, rareChance: 1.4, cost: 40000000 },
+        10: { name: "Crystal Rod", catchRate: 5.5, rareChance: 1.45, cost: 50000000 },
+        11: { name: "Vibranium Rod", catchRate: 6.0, rareChance: 1.5, cost: 75000000 },
+        12: { name: "Meteor Rod", catchRate: 6.5, rareChance: 1.55, cost: 100000000 },
+        13: { name: "Aurora Rod", catchRate: 7.0, rareChance: 1.6, cost: 120000000 },
+        14: { name: "Celestial Rod", catchRate: 7.5, rareChance: 1.65, cost: 150000000 },
+        15: { name: "Infinity Rod", catchRate: 8.0, rareChance: 1.7, cost: 200000000 },
+        16: { name: "Titanium Rod", catchRate: 8.5, rareChance: 1.75, cost: 250000000 },
+        17: { name: "Mystic Rod", catchRate: 9.0, rareChance: 1.8, cost: 300000000 },
+        18: { name: "Abyss Rod", catchRate: 9.5, rareChance: 1.85, cost: 400000000 },
+        19: { name: "Zephyr Rod", catchRate: 10.0, rareChance: 1.9, cost: 500000000 },
+        20: { name: "Phoenix Rod", catchRate: 10.5, rareChance: 2.0, cost: 1000000000 },
+        21: { name: "Cosmic Rod", catchRate: 11.0, rareChance: 2.1, cost: 1500000000 },
+        22: { name: "Quantum Rod", catchRate: 11.5, rareChance: 2.2, cost: 2000000000 },
+        23: { name: "Nebula Rod", catchRate: 12.0, rareChance: 2.3, cost: 2500000000 },
+        24: { name: "Galactic Rod", catchRate: 12.5, rareChance: 2.4, cost: 3000000000 },
+        25: { name: "Void Rod", catchRate: 13.0, rareChance: 2.5, cost: 3500000000 },
+        26: { name: "Supernova Rod", catchRate: 13.5, rareChance: 2.6, cost: 4000000000 },
+        27: { name: "Antimatter Rod", catchRate: 14.0, rareChance: 2.7, cost: 4500000000 },
+        28: { name: "Dark Matter Rod", catchRate: 14.5, rareChance: 2.8, cost: 5000000000 },
+        29: { name: "Wormhole Rod", catchRate: 15.0, rareChance: 2.9, cost: 5500000000 },
+        30: { name: "Multiverse Rod", catchRate: 15.5, rareChance: 3.0, cost: 6000000000 },
+        31: { name: "Eternity Rod", catchRate: 16.0, rareChance: 3.1, cost: 6500000000 },
+        32: { name: "Infinity+1 Rod", catchRate: 16.5, rareChance: 3.2, cost: 7000000000 },
+        33: { name: "Omnipotent Rod", catchRate: 17.0, rareChance: 3.3, cost: 7500000000 },
+        34: { name: "Godly Rod", catchRate: 17.5, rareChance: 3.4, cost: 8000000000 },
+        35: { name: "Beyond Rod", catchRate: 18.0, rareChance: 3.5, cost: 8500000000 },
+        36: { name: "Transcendent Rod", catchRate: 18.5, rareChance: 3.6, cost: 9000000000 },
+        37: { name: "Absolute Rod", catchRate: 19.0, rareChance: 3.7, cost: 9500000000 },
+        38: { name: "Ultimate Rod", catchRate: 19.5, rareChance: 3.8, cost: 10000000000 },
+        39: { name: "Omega Rod", catchRate: 20.0, rareChance: 3.9, cost: 10500000000 },
+        40: { name: "Alpha and Omega Rod", catchRate: 20.5, rareChance: 4.0, cost: 11000000000 },
+        41: { name: "Singularity Rod", catchRate: 21.0, rareChance: 4.2, cost: 11500000000 },
+        42: { name: "Existence Rod", catchRate: 21.5, rareChance: 4.4, cost: 12000000000 },
+        43: { name: "Primordial Rod", catchRate: 22.0, rareChance: 4.6, cost: 12500000000 },
+        44: { name: "Ethereal Rod", catchRate: 22.5, rareChance: 4.8, cost: 13000000000 },
+        45: { name: "Astral Rod", catchRate: 23.0, rareChance: 5.0, cost: 13500000000 },
+        46: { name: "Dimensional Rod", catchRate: 23.5, rareChance: 5.2, cost: 14000000000 },
+        47: { name: "Cosmic Whale Rod", catchRate: 24.0, rareChance: 5.5, cost: 14500000000 },
+        48: { name: "Starborn Rod", catchRate: 24.5, rareChance: 5.8, cost: 15000000000 },
+        49: { name: "Celestial Harmony Rod", catchRate: 25.0, rareChance: 6.0, cost: 15500000000 },
+        50: { name: "Infinity's End Rod", catchRate: 25.5, rareChance: 6.3, cost: 16000000000 },
+        51: { name: "Cosmic Inception Rod", catchRate: 26.0, rareChance: 6.6, cost: 16500000000 },
+        52: {
+          name: "Quantum Entanglement Rod",
+          catchRate: 26.5,
+          rareChance: 7.0,
+          cost: 17000000000,
+        },
+        53: { name: "Superluminal Rod", catchRate: 27.0, rareChance: 7.5, cost: 17500000000 },
+        54: { name: "Hyperdimensional Rod", catchRate: 27.5, rareChance: 8.0, cost: 18000000000 },
+        55: { name: "Omniversal Rod", catchRate: 28.0, rareChance: 9.0, cost: 18500000000 },
+      };
+
+      const ROD_ATTACHMENTS = [
+        {
+          id: "rod_hook_sharp",
+          name: "Sharpened Hook",
+          emoji: "🪝",
+          tokens: 8,
+          desc: "+20% rare chance on every cast.",
+        },
+        {
+          id: "rod_reel_gold",
+          name: "Golden Reel",
+          emoji: "⚙️",
+          tokens: 10,
+          desc: "+25% sell value on every catch.",
+        },
+        {
+          id: "rod_charm_lucky",
+          name: "Lucky Charm",
+          emoji: "🍀",
+          tokens: 15,
+          desc: "+15% rare chance and +15% sell value.",
+        },
+        {
+          id: "rod_sensor_depth",
+          name: "Depth Sensor",
+          emoji: "📡",
+          tokens: 12,
+          desc: "Reduces storm and escape events by 60%.",
+        },
+        {
+          id: "rod_lure_void",
+          name: "Void Lure",
+          emoji: "🌑",
+          tokens: 25,
+          desc: "+40% rare chance. Dark matter infused.",
+        },
+        {
+          id: "rod_net_ext",
+          name: "Net Extension",
+          emoji: "🕸️",
+          tokens: 18,
+          desc: "Triple-catch net event chance ×2.5.",
+        },
+        {
+          id: "rod_gem_celestial",
+          name: "Celestial Gem",
+          emoji: "💎",
+          tokens: 35,
+          desc: "+25% rare chance and +30% sell value.",
+        },
+      ];
+
+      function renderAttachments() {
+        const grid = document.getElementById("attachmentsGrid");
+        if (!grid) return;
+        grid.innerHTML = ROD_ATTACHMENTS.map((a) => {
+          const owned = ownedAttachments.has(a.id);
+          const canAfford = userStats && (userStats.tokens || 0) >= a.tokens;
+          const btnStyle = `flex:1; padding:0.75rem; border-radius:8px; font-weight:500; font-size:0.9rem; cursor:${owned ? "default" : "pointer"}; transition:background 0.2s;`;
+          const ownedBadge = owned
+            ? `<div style="position:absolute;top:0.5rem;right:0.5rem;background:rgba(167,139,250,0.2);color:#c4b5fd;border:1px solid rgba(167,139,250,0.4);border-radius:4px;font-size:0.7rem;font-weight:700;padding:0.15rem 0.4rem;">OWNED</div>`
+            : "";
+          const btn = owned
+            ? `<button disabled style="${btnStyle} background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);color:#a78bfa;opacity:0.7;">✓ Equipped</button>`
+            : `<button class="buy-btn" data-id="${a.id}" data-name="${a.name}" data-tokens="${a.tokens}" data-coins="0" data-req-level="1"
+                   style="${btnStyle} background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--fg);">
+                   Purchase — ${a.tokens} Tokens
+                 </button>`;
+          return `
+              <div class="item-card" style="position:relative;">
+                ${ownedBadge}
+                <div>
+                  <h4 style="margin:0 0 0.5rem 0;color:var(--fg);display:flex;align-items:center;gap:0.5rem;font-size:1.05rem;">
+                    <span style="font-size:1.3rem;">${a.emoji}</span> ${a.name}
+                  </h4>
+                  <p style="font-size:0.9rem;color:var(--fg-3);margin:0 0 1.5rem 0;line-height:1.4;">${a.desc}</p>
+                  <p style="font-size:0.8rem;color:var(--fg-3);margin:0 0 1rem 0;">One-time purchase • Always active</p>
+                </div>
+                <div style="display:flex;gap:0.5rem;align-items:stretch;">
+                  ${btn}
+                </div>
+              </div>`;
+        }).join("");
+        // Re-wire buy buttons
+        grid.querySelectorAll(".buy-btn").forEach((btn) => {
+          btn.addEventListener("click", () => openModal(btn.dataset));
         });
+      }
 
-        const io = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-        }, { threshold: 0.05 });
-        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+      // ── Fishing Rod helpers ──────────────────────────────────────────────────
+      async function sbLoadFishingData(discordId) {
+        try {
+          const res = await fetch(
+            `${SB_URL}/rest/v1/user_settings?discord_id=eq.${discordId}&select=fishing_rod_level`,
+            { headers: sbHeaders },
+          );
+          const rows = await res.json();
+          if (rows.length > 0 && rows[0].fishing_rod_level) {
+            currentRodLevel = Math.max(1, Math.min(55, parseInt(rows[0].fishing_rod_level) || 1));
+          }
+        } catch {
+          /* column may not exist yet — stays at 1 */
+        }
+      }
 
-        function getToken() { return localStorage.getItem(STORE_TOKEN); }
-        function getUser()  { try { return JSON.parse(localStorage.getItem(STORE_USER)); } catch { return null; } }
+      function renderRodUpgrade() {
+        const content = document.getElementById("rodUpgradeContent");
+        if (!content) return;
 
-        function avatarUrl(user) {
-            if (user.avatar) return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar.startsWith('a_') ? 'gif' : 'webp'}?size=80`;
-            const idx = user.discriminator === '0' ? (BigInt(user.id) >> 22n) % 6n : parseInt(user.discriminator) % 5;
-            return `https://cdn.discordapp.com/embed/avatars/${idx}.png`;
+        const level = currentRodLevel;
+        const rod = FISHING_RODS[level];
+        const isMax = level >= 55;
+        const nextRod = !isMax ? FISHING_RODS[level + 1] : null;
+
+        function tierColor(l) {
+          if (l <= 5) return "#9ca3af";
+          if (l <= 10) return "#34d399";
+          if (l <= 20) return "#60a5fa";
+          if (l <= 30) return "#a78bfa";
+          if (l <= 40) return "#fbbf24";
+          if (l <= 50) return "#fb923c";
+          return "#f0abfc";
+        }
+        function tierLabel(l) {
+          if (l <= 5) return "Basic";
+          if (l <= 10) return "Advanced";
+          if (l <= 20) return "Elite";
+          if (l <= 30) return "Master";
+          if (l <= 40) return "Legendary";
+          if (l <= 50) return "Mythical";
+          return "Apex";
+        }
+        function fc(n) {
+          if (n >= 1e9) return (n / 1e9).toFixed(2).replace(/\.?0+$/, "") + "B";
+          if (n >= 1e6) return (n / 1e6).toFixed(2).replace(/\.?0+$/, "") + "M";
+          if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.?0+$/, "") + "K";
+          return n.toLocaleString();
         }
 
-        let currentDiscordId = null;
-        let userStats        = null;
-        let selectedItem     = null;
-        let ownedThemes      = new Set();
-        let activeTheme      = 'default';
-        let currentThemeCat  = 'all';
+        const color = tierColor(level);
+        const canAfford = nextRod && userStats && (userStats.balance || 0) >= nextRod.cost;
+        const pct = Math.round((level / 55) * 100);
 
-        // ── Supabase helpers ─────────────────────────────────────────────────────
-        async function sbLoadStats(discordId) {
-            try {
-                const res  = await fetch(`${SB_URL}/rest/v1/user_stats?discord_id=eq.${discordId}&select=*`, { headers: sbHeaders });
-                const rows = await res.json();
-                if (rows.length > 0) {
-                    userStats = rows[0];
-                    document.getElementById('tokenDisplay').textContent =
-                        `${userStats.tokens || 0} Tokens | ${Number(userStats.balance || 0).toLocaleString()} Coins | Lvl ${userStats.level || 0}`;
-                } else {
-                    document.getElementById('tokenDisplay').textContent = '0 Tokens';
-                    userStats = { tokens: 0, level: 0, balance: 0 };
-                }
-            } catch (err) {
-                console.warn('Supabase stats load failed:', err);
-                document.getElementById('tokenDisplay').textContent = 'Failed to load';
+        const currentCard = `
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${color};border-radius:12px 12px 0 0;"></div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+              <div>
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+                  <span style="font-size:2.2rem;">🎣</span>
+                  <div>
+                    <div style="font-size:1.2rem;font-weight:700;color:${color};">${rod.name}</div>
+                    <div style="font-size:0.8rem;color:var(--fg-4);margin-top:0.1rem;">Level ${level} · ${tierLabel(level)}</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:2rem;flex-wrap:wrap;">
+                  <div>
+                    <div style="font-size:0.7rem;color:var(--fg-4);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.2rem;">Catch Rate</div>
+                    <div style="font-size:1.05rem;font-weight:600;color:var(--fg);">${rod.catchRate}x</div>
+                  </div>
+                  <div>
+                    <div style="font-size:0.7rem;color:var(--fg-4);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.2rem;">Rare Chance</div>
+                    <div style="font-size:1.05rem;font-weight:600;color:var(--fg);">${rod.rareChance}x</div>
+                  </div>
+                  <div>
+                    <div style="font-size:0.7rem;color:var(--fg-4);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.2rem;">Progress</div>
+                    <div style="font-size:1.05rem;font-weight:600;color:var(--fg);">${level}<span style="color:var(--fg-4);font-size:0.8rem;"> / 55</span></div>
+                  </div>
+                </div>
+                <div style="margin-top:0.9rem;">
+                  <div style="height:4px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;">
+                    <div style="height:100%;width:${pct}%;background:${color};border-radius:99px;"></div>
+                  </div>
+                </div>
+              </div>
+              ${isMax ? `<div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:8px;padding:0.5rem 1rem;color:#fbbf24;font-size:0.85rem;font-weight:600;align-self:flex-start;">✨ MAX LEVEL</div>` : ""}
+            </div>
+          </div>`;
+
+        const upgradeSection = isMax
+          ? ""
+          : `
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.5rem;margin-bottom:2rem;">
+            <div style="font-size:0.72rem;font-weight:600;color:var(--fg-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.9rem;">Next Upgrade</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+              <div>
+                <div style="font-size:1.05rem;font-weight:600;color:${tierColor(level + 1)};">
+                  ${nextRod.name}
+                  <span style="color:var(--fg-4);font-weight:400;font-size:0.875rem;"> Lv. ${level + 1}</span>
+                </div>
+                <div style="display:flex;gap:1.5rem;margin-top:0.4rem;flex-wrap:wrap;">
+                  <span style="font-size:0.875rem;color:var(--fg-3);">
+                    Catch <strong style="color:var(--fg);">${nextRod.catchRate}x</strong>
+                    <span style="color:#4ade80;font-size:0.8rem;"> (+${((nextRod.catchRate - rod.catchRate) * 100).toFixed(0)}%)</span>
+                  </span>
+                  <span style="font-size:0.875rem;color:var(--fg-3);">
+                    Rare <strong style="color:var(--fg);">${nextRod.rareChance}x</strong>
+                    <span style="color:#4ade80;font-size:0.8rem;"> (+${((nextRod.rareChance - rod.rareChance) * 100).toFixed(0)}%)</span>
+                  </span>
+                </div>
+              </div>
+              <button id="rodUpgradeBtn"
+                data-id="rod_upgrade" data-name="${nextRod.name}" data-tokens="0" data-coins="${nextRod.cost}" data-req-level="1"
+                style="background:${canAfford ? "rgba(167,139,250,0.15)" : "rgba(255,255,255,0.05)"};
+                       border:1px solid ${canAfford ? "rgba(167,139,250,0.4)" : "rgba(255,255,255,0.1)"};
+                       color:${canAfford ? "#c4b5fd" : "var(--fg-3)"};
+                       padding:0.75rem 1.5rem;border-radius:8px;font-weight:600;font-size:0.9rem;
+                       cursor:${canAfford ? "pointer" : "default"};white-space:nowrap;font-family:var(--font);">
+                Upgrade — ${fc(nextRod.cost)} Coins
+              </button>
+            </div>
+            ${!canAfford && userStats ? `<p style="margin:0.75rem 0 0;font-size:0.8rem;color:var(--fg-4);">Need ${fc(nextRod.cost)} coins · You have ${fc(userStats.balance || 0)}</p>` : ""}
+          </div>`;
+
+        const tierRows = Object.entries(FISHING_RODS)
+          .map(([lvl, r]) => {
+            const l = parseInt(lvl);
+            const done = l < level,
+              cur = l === level;
+            const c = tierColor(l);
+            return `<div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0.75rem;border-radius:6px;${cur ? "background:rgba(255,255,255,0.05);" : ""}">
+            <span style="font-size:0.7rem;font-weight:700;color:${cur ? c : done ? "#4ade80" : "var(--fg-4)"};min-width:2.8rem;">Lv ${l}</span>
+            <span style="flex:1;font-size:0.875rem;color:${cur ? "var(--fg)" : done ? "var(--fg-3)" : "var(--fg-4)"};">${r.name}</span>
+            ${
+              done
+                ? `<span style="font-size:0.75rem;color:#4ade80;">✓</span>`
+                : cur
+                  ? `<span style="font-size:0.75rem;font-weight:600;color:${c};">◄</span>`
+                  : `<span style="font-size:0.75rem;color:var(--fg-4);">${fc(r.cost)}</span>`
             }
+          </div>`;
+          })
+          .join("");
+
+        content.innerHTML = `
+          <p style="color:var(--fg-3);font-size:0.875rem;margin-bottom:1.75rem;line-height:1.5;">
+            Upgrade your fishing rod to boost catch rate and rare fish chance on every cast.
+            Upgrades are permanent and stack with rod attachments.
+            Use <code style="background:rgba(255,255,255,0.07);padding:0.1rem 0.3rem;border-radius:3px;">.fishstats</code> in Discord to view your full in-game rod stats.
+          </p>
+          ${currentCard}
+          ${upgradeSection}
+          <details>
+            <summary style="cursor:pointer;font-size:0.875rem;font-weight:600;color:var(--fg-3);padding:0.4rem 0;user-select:none;list-style:none;display:flex;align-items:center;gap:0.4rem;">
+              All 55 Tiers
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div style="margin-top:0.75rem;max-height:420px;overflow-y:auto;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:0.5rem;">
+              ${tierRows}
+            </div>
+          </details>`;
+
+        const upgradeBtn = document.getElementById("rodUpgradeBtn");
+        if (upgradeBtn) upgradeBtn.addEventListener("click", () => openModal(upgradeBtn.dataset));
+      }
+
+      // ── Supabase helpers ─────────────────────────────────────────────────────
+      async function sbLoadStats(discordId) {
+        try {
+          const res = await fetch(
+            `${SB_URL}/rest/v1/user_stats?discord_id=eq.${discordId}&select=*`,
+            { headers: sbHeaders },
+          );
+          const rows = await res.json();
+          if (rows.length > 0) {
+            userStats = rows[0];
+            document.getElementById("tokenDisplay").textContent =
+              `${userStats.tokens || 0} Tokens | ${Number(userStats.balance || 0).toLocaleString()} Coins | Lvl ${userStats.level || 0}`;
+          } else {
+            document.getElementById("tokenDisplay").textContent = "0 Tokens";
+            userStats = { tokens: 0, level: 0, balance: 0 };
+          }
+        } catch (err) {
+          console.warn("Supabase stats load failed:", err);
+          document.getElementById("tokenDisplay").textContent = "Failed to load";
         }
+      }
 
-        async function sbLoadThemeData(discordId) {
-            // Always own standard/free themes
-            Object.values(THEMES_CATALOG.themes)
-                .filter(t => t.category === 'standard')
-                .forEach(t => ownedThemes.add(t.id));
+      async function sbLoadThemeData(discordId) {
+        // Always own standard/free themes
+        Object.values(THEMES_CATALOG.themes)
+          .filter((t) => t.category === "standard")
+          .forEach((t) => ownedThemes.add(t.id));
 
-            try {
-                // Active theme from user_settings
-                const sr = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${discordId}&select=active_theme`, { headers: sbHeaders });
-                const srows = await sr.json();
-                if (srows.length > 0 && srows[0].active_theme) activeTheme = srows[0].active_theme;
+        try {
+          // Active theme from user_settings
+          const sr = await fetch(
+            `${SB_URL}/rest/v1/user_settings?discord_id=eq.${discordId}&select=active_theme`,
+            { headers: sbHeaders },
+          );
+          const srows = await sr.json();
+          if (srows.length > 0 && srows[0].active_theme) activeTheme = srows[0].active_theme;
 
-                // Owned themes from marketplace_purchases (fulfilled)
-                const pr = await fetch(`${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${discordId}&fulfilled=eq.true&select=item_id`, { headers: sbHeaders });
-                const purchases = await pr.json();
-                for (const p of purchases) {
-                    // Support both 'theme_obsidian' and legacy 'obsidian_theme'
-                    if (p.item_id.startsWith('theme_')) ownedThemes.add(p.item_id.slice(6));
-                    else if (p.item_id.endsWith('_theme')) ownedThemes.add(p.item_id.replace('_theme', ''));
-                }
-            } catch (err) {
-                console.warn('Theme data load failed:', err);
+          // Owned themes from marketplace_purchases (fulfilled)
+          const pr = await fetch(
+            `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${discordId}&fulfilled=eq.true&select=item_id`,
+            { headers: sbHeaders },
+          );
+          const purchases = await pr.json();
+          for (const p of purchases) {
+            // Support both 'theme_obsidian' and legacy 'obsidian_theme'
+            if (p.item_id.startsWith("theme_")) ownedThemes.add(p.item_id.slice(6));
+            else if (p.item_id.endsWith("_theme")) ownedThemes.add(p.item_id.replace("_theme", ""));
+            // Rod attachments
+            if (p.item_id.startsWith("rod_")) ownedAttachments.add(p.item_id);
+          }
+          renderAttachments();
+        } catch (err) {
+          console.warn("Theme data load failed:", err);
+        }
+      }
+
+      async function sbLoadVoiceData(discordId) {
+        try {
+          const pr = await fetch(
+            `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${discordId}&fulfilled=eq.true&item_id=like.elevenlabs_*&select=item_id`,
+            { headers: sbHeaders },
+          );
+          const purchases = await pr.json();
+          if (Array.isArray(purchases)) {
+            for (const p of purchases) {
+              if (p.item_id.startsWith("elevenlabs_")) {
+                ownedVoiceIds.add(p.item_id.slice(11)); // extract voice ID
+              }
             }
+          }
+        } catch (err) {
+          console.warn("Voice data load failed:", err);
+        }
+      }
+
+      const VOICES_PAGE_SIZE = 48;
+      let voicesPage = 0;
+      let voicesFiltered = [];
+
+      function getFilteredVoices() {
+        const cat = currentVoiceCat;
+        const q = (document.getElementById("voiceSearch")?.value || "").toLowerCase().trim();
+        return EL_CATALOG.filter((v) => {
+          if (cat === "standard" && v.category !== "standard") return false;
+          if (cat === "premium" && v.category !== "premium") return false;
+          if (cat === "owned" && !ownedVoiceIds.has(v.id)) return false;
+          if (q && !v.name.toLowerCase().includes(q) && !v.desc.toLowerCase().includes(q))
+            return false;
+          return true;
+        });
+      }
+
+      function voiceCardHtml(v) {
+        const isOwned = ownedVoiceIds.has(v.id);
+        const isPrem = v.category === "premium";
+        const catBg = isPrem ? "rgba(167,139,250,.15)" : "rgba(113,113,122,.15)";
+        const catColor = isPrem ? "#a78bfa" : "#71717a";
+        const catLabel = isPrem ? "Premium" : "Standard";
+        const tokens = v.price_tokens;
+        const safeId = CSS.escape("vm-" + v.id);
+
+        let actionBtn;
+        if (isOwned) {
+          actionBtn = `<button class="btn-voice-action btn-voice-owned" disabled>✓ Owned</button>`;
+        } else {
+          actionBtn = `<button class="btn-voice-action btn-voice-buy buy-btn"
+                    data-id="elevenlabs_${v.id}"
+                    data-name="${v.name.replace(/"/g, "&quot;")} (ElevenLabs AI)"
+                    data-tokens="${tokens}" data-coins="0" data-req-level="0"
+                    >${tokens} Token${tokens > 1 ? "s" : ""}</button>`;
         }
 
-        async function equipTheme(themeId) {
-            if (!currentDiscordId) return;
-            try {
-                // Try PATCH first; if no row exists, POST with upsert
-                const r = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${currentDiscordId}`, {
-                    method: 'PATCH',
-                    headers: { ...sbHeaders, Prefer: 'return=minimal' },
-                    body: JSON.stringify({ active_theme: themeId })
-                });
-                // If nothing was updated (no existing row), insert
-                if (r.status === 200 || r.status === 204) {
-                    const check = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${currentDiscordId}&select=discord_id`, { headers: sbHeaders });
-                    const rows = await check.json();
-                    if (rows.length === 0) {
-                        await fetch(`${SB_URL}/rest/v1/user_settings`, {
-                            method: 'POST',
-                            headers: { ...sbHeaders, Prefer: 'resolution=merge-duplicates,return=minimal' },
-                            body: JSON.stringify({ discord_id: currentDiscordId, active_theme: themeId })
-                        });
-                    }
-                }
-                activeTheme = themeId;
-                renderThemes(currentThemeCat);
-            } catch {
-                alert('Failed to equip theme. Please try again.');
+        const menuId = "vm-" + v.id;
+        const giftHtml = `<div class="card-menu-wrap">
+                <button class="card-menu-btn" onclick="toggleCardMenu(event,'${menuId}')">⋯</button>
+                <div class="card-dropdown" id="${menuId}">
+                    <button class="card-dropdown-item" onclick="openGiftModal({id:'elevenlabs_${v.id}',name:'${v.name.replace(/'/g, "\\'")} (ElevenLabs AI)',tokens:${tokens},coins:0,reqLevel:0});closeAllMenus()">🎁 Gift</button>
+                </div>
+            </div>`;
+
+        return `
+            <div class="voice-card${isOwned ? " is-owned" : ""}">
+                ${isOwned ? '<div class="voice-badge">Owned</div>' : ""}
+                <div style="display:flex;align-items:center;gap:0.625rem;margin-bottom:0.25rem;">
+                    <div class="voice-card-icon">🎙️</div>
+                    <div class="voice-card-name" style="font-size:0.875rem;">${v.name}</div>
+                </div>
+                <span class="voice-cat-pill" style="background:${catBg};color:${catColor}">${catLabel}</span>
+                <div class="voice-card-desc">${v.desc || "—"}</div>
+                <div class="voice-card-footer">
+                    <span class="voice-price">${isOwned ? "Owned" : `${tokens} Token${tokens > 1 ? "s" : ""}`}</span>
+                    ${actionBtn}${giftHtml}
+                </div>
+            </div>`;
+      }
+
+      function renderVoices(cat) {
+        currentVoiceCat = cat;
+        voicesPage = 0;
+        document
+          .querySelectorAll("#voiceCatBar .cat-btn")
+          .forEach((b) => b.classList.toggle("active", b.dataset.vcat === cat));
+        voicesFiltered = getFilteredVoices();
+        const grid = document.getElementById("voicesGrid");
+        const countEl = document.getElementById("voiceCount");
+        const moreBtn = document.getElementById("voicesLoadMore");
+
+        if (!elCatalogLoaded) {
+          grid.innerHTML = '<p style="color:var(--fg-4);font-size:0.875rem;">Loading voices...</p>';
+          return;
+        }
+        if (voicesFiltered.length === 0) {
+          grid.innerHTML = '<p style="color:var(--fg-4);font-size:0.875rem;">No voices found.</p>';
+          countEl.textContent = "";
+          moreBtn.style.display = "none";
+          return;
+        }
+
+        const page = voicesFiltered.slice(0, VOICES_PAGE_SIZE);
+        grid.innerHTML = page.map(voiceCardHtml).join("");
+        countEl.textContent = `Showing ${page.length} of ${voicesFiltered.length} voices`;
+        moreBtn.style.display = voicesFiltered.length > VOICES_PAGE_SIZE ? "block" : "none";
+        voicesPage = 1;
+        bindVoiceButtons();
+      }
+
+      function voicesLoadMore() {
+        const grid = document.getElementById("voicesGrid");
+        const countEl = document.getElementById("voiceCount");
+        const moreBtn = document.getElementById("voicesLoadMore");
+        const start = voicesPage * VOICES_PAGE_SIZE;
+        const page = voicesFiltered.slice(start, start + VOICES_PAGE_SIZE);
+        grid.insertAdjacentHTML("beforeend", page.map(voiceCardHtml).join(""));
+        voicesPage++;
+        const shown = voicesPage * VOICES_PAGE_SIZE;
+        countEl.textContent = `Showing ${Math.min(shown, voicesFiltered.length)} of ${voicesFiltered.length} voices`;
+        if (shown >= voicesFiltered.length) moreBtn.style.display = "none";
+        bindVoiceButtons();
+      }
+
+      function bindVoiceButtons() {
+        document.querySelectorAll("#voicesGrid .buy-btn").forEach((btn) => {
+          btn.onclick = null;
+          btn.addEventListener("click", () => openModal(btn.dataset));
+        });
+      }
+
+      async function equipTheme(themeId) {
+        if (!currentDiscordId) return;
+        try {
+          // Try PATCH first; if no row exists, POST with upsert
+          const r = await fetch(
+            `${SB_URL}/rest/v1/user_settings?discord_id=eq.${currentDiscordId}`,
+            {
+              method: "PATCH",
+              headers: { ...sbHeaders, Prefer: "return=minimal" },
+              body: JSON.stringify({ active_theme: themeId }),
+            },
+          );
+          // If nothing was updated (no existing row), insert
+          if (r.status === 200 || r.status === 204) {
+            const check = await fetch(
+              `${SB_URL}/rest/v1/user_settings?discord_id=eq.${currentDiscordId}&select=discord_id`,
+              { headers: sbHeaders },
+            );
+            const rows = await check.json();
+            if (rows.length === 0) {
+              await fetch(`${SB_URL}/rest/v1/user_settings`, {
+                method: "POST",
+                headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
+                body: JSON.stringify({ discord_id: currentDiscordId, active_theme: themeId }),
+              });
             }
+          }
+          activeTheme = themeId;
+          renderThemes(currentThemeCat);
+        } catch {
+          alert("Failed to equip theme. Please try again.");
         }
+      }
 
-        // ── Theme renderer ───────────────────────────────────────────────────────
-        function renderThemes(cat) {
-            currentThemeCat = cat;
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+      // ── Theme renderer ───────────────────────────────────────────────────────
+      function renderThemes(cat) {
+        currentThemeCat = cat;
+        document
+          .querySelectorAll("#themeCatBar .cat-btn")
+          .forEach((b) => b.classList.toggle("active", b.dataset.cat === cat));
 
-            const grid   = document.getElementById('themesGrid');
-            const themes = Object.values(THEMES_CATALOG.themes)
-                .filter(t => cat === 'all' || t.category === cat);
+        const grid = document.getElementById("themesGrid");
+        const themes = Object.values(THEMES_CATALOG.themes).filter(
+          (t) => cat === "all" || t.category === cat,
+        );
 
-            grid.innerHTML = themes.map(t => {
-                const catInfo   = THEMES_CATALOG.categories[t.category];
-                const isOwned   = ownedThemes.has(t.id);
-                const isActive  = activeTheme === t.id;
-                const isExcl    = t.category === 'exclusive';
+        grid.innerHTML = themes
+          .map((t) => {
+            const catInfo = THEMES_CATALOG.categories[t.category];
+            const isOwned = ownedThemes.has(t.id);
+            const isActive = activeTheme === t.id;
+            const isExcl = t.category === "exclusive";
 
-                const palette = t.colors.map(c =>
-                    `<div class="theme-palette-swatch" style="background:${c}"></div>`
-                ).join('');
+            const palette = t.colors
+              .map((c) => `<div class="theme-palette-swatch" style="background:${c}"></div>`)
+              .join("");
 
-                let badgeBg, badgeColor;
-                switch (t.category) {
-                    case 'premium':   badgeBg = 'rgba(167,139,250,.15)'; badgeColor = '#a78bfa'; break;
-                    case 'seasonal':  badgeBg = 'rgba(52,211,153,.15)';  badgeColor = '#34d399'; break;
-                    case 'exclusive': badgeBg = 'rgba(251,191,36,.15)';  badgeColor = '#fbbf24'; break;
-                    default:          badgeBg = 'rgba(113,113,122,.15)'; badgeColor = '#71717a';
-                }
+            let badgeBg, badgeColor;
+            switch (t.category) {
+              case "premium":
+                badgeBg = "rgba(167,139,250,.15)";
+                badgeColor = "#a78bfa";
+                break;
+              case "seasonal":
+                badgeBg = "rgba(52,211,153,.15)";
+                badgeColor = "#34d399";
+                break;
+              case "exclusive":
+                badgeBg = "rgba(251,191,36,.15)";
+                badgeColor = "#fbbf24";
+                break;
+              default:
+                badgeBg = "rgba(113,113,122,.15)";
+                badgeColor = "#71717a";
+            }
 
-                let actionBtn;
-                if (isActive) {
-                    actionBtn = `<button class="btn-theme-action state-active" disabled>✓ Active</button>`;
-                } else if (isOwned) {
-                    actionBtn = `<button class="btn-theme-action state-equip" onclick="equipTheme('${t.id}')">Equip</button>`;
-                } else if (isExcl) {
-                    actionBtn = `<button class="btn-theme-action state-locked" disabled>Locked</button>`;
-                } else {
-                    actionBtn = `<button class="btn-theme-action state-buy buy-btn"
+            let actionBtn;
+            if (isActive) {
+              actionBtn = `<button class="btn-theme-action state-active" disabled>✓ Active</button>`;
+            } else if (isOwned) {
+              actionBtn = `<button class="btn-theme-action state-equip" onclick="equipTheme('${t.id}')">Equip</button>`;
+            } else if (isExcl) {
+              actionBtn = `<button class="btn-theme-action state-locked" disabled>Locked</button>`;
+            } else {
+              actionBtn = `<button class="btn-theme-action state-buy buy-btn"
                         data-id="theme_${t.id}" data-name="${t.name} Theme"
                         data-tokens="${t.tokens}" data-coins="${t.coins}" data-req-level="${t.reqLevel}">
-                        ${t.tokens > 0 ? `${t.tokens} Tokens` : 'Free'}
+                        ${t.tokens > 0 ? `${t.tokens} Tokens` : "Free"}
                     </button>`;
-                }
+            }
 
-                const priceLabel = isExcl ? 'Earned only' : isOwned ? 'Owned' : (t.tokens > 0 ? `${t.tokens} Tokens` : 'Free');
+            const priceLabel = isExcl
+              ? "Earned only"
+              : isOwned
+                ? "Owned"
+                : t.tokens > 0
+                  ? `${t.tokens} Tokens`
+                  : "Free";
 
-                return `
-                    <div class="theme-card${isActive ? ' is-active' : ''}">
-                        ${isOwned && !isActive ? '<div class="theme-owned-badge">Owned</div>' : ''}
+            const canGift = !isExcl && t.tokens > 0;
+            const menuId = `tm-${t.id}`;
+            const giftBtnHtml = canGift
+              ? `<div class="card-menu-wrap">
+                        <button class="card-menu-btn" onclick="toggleCardMenu(event,'${menuId}')">⋯</button>
+                        <div class="card-dropdown" id="${menuId}">
+                            <button class="card-dropdown-item" onclick="openGiftModal({id:'theme_${t.id}',name:'${t.name} Theme',tokens:${t.tokens},coins:0,reqLevel:${t.reqLevel}});closeAllMenus()">🎁 Gift</button>
+                        </div>
+                    </div>`
+              : "";
+
+            return `
+                    <div class="theme-card${isActive ? " is-active" : ""}">
+                        ${isOwned && !isActive ? '<div class="theme-owned-badge">Owned</div>' : ""}
                         <div class="theme-palette">${palette}</div>
                         <div class="theme-body">
                             <span class="theme-cat-badge" style="background:${badgeBg};color:${badgeColor}">${catInfo.label}</span>
@@ -619,248 +2170,538 @@
                             <div class="theme-desc">${t.desc}</div>
                             <div class="theme-footer">
                                 <span class="theme-price">${priceLabel}</span>
-                                ${actionBtn}
+                                ${actionBtn}${giftBtnHtml}
                             </div>
                         </div>
                     </div>`;
-            }).join('');
+          })
+          .join("");
 
-            // Re-bind buy buttons rendered in the themes grid
-            document.querySelectorAll('#themesGrid .buy-btn').forEach(btn => {
-                btn.addEventListener('click', () => openModal(btn.dataset));
-            });
-        }
-
-        // ── Modal ────────────────────────────────────────────────────────────────
-        function openModal(item) {
-            selectedItem = item;
-            let costParts = [];
-            if (parseInt(item.tokens) > 0) costParts.push(`${item.tokens} Tokens`);
-            if (parseInt(item.coins)  > 0) costParts.push(`${Number(item.coins).toLocaleString()} Coins`);
-
-            document.getElementById('modalTitle').textContent = 'Confirm Purchase';
-            document.getElementById('modalDesc').innerHTML =
-                `Are you sure you want to buy <strong>${item.name}</strong> for ${costParts.join(' and ')}?`;
-            document.getElementById('modalError').style.display = 'none';
-
-            const btn = document.getElementById('btnConfirm');
-            btn.disabled = false;
-
-            if (userStats) {
-                if ((userStats.level || 0) < parseInt(item.reqLevel)) {
-                    document.getElementById('modalError').textContent = `You must be Level ${item.reqLevel} to purchase this.`;
-                    document.getElementById('modalError').style.display = 'block';
-                    btn.disabled = true;
-                } else if ((userStats.tokens || 0) < parseInt(item.tokens)) {
-                    document.getElementById('modalError').textContent = `You need ${item.tokens} Tokens. You have ${userStats.tokens}.`;
-                    document.getElementById('modalError').style.display = 'block';
-                    btn.disabled = true;
-                } else if ((userStats.balance || 0) < parseInt(item.coins)) {
-                    document.getElementById('modalError').textContent = `You need ${Number(item.coins).toLocaleString()} Coins.`;
-                    document.getElementById('modalError').style.display = 'block';
-                    btn.disabled = true;
-                }
-            }
-
-            document.getElementById('confirmModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('confirmModal').classList.remove('active');
-            selectedItem = null;
-        }
-
-        async function purchaseItem() {
-            if (!selectedItem || !currentDiscordId) return;
-            const btn   = document.getElementById('btnConfirm');
-            const errEl = document.getElementById('modalError');
-            btn.textContent = 'Processing...';
-            btn.disabled    = true;
-            errEl.style.display = 'none';
-
-            try {
-                await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
-                    method: 'POST',
-                    headers: sbHeaders,
-                    body: JSON.stringify({
-                        discord_id:   currentDiscordId,
-                        item_id:      selectedItem.id,
-                        cost_tokens:  parseInt(selectedItem.tokens),
-                        cost_coins:   parseInt(selectedItem.coins)
-                    })
-                });
-
-                // Optimistic stat update
-                if (userStats) {
-                    if (parseInt(selectedItem.tokens) > 0) userStats.tokens  -= parseInt(selectedItem.tokens);
-                    if (parseInt(selectedItem.coins)  > 0) userStats.balance -= parseInt(selectedItem.coins);
-                    document.getElementById('tokenDisplay').textContent =
-                        `${userStats.tokens} Tokens | ${Number(userStats.balance).toLocaleString()} Coins | Lvl ${userStats.level}`;
-                }
-
-                // If this was a theme purchase: add to owned set and re-render
-                if (selectedItem.id.startsWith('theme_')) {
-                    const themeId = selectedItem.id.slice(6);
-                    ownedThemes.add(themeId);
-                    renderThemes(currentThemeCat);
-                }
-
-                closeModal();
-                alert(`Purchase submitted! The bot will process this within a few seconds and DM you on Discord.`);
-            } catch {
-                errEl.textContent = 'Error communicating with server. Try again.';
-                errEl.style.display = 'block';
-            } finally {
-                btn.textContent = 'Yes, I want to buy this';
-                btn.disabled    = false;
-            }
-        }
-
-        document.getElementById('btnCancel').addEventListener('click', closeModal);
-        document.getElementById('btnConfirm').addEventListener('click', purchaseItem);
-
-        // ── Tab switching ────────────────────────────────────────────────────────
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tab = btn.dataset.tab;
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-                document.getElementById('itemsTab').style.display   = tab === 'items'   ? '' : 'none';
-                document.getElementById('themesTab').style.display  = tab === 'themes'  ? '' : 'none';
-                document.getElementById('profileTab').style.display = tab === 'profile' ? '' : 'none';
-                if (tab === 'themes') renderThemes(currentThemeCat);
-                if (tab === 'profile') loadBio();
-            });
+        // Re-bind buy buttons rendered in the themes grid
+        document.querySelectorAll("#themesGrid .buy-btn").forEach((btn) => {
+          btn.addEventListener("click", () => openModal(btn.dataset));
         });
+      }
 
-        // ── Profile tab — Bio ────────────────────────────────────────────────────
-        async function loadBio() {
-            const user = getUser();
-            if (!user) return;
-            try {
-                const res  = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=bio`, { headers: sbHeaders });
-                const rows = await res.json();
-                const bio  = (rows[0] && rows[0].bio) || '';
-                document.getElementById('bioInput').value = bio;
-                document.getElementById('bioCharCount').textContent = `${bio.length} / 120`;
-            } catch { /* silently ignore pre-login */ }
-        }
+      // ── Modal ────────────────────────────────────────────────────────────────
+      function openModal(item) {
+        selectedItem = item;
+        let costParts = [];
+        if (parseInt(item.tokens) > 0) costParts.push(`${item.tokens} Tokens`);
+        if (parseInt(item.coins) > 0)
+          costParts.push(`${Number(item.coins).toLocaleString()} Coins`);
 
-        document.getElementById('bioInput').addEventListener('input', function () {
-            document.getElementById('bioCharCount').textContent = `${this.value.length} / 120`;
-        });
+        document.getElementById("modalTitle").textContent = "Confirm Purchase";
+        document.getElementById("modalDesc").innerHTML =
+          `Are you sure you want to buy <strong>${item.name}</strong> for ${costParts.join(" and ")}?`;
+        document.getElementById("modalError").style.display = "none";
 
-        document.getElementById('saveBioBtn').addEventListener('click', async () => {
-            const user = getUser();
-            if (!user) return;
-            const bio    = document.getElementById('bioInput').value.trim();
-            const status = document.getElementById('bioStatus');
-            const btn    = document.getElementById('saveBioBtn');
+        const btn = document.getElementById("btnConfirm");
+        btn.disabled = false;
+
+        if (userStats) {
+          if ((userStats.level || 0) < parseInt(item.reqLevel)) {
+            document.getElementById("modalError").textContent =
+              `You must be Level ${item.reqLevel} to purchase this.`;
+            document.getElementById("modalError").style.display = "block";
             btn.disabled = true;
-            btn.textContent = 'Saving...';
-            try {
-                await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}`, {
-                    method: 'PATCH',
-                    headers: { ...sbHeaders, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-                    body: JSON.stringify({ bio: bio.slice(0, 120) })
-                });
-                status.style.color = '#86efac';
-                status.textContent = 'Saved!';
-                setTimeout(() => status.textContent = '', 3000);
-            } catch {
-                status.style.color = '#fca5a5';
-                status.textContent = 'Failed to save. Try again.';
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Save Bio';
-            }
-        });
-
-        // ── Category filter buttons ──────────────────────────────────────────────
-        document.querySelectorAll('.cat-btn').forEach(btn => {
-            btn.addEventListener('click', () => renderThemes(btn.dataset.cat));
-        });
-
-        // ── Store item buy buttons ───────────────────────────────────────────────
-        document.querySelectorAll('#itemsTab .buy-btn').forEach(btn => {
-            btn.addEventListener('click', () => openModal(btn.dataset));
-        });
-
-        // ── Auth & init ──────────────────────────────────────────────────────────
-        function renderUser(user) {
-            document.getElementById('loginView').style.display    = 'none';
-            document.getElementById('settingsView').style.display = 'block';
-            document.getElementById('userName').textContent = user.global_name || user.username;
-            document.getElementById('userTag').textContent  = user.discriminator === '0' ? '@' + user.username : '#' + user.discriminator;
-            const av = document.getElementById('userAvatar');
-            av.innerHTML = `<img src="${avatarUrl(user)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+          } else if ((userStats.tokens || 0) < parseInt(item.tokens)) {
+            document.getElementById("modalError").textContent =
+              `You need ${item.tokens} Tokens. You have ${userStats.tokens}.`;
+            document.getElementById("modalError").style.display = "block";
+            btn.disabled = true;
+          } else if ((userStats.balance || 0) < parseInt(item.coins)) {
+            document.getElementById("modalError").textContent =
+              `You need ${Number(item.coins).toLocaleString()} Coins.`;
+            document.getElementById("modalError").style.display = "block";
+            btn.disabled = true;
+          }
         }
 
-        function showLoggedOut() {
-            document.getElementById('loginView').style.display    = 'block';
-            document.getElementById('settingsView').style.display = 'none';
+        document.getElementById("confirmModal").classList.add("active");
+      }
+
+      function closeModal() {
+        document.getElementById("confirmModal").classList.remove("active");
+        selectedItem = null;
+      }
+
+      async function purchaseItem() {
+        if (!selectedItem || !currentDiscordId) return;
+        const btn = document.getElementById("btnConfirm");
+        const errEl = document.getElementById("modalError");
+        btn.textContent = "Processing...";
+        btn.disabled = true;
+        errEl.style.display = "none";
+
+        try {
+          await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
+            method: "POST",
+            headers: sbHeaders,
+            body: JSON.stringify({
+              discord_id: currentDiscordId,
+              item_id: selectedItem.id,
+              cost_tokens: parseInt(selectedItem.tokens),
+              cost_coins: parseInt(selectedItem.coins),
+            }),
+          });
+
+          // Optimistic stat update
+          if (userStats) {
+            if (parseInt(selectedItem.tokens) > 0)
+              userStats.tokens -= parseInt(selectedItem.tokens);
+            if (parseInt(selectedItem.coins) > 0) userStats.balance -= parseInt(selectedItem.coins);
+            document.getElementById("tokenDisplay").textContent =
+              `${userStats.tokens} Tokens | ${Number(userStats.balance).toLocaleString()} Coins | Lvl ${userStats.level}`;
+          }
+
+          // If this was a theme purchase: add to owned set and re-render
+          if (selectedItem.id.startsWith("theme_")) {
+            const themeId = selectedItem.id.slice(6);
+            ownedThemes.add(themeId);
+            renderThemes(currentThemeCat);
+          }
+          // If this was a voice purchase: add to owned set and re-render
+          if (selectedItem.id.startsWith("elevenlabs_")) {
+            ownedVoiceIds.add(selectedItem.id.slice(11));
+            renderVoices(currentVoiceCat);
+          }
+          // If this was a rod upgrade purchase: increment local level and re-render
+          if (selectedItem.id === "rod_upgrade") {
+            currentRodLevel = Math.min(55, currentRodLevel + 1);
+            renderRodUpgrade();
+          }
+          // If this was a rod attachment purchase: add to owned set and re-render
+          if (selectedItem.id.startsWith("rod_") && selectedItem.id !== "rod_upgrade") {
+            ownedAttachments.add(selectedItem.id);
+            renderAttachments();
+          }
+
+          closeModal();
+          alert(
+            `Purchase submitted! The bot will process this within a few seconds and DM you on Discord.`,
+          );
+        } catch {
+          errEl.textContent = "Error communicating with server. Try again.";
+          errEl.style.display = "block";
+        } finally {
+          btn.textContent = "Yes, I want to buy this";
+          btn.disabled = false;
+        }
+      }
+
+      document.getElementById("btnCancel").addEventListener("click", closeModal);
+      document.getElementById("btnConfirm").addEventListener("click", purchaseItem);
+
+      // ── Tab switching ────────────────────────────────────────────────────────
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const tab = btn.dataset.tab;
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+          document.getElementById("itemsTab").style.display = tab === "items" ? "" : "none";
+          document.getElementById("fishingTab").style.display = tab === "fishing" ? "" : "none";
+          document.getElementById("themesTab").style.display = tab === "themes" ? "" : "none";
+          document.getElementById("voicesTab").style.display = tab === "voices" ? "" : "none";
+          document.getElementById("profileTab").style.display = tab === "profile" ? "" : "none";
+          if (tab === "items") renderAttachments();
+          if (tab === "fishing") renderRodUpgrade();
+          if (tab === "themes") renderThemes(currentThemeCat);
+          if (tab === "voices") {
+            loadElCatalog().then(() => renderVoices(currentVoiceCat));
+          }
+          if (tab === "profile") loadBio();
+        });
+      });
+
+      // ── Profile tab — Bio ────────────────────────────────────────────────────
+      async function loadBio() {
+        const user = getUser();
+        if (!user) return;
+        try {
+          const res = await fetch(
+            `${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=bio`,
+            { headers: sbHeaders },
+          );
+          const rows = await res.json();
+          const bio = (rows[0] && rows[0].bio) || "";
+          document.getElementById("bioInput").value = bio;
+          document.getElementById("bioCharCount").textContent = `${bio.length} / 120`;
+        } catch {
+          /* silently ignore pre-login */
+        }
+      }
+
+      document.getElementById("bioInput").addEventListener("input", function () {
+        document.getElementById("bioCharCount").textContent = `${this.value.length} / 120`;
+      });
+
+      document.getElementById("saveBioBtn").addEventListener("click", async () => {
+        const user = getUser();
+        if (!user) return;
+        const bio = document.getElementById("bioInput").value.trim();
+        const status = document.getElementById("bioStatus");
+        const btn = document.getElementById("saveBioBtn");
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+        try {
+          await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}`, {
+            method: "PATCH",
+            headers: { ...sbHeaders, "Content-Type": "application/json", Prefer: "return=minimal" },
+            body: JSON.stringify({ bio: bio.slice(0, 120) }),
+          });
+          status.style.color = "#86efac";
+          status.textContent = "Saved!";
+          setTimeout(() => (status.textContent = ""), 3000);
+        } catch {
+          status.style.color = "#fca5a5";
+          status.textContent = "Failed to save. Try again.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Save Bio";
+        }
+      });
+
+      // ── Category filter buttons ──────────────────────────────────────────────
+      document.querySelectorAll("#themesTab .cat-btn").forEach((btn) => {
+        btn.addEventListener("click", () => renderThemes(btn.dataset.cat));
+      });
+      document.querySelectorAll("#voiceCatBar .cat-btn").forEach((btn) => {
+        btn.addEventListener("click", () => renderVoices(btn.dataset.vcat));
+      });
+
+      let voiceSearchTimer;
+      document.getElementById("voiceSearch")?.addEventListener("input", () => {
+        clearTimeout(voiceSearchTimer);
+        voiceSearchTimer = setTimeout(() => renderVoices(currentVoiceCat), 250);
+      });
+      document.getElementById("voicesLoadMore")?.addEventListener("click", voicesLoadMore);
+
+      // ── Store item buy buttons ───────────────────────────────────────────────
+      document.querySelectorAll("#itemsTab .buy-btn").forEach((btn) => {
+        btn.addEventListener("click", () => openModal(btn.dataset));
+      });
+
+      // ── Auth & init ──────────────────────────────────────────────────────────
+      function renderUser(user) {
+        document.getElementById("loginView").style.display = "none";
+        document.getElementById("settingsView").style.display = "block";
+        document.getElementById("userName").textContent = user.global_name || user.username;
+        document.getElementById("userTag").textContent =
+          user.discriminator === "0" ? "@" + user.username : "#" + user.discriminator;
+        const av = document.getElementById("userAvatar");
+        av.innerHTML = `<img src="${avatarUrl(user)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+      }
+
+      function showLoggedOut() {
+        document.getElementById("loginView").style.display = "block";
+        document.getElementById("settingsView").style.display = "none";
+      }
+
+      async function init() {
+        const fragment = new URLSearchParams(window.location.hash.slice(1));
+        const newToken = fragment.get("access_token");
+        if (newToken) {
+          window.history.replaceState(null, "", window.location.pathname);
+          localStorage.setItem(STORE_TOKEN, newToken);
         }
 
-        async function init() {
-            const fragment = new URLSearchParams(window.location.hash.slice(1));
-            const newToken = fragment.get('access_token');
-            if (newToken) {
-                window.history.replaceState(null, '', window.location.pathname);
-                localStorage.setItem(STORE_TOKEN, newToken);
-            }
+        const token = getToken();
+        if (!token) return showLoggedOut();
 
-            const token = getToken();
-            if (!token) return showLoggedOut();
+        try {
+          const res = await fetch("https://discord.com/api/users/@me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (!res.ok) throw new Error("Token expired");
+          const user = await res.json();
+          localStorage.setItem(STORE_USER, JSON.stringify(user));
+          currentDiscordId = user.id;
+          renderUser(user);
 
-            try {
-                const res  = await fetch('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${token}` } });
-                if (!res.ok) throw new Error('Token expired');
-                const user = await res.json();
-                localStorage.setItem(STORE_USER, JSON.stringify(user));
-                currentDiscordId = user.id;
-                renderUser(user);
+          // Sync username to Supabase for admin panel
+          fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}`, {
+            method: "PATCH",
+            headers: sbHeaders,
+            body: JSON.stringify({ discord_username: user.username }),
+          }).catch(() => {});
+          await Promise.all([
+            sbLoadStats(user.id),
+            sbLoadThemeData(user.id),
+            sbLoadVoiceData(user.id),
+            sbLoadFishingData(user.id),
+          ]);
 
-                // Sync username to Supabase for admin panel
-                fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}`, {
-                    method: 'PATCH', headers: sbHeaders,
-                    body: JSON.stringify({ discord_username: user.username })
-                }).catch(() => {});
-                await Promise.all([
-                    sbLoadStats(user.id),
-                    sbLoadThemeData(user.id)
-                ]);
-
-                document.querySelectorAll('#settingsView .reveal').forEach(el => {
-                    el.classList.remove('visible');
-                    requestAnimationFrame(() => io.observe(el));
-                });
-            } catch {
-                const cached = getUser();
-                if (cached) {
-                    currentDiscordId = cached.id;
-                    renderUser(cached);
-                    await Promise.all([
-                        sbLoadStats(cached.id),
-                        sbLoadThemeData(cached.id)
-                    ]);
-                } else {
-                    localStorage.removeItem(STORE_TOKEN);
-                    showLoggedOut();
-                }
-            }
-        }
-
-        document.getElementById('loginBtn').addEventListener('click', () => window.location.href = OAUTH_URL);
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem(STORE_USER);
+          document.querySelectorAll("#settingsView .reveal").forEach((el) => {
+            el.classList.remove("visible");
+            requestAnimationFrame(() => io.observe(el));
+          });
+        } catch {
+          const cached = getUser();
+          if (cached) {
+            currentDiscordId = cached.id;
+            renderUser(cached);
+            await Promise.all([
+              sbLoadStats(cached.id),
+              sbLoadThemeData(cached.id),
+              sbLoadVoiceData(cached.id),
+              sbLoadFishingData(cached.id),
+            ]);
+          } else {
             localStorage.removeItem(STORE_TOKEN);
-            currentDiscordId = null;
-            ownedThemes.clear();
-            activeTheme = 'default';
             showLoggedOut();
+          }
+        }
+      }
+
+      // ── Card kebab menus ─────────────────────────────────────────────────────
+      function toggleCardMenu(e, menuId) {
+        e.stopPropagation();
+        const menu = document.getElementById(menuId);
+        const wasOpen = menu?.classList.contains("open");
+        closeAllMenus();
+        if (!wasOpen && menu) menu.classList.add("open");
+      }
+
+      function closeAllMenus() {
+        document.querySelectorAll(".card-dropdown.open").forEach((m) => m.classList.remove("open"));
+      }
+
+      document.addEventListener("click", closeAllMenus);
+
+      // ── Gift modal ───────────────────────────────────────────────────────────
+      let giftItem = null;
+      let selectedRecipientId = null;
+
+      function openGiftModal(item) {
+        closeAllMenus();
+        giftItem = item;
+        selectedRecipientId = null;
+        document.getElementById("giftItemName").textContent = item.name;
+        document.getElementById("giftRecipientInput").value = "";
+        document.getElementById("giftSuggestions").classList.remove("open");
+        document.getElementById("giftError").style.display = "none";
+        document.getElementById("giftSuccess").style.display = "none";
+        const btn = document.getElementById("btnGiftConfirm");
+        btn.disabled = false;
+        btn.textContent = "Send Gift";
+        document.getElementById("giftModal").classList.add("active");
+        setTimeout(() => document.getElementById("giftRecipientInput").focus(), 100);
+      }
+
+      function closeGiftModal() {
+        document.getElementById("giftModal").classList.remove("active");
+        document.getElementById("giftSuggestions").classList.remove("open");
+        selectedRecipientId = null;
+        giftItem = null;
+      }
+
+      function setupGiftAutocomplete() {
+        const input = document.getElementById("giftRecipientInput");
+        const list = document.getElementById("giftSuggestions");
+        let timer;
+
+        input.addEventListener("input", () => {
+          selectedRecipientId = null;
+          const q = input.value.trim().replace(/^@/, "");
+          clearTimeout(timer);
+          list.classList.remove("open");
+          // Skip search if it looks like a raw numeric ID
+          if (q.length < 2 || /^\d{10,}$/.test(q)) return;
+          timer = setTimeout(() => fetchGiftSuggestions(q), 300);
         });
 
-        init();
-    </script>
-</body>
+        input.addEventListener("keydown", (e) => {
+          if (!list.classList.contains("open")) return;
+          const items = [...list.querySelectorAll(".gift-suggestion-item")];
+          const cur = list.querySelector(".gift-suggestion-item.active");
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            const next = cur ? cur.nextElementSibling : items[0];
+            cur?.classList.remove("active");
+            next?.classList.add("active");
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            const prev = cur ? cur.previousElementSibling : items[items.length - 1];
+            cur?.classList.remove("active");
+            prev?.classList.add("active");
+          } else if (e.key === "Enter" && cur) {
+            e.preventDefault();
+            pickGiftSuggestion(cur.dataset.id, cur.dataset.name);
+          } else if (e.key === "Escape") {
+            list.classList.remove("open");
+          }
+        });
 
+        document.addEventListener("click", (e) => {
+          if (!e.target.closest(".gift-input-wrap")) list.classList.remove("open");
+        });
+      }
+
+      async function fetchGiftSuggestions(query) {
+        const list = document.getElementById("giftSuggestions");
+        try {
+          const res = await fetch(
+            `${SB_URL}/rest/v1/user_settings?discord_username=ilike.*${encodeURIComponent(query)}*&select=discord_id,discord_username&limit=6`,
+            { headers: sbHeaders },
+          );
+          const rows = await res.json();
+          if (!Array.isArray(rows) || rows.length === 0) return;
+          const filtered = rows.filter(
+            (r) => r.discord_username && r.discord_id !== currentDiscordId,
+          );
+          if (filtered.length === 0) return;
+          list.innerHTML = filtered
+            .map(
+              (r) =>
+                `<li class="gift-suggestion-item" data-id="${r.discord_id}" data-name="${r.discord_username}">@${r.discord_username}</li>`,
+            )
+            .join("");
+          list.classList.add("open");
+          list.querySelectorAll(".gift-suggestion-item").forEach((li) => {
+            li.addEventListener("click", () => pickGiftSuggestion(li.dataset.id, li.dataset.name));
+          });
+        } catch {}
+      }
+
+      function pickGiftSuggestion(id, name) {
+        selectedRecipientId = id;
+        document.getElementById("giftRecipientInput").value = `@${name}`;
+        document.getElementById("giftSuggestions").classList.remove("open");
+      }
+
+      async function confirmGift() {
+        if (!giftItem || !currentDiscordId) return;
+        const rawInput = document.getElementById("giftRecipientInput").value.trim();
+        const errEl = document.getElementById("giftError");
+        const sucEl = document.getElementById("giftSuccess");
+        const btn = document.getElementById("btnGiftConfirm");
+        errEl.style.display = "none";
+        sucEl.style.display = "none";
+
+        // Use autocomplete-selected ID or parse raw input
+        let recipientId = selectedRecipientId;
+        if (!recipientId) {
+          const cleaned = rawInput.replace(/^<@!?/, "").replace(/>$/, "").replace(/^@/, "").trim();
+          if (!/^\d{17,20}$/.test(cleaned)) {
+            errEl.textContent =
+              "Search for a username and pick a result, or paste a valid Discord ID (17–20 digits).";
+            errEl.style.display = "block";
+            return;
+          }
+          recipientId = cleaned;
+        }
+        if (recipientId === currentDiscordId) {
+          errEl.textContent = "You can't gift an item to yourself.";
+          errEl.style.display = "block";
+          return;
+        }
+
+        const tokens = parseInt(giftItem.tokens);
+        if ((userStats?.tokens || 0) < tokens) {
+          errEl.textContent = `You need ${tokens} Tokens to gift this. You have ${userStats?.tokens || 0}.`;
+          errEl.style.display = "block";
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Sending...";
+
+        try {
+          // 1. Check recipient exists in the bot's user_stats
+          const rCheck = await fetch(
+            `${SB_URL}/rest/v1/user_stats?discord_id=eq.${recipientId}&select=discord_id`,
+            { headers: sbHeaders },
+          );
+          const rRows = await rCheck.json();
+          if (!Array.isArray(rRows) || rRows.length === 0) {
+            errEl.textContent =
+              "That user hasn't used the bot yet. They need to run a bot command first.";
+            errEl.style.display = "block";
+            btn.disabled = false;
+            btn.textContent = "Send Gift";
+            return;
+          }
+
+          // 2. For themes/voices: check recipient doesn't already own it
+          const itemIdStr = String(giftItem.id);
+          if (itemIdStr.startsWith("theme_") || itemIdStr.startsWith("elevenlabs_")) {
+            const ownCheck = await fetch(
+              `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${recipientId}&item_id=eq.${itemIdStr}&fulfilled=eq.true&select=item_id`,
+              { headers: sbHeaders },
+            );
+            const ownRows = await ownCheck.json();
+            if (Array.isArray(ownRows) && ownRows.length > 0) {
+              const itemType = itemIdStr.startsWith("elevenlabs_") ? "voice" : "theme";
+              errEl.textContent = `That user already owns this ${itemType}.`;
+              errEl.style.display = "block";
+              btn.disabled = false;
+              btn.textContent = "Send Gift";
+              return;
+            }
+          }
+
+          // 3. Deduct tokens from gifter
+          const newTokens = (userStats.tokens || 0) - tokens;
+          await fetch(`${SB_URL}/rest/v1/user_stats?discord_id=eq.${currentDiscordId}`, {
+            method: "PATCH",
+            headers: { ...sbHeaders, Prefer: "return=minimal" },
+            body: JSON.stringify({ tokens: newTokens }),
+          });
+
+          // 4. Create a purchase record for the recipient (bot will fulfill it)
+          const postRes = await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
+            method: "POST",
+            headers: sbHeaders,
+            body: JSON.stringify({
+              discord_id: recipientId,
+              item_id: giftItem.id,
+              cost_tokens: 0,
+              cost_coins: 0,
+              gifted_by: currentDiscordId,
+            }),
+          });
+          if (!postRes.ok) {
+            const errBody = await postRes.json().catch(() => ({}));
+            throw new Error(errBody.message || `Server error ${postRes.status}`);
+          }
+
+          // 5. Optimistic UI update
+          if (userStats) {
+            userStats.tokens = newTokens;
+            document.getElementById("tokenDisplay").textContent =
+              `${userStats.tokens} Tokens | ${Number(userStats.balance || 0).toLocaleString()} Coins | Lvl ${userStats.level || 0}`;
+          }
+
+          sucEl.textContent = "🎁 Gift sent! They'll receive it within a few seconds.";
+          sucEl.style.display = "block";
+          btn.textContent = "Sent!";
+          setTimeout(() => closeGiftModal(), 2500);
+        } catch {
+          errEl.textContent = "Error sending gift. Please try again.";
+          errEl.style.display = "block";
+          btn.disabled = false;
+          btn.textContent = "Send Gift";
+        }
+      }
+
+      document.getElementById("btnGiftConfirm").addEventListener("click", confirmGift);
+      setupGiftAutocomplete();
+
+      document
+        .getElementById("loginBtn")
+        .addEventListener("click", () => (window.location.href = OAUTH_URL));
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.removeItem(STORE_USER);
+        localStorage.removeItem(STORE_TOKEN);
+        currentDiscordId = null;
+        ownedThemes.clear();
+        activeTheme = "default";
+        showLoggedOut();
+      });
+
+      init();
+    </script>
+  </body>
 </html>
