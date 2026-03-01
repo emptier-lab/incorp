@@ -511,23 +511,35 @@
                     <div id="voicesTab" style="display:none">
                         <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 0.75rem;">
                             Purchase AI voices powered by <strong>ElevenLabs</strong> for use in the <code>.ttsbot</code> feature.
-                            Once bought, set yours with <code>.changevoice &lt;name&gt;</code>.
+                            Once bought, set yours with <code>.changevoice &lt;name&gt;</code>. Daily limit: <strong>3,000 chars/user</strong>.
                         </p>
-                        <p style="color: var(--fg-3); font-size: 0.825rem; margin-bottom: 1.5rem;">
+                        <p style="color: var(--fg-3); font-size: 0.825rem; margin-bottom: 1rem;">
                             Standard voices cost <strong>1 Token</strong>. Premium voices cost <strong>2 Tokens</strong>.
                         </p>
 
-                        <div class="cat-filter-bar" id="voiceCatBar">
-                            <button class="cat-btn active" data-vcat="all">All</button>
-                            <button class="cat-btn" data-vcat="standard">Standard</button>
-                            <button class="cat-btn" data-vcat="premium">Premium</button>
-                            <button class="cat-btn" data-vcat="male">Male</button>
-                            <button class="cat-btn" data-vcat="female">Female</button>
+                        <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap;">
+                            <input type="text" id="voiceSearch" placeholder="Search voices..." autocomplete="off"
+                                style="flex:1; min-width:180px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+                                border-radius:8px; color:var(--fg); padding:0.55rem 0.875rem; font-size:0.875rem;
+                                font-family:var(--font); outline:none; transition:border-color 0.15s;"
+                                onfocus="this.style.borderColor='rgba(167,139,250,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                            <div class="cat-filter-bar" id="voiceCatBar" style="margin-bottom:0; flex-wrap:nowrap;">
+                                <button class="cat-btn active" data-vcat="all">All</button>
+                                <button class="cat-btn" data-vcat="standard">Standard</button>
+                                <button class="cat-btn" data-vcat="premium">Premium</button>
+                                <button class="cat-btn" data-vcat="owned">Owned</button>
+                            </div>
                         </div>
+                        <p id="voiceCount" style="color:var(--fg-4); font-size:0.75rem; margin-bottom:1rem;"></p>
 
                         <div class="voices-grid" id="voicesGrid">
                             <p style="color:var(--fg-4); font-size:0.875rem;">Loading voices...</p>
                         </div>
+                        <button id="voicesLoadMore" style="display:none; margin:1.5rem auto 0; display:none;
+                            background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--fg-2);
+                            padding:0.6rem 1.5rem; border-radius:8px; cursor:pointer; font-family:var(--font); font-size:0.875rem;">
+                            Load more
+                        </button>
                     </div><!-- /voicesTab -->
 
                     <!-- ── PROFILE SETTINGS TAB ── -->
@@ -640,53 +652,27 @@
             }
         };
 
-        // ── ElevenLabs Voice Catalog ─────────────────────────────────────────────
-        const EL_CATALOG = [
-          {id:'21m00Tcm4TlvDq8ikWAM',name:'Rachel',   gender:'female',accent:'American',   desc:'Calm, young American female',           price:1,category:'standard'},
-          {id:'AZnzlk1XvdvUeBnXmlld',name:'Domi',     gender:'female',accent:'American',   desc:'Confident, young American female',      price:1,category:'standard'},
-          {id:'EXAVITQu4vr4xnSDxMaL',name:'Bella',    gender:'female',accent:'American',   desc:'Soft, young American female',           price:1,category:'standard'},
-          {id:'ErXwobaYiN019PkySvjV', name:'Antoni',   gender:'male',  accent:'American',   desc:'Well-rounded American male',            price:1,category:'standard'},
-          {id:'MF3mGyEYCl7XYWbV9V6O', name:'Elli',     gender:'female',accent:'American',   desc:'Young, emotional American female',       price:1,category:'standard'},
-          {id:'TxGEqnHWrfWFTfGW9XjX', name:'Josh',     gender:'male',  accent:'American',   desc:'Deep, American male',                   price:1,category:'standard'},
-          {id:'VR6AewLTigWG4xSOukaG', name:'Arnold',   gender:'male',  accent:'American',   desc:'Crisp, middle-aged American male',       price:1,category:'standard'},
-          {id:'pNInz6obpgDQGcFmaJgB', name:'Adam',     gender:'male',  accent:'American',   desc:'Deep narrator voice',                   price:1,category:'standard'},
-          {id:'yoZ06aMxZJJ28mfd3POQ', name:'Sam',      gender:'male',  accent:'American',   desc:'Raspy, young American male',             price:1,category:'standard'},
-          {id:'onwK4e9ZLuTAKqWW03F9', name:'Daniel',   gender:'male',  accent:'British',    desc:'Deep, authoritative British male',       price:1,category:'standard'},
-          {id:'ThT5KcBeYPX3keUQqHPh', name:'Dorothy',  gender:'female',accent:'British',    desc:'Pleasant, warm British female',          price:1,category:'standard'},
-          {id:'IKne3meq5aSn9XLyUdCD', name:'Charlie',  gender:'male',  accent:'Australian', desc:'Natural, Australian male',               price:1,category:'standard'},
-          {id:'XB0fDUnXU5powFXDhCwa', name:'Charlotte',gender:'female',accent:'Swedish',    desc:'Seductive, Swedish/English female',      price:1,category:'standard'},
-          {id:'pqHfZKP75CvOlQylNhV4', name:'Bill',     gender:'male',  accent:'American',   desc:'Trustworthy, ground-level American male',price:1,category:'standard'},
-          {id:'LcfcDJNUP1GQjkzn1xUU', name:'Emily',    gender:'female',accent:'American',   desc:'Calm, young American female',           price:1,category:'standard'},
-          {id:'flq6f7ib4F8Vz3B0D9Hv', name:'Michael',  gender:'male',  accent:'American',   desc:'Audiobook-style American male',          price:1,category:'standard'},
-          {id:'SOYHLrjzK2X1ezoPC6cr', name:'Harry',    gender:'male',  accent:'American',   desc:'Anxious, young American male',           price:1,category:'standard'},
-          {id:'TX3LPaxmHKxFdv7VOQHJ', name:'Liam',     gender:'male',  accent:'American',   desc:'Neutral American male',                  price:1,category:'standard'},
-          {id:'XrExE9yKIg1WjnnlVkGX', name:'Matilda',  gender:'female',accent:'American',   desc:'Warm, friendly American female',         price:1,category:'standard'},
-          {id:'GBv7mTt0atIp3Br8iCZE', name:'Thomas',   gender:'male',  accent:'American',   desc:'Calm, young American male',              price:1,category:'standard'},
-          {id:'bVMeCyTHy58xNoL34h3p', name:'Jeremy',   gender:'male',  accent:'American',   desc:'Excited American male',                  price:1,category:'standard'},
-          {id:'piTKgcLEGmPE4e6mEKli', name:'Nicole',   gender:'female',accent:'American',   desc:'Whispery, soft American female',         price:1,category:'standard'},
-          {id:'N2lVS1w4EtoT3dr4eOWO', name:'Callum',   gender:'male',  accent:'Transatlantic',desc:'Masculine, intense voice',             price:1,category:'standard'},
-          {id:'CYw3kZ02Hs0563khs1Fj', name:'Dave',     gender:'male',  accent:'British',    desc:'Conversational British male',            price:1,category:'standard'},
-          {id:'29vD33N1ypyABXS2h8YP', name:'Drew',     gender:'male',  accent:'American',   desc:'Well-rounded, casual American male',     price:1,category:'standard'},
-          {id:'D38z5RcWu1voky8WS1ja', name:'Fin',      gender:'male',  accent:'Irish',      desc:'Sailor-style Irish male',                price:1,category:'standard'},
-          {id:'jsCqWAovK2LkecY7zXl4', name:'Freya',    gender:'female',accent:'American',   desc:'Oversharing American female',            price:1,category:'standard'},
-          {id:'jBpfuIE2acCO8z3wKNLl', name:'Gigi',     gender:'female',accent:'American',   desc:'Childlike, young American female',       price:1,category:'standard'},
-          {id:'oWAxZDx7w5VEj9dCyTzz', name:'Grace',    gender:'female',accent:'Southern US',desc:'Southern American female',               price:1,category:'standard'},
-          {id:'t0jbNlBVZ17f02VDIeMI', name:'Jessie',   gender:'male',  accent:'American',   desc:'Raspy, old American male',               price:1,category:'standard'},
-          {id:'g5CIjZEefAph4nQFvHAz', name:'Ethan',    gender:'male',  accent:'American',   desc:'ASMR-style American male',               price:1,category:'standard'},
-          {id:'ZQe5CZNOzWyzPSCn5a3c', name:'James',    gender:'male',  accent:'Australian', desc:'Calm, Australian male',                  price:1,category:'standard'},
-          {id:'Zlb1dXrM653N07WRdFW3', name:'Joseph',   gender:'male',  accent:'British',    desc:'British male',                           price:1,category:'standard'},
-          {id:'pFZP5JQG7iQjIQuC4Bku', name:'Lily',     gender:'female',accent:'British',    desc:'Warm British female',                    price:1,category:'standard'},
-          {id:'z9fAnlkpzviPz146aGWa', name:'Glinda',   gender:'female',accent:'American',   desc:'Warm, friendly American female',         price:1,category:'standard'},
-          {id:'zcAOhNBS3c14rBihAFp1', name:'Giovanni', gender:'male',  accent:'Italian',    desc:'Italian-accented male',                  price:1,category:'standard'},
-          {id:'zrHiDhphv9ZnVXBqCLjz', name:'Mimi',     gender:'female',accent:'Swedish',    desc:'Young, childlike Swedish female',        price:1,category:'standard'},
-          {id:'iP05790A1LoA0KnP27K9', name:'Chris',    gender:'male',  accent:'American',   desc:'Casual, conversational American male',   price:2,category:'premium'},
-          {id:'wViXBPUzp2ZZixB1xQuM', name:'Ryan',     gender:'male',  accent:'Australian', desc:'Polished Australian male',               price:2,category:'premium'},
-          {id:'pMsXgVXv3BLzUgSXRplE', name:'Serena',   gender:'female',accent:'American',   desc:'Pleasant, expressive American female',   price:2,category:'premium'},
-          {id:'ODq5zmih8GrVes37Dx9W', name:'Patrick',  gender:'male',  accent:'American',   desc:'Middle-aged American male',              price:2,category:'premium'},
-          {id:'Yko7PKHZNXotIFUBG7I9', name:'Matthew',  gender:'male',  accent:'British',    desc:'British-accented male',                  price:2,category:'premium'},
-          {id:'5Q0t7uMcjvnagumLfvZi', name:'Paul',     gender:'male',  accent:'American',   desc:'Middle-aged American male',              price:2,category:'premium'},
-          {id:'2EiwWnXFnvU5JabPnv8n', name:'Clyde',    gender:'male',  accent:'American',   desc:'War-veteran-style American male',        price:2,category:'premium'},
-        ];
+        // ── ElevenLabs Voice Catalog (fetched dynamically) ───────────────────────
+        let EL_CATALOG = [];
+        let elCatalogLoaded = false;
+        async function loadElCatalog() {
+            if (elCatalogLoaded) return;
+            try {
+                const res = await fetch('el_voices.json');
+                const raw = await res.json();
+                // raw entries: {id, name, desc, p (price_tokens), c (1=standard/2=premium)}
+                EL_CATALOG = raw.map(v => ({
+                    id: v.id,
+                    name: v.name,
+                    desc: v.desc || '',
+                    price_tokens: v.p || 1,
+                    category: (v.c === 2 || v.p === 2) ? 'premium' : 'standard'
+                }));
+                elCatalogLoaded = true;
+            } catch (e) {
+                console.error('Failed to load voice catalog:', e);
+            }
+        }
 
         // ── State ────────────────────────────────────────────────────────────────
         const toggle   = document.getElementById('mobileToggle');
@@ -782,57 +768,111 @@
             }
         }
 
+        const VOICES_PAGE_SIZE = 48;
+        let voicesPage = 0;
+        let voicesFiltered = [];
+
+        function getFilteredVoices() {
+            const cat = currentVoiceCat;
+            const q   = (document.getElementById('voiceSearch')?.value || '').toLowerCase().trim();
+            return EL_CATALOG.filter(v => {
+                if (cat === 'standard' && v.category !== 'standard') return false;
+                if (cat === 'premium'  && v.category !== 'premium')  return false;
+                if (cat === 'owned'    && !ownedVoiceIds.has(v.id))  return false;
+                if (q && !v.name.toLowerCase().includes(q) && !v.desc.toLowerCase().includes(q)) return false;
+                return true;
+            });
+        }
+
+        function voiceCardHtml(v) {
+            const isOwned  = ownedVoiceIds.has(v.id);
+            const isPrem   = v.category === 'premium';
+            const catBg    = isPrem ? 'rgba(167,139,250,.15)' : 'rgba(113,113,122,.15)';
+            const catColor = isPrem ? '#a78bfa' : '#71717a';
+            const catLabel = isPrem ? 'Premium' : 'Standard';
+            const tokens   = v.price_tokens;
+            const safeId   = CSS.escape('vm-' + v.id);
+
+            let actionBtn;
+            if (isOwned) {
+                actionBtn = `<button class="btn-voice-action btn-voice-owned" disabled>✓ Owned</button>`;
+            } else {
+                actionBtn = `<button class="btn-voice-action btn-voice-buy buy-btn"
+                    data-id="elevenlabs_${v.id}"
+                    data-name="${v.name.replace(/"/g,'&quot;')} (ElevenLabs AI)"
+                    data-tokens="${tokens}" data-coins="0" data-req-level="0"
+                    >${tokens} Token${tokens > 1 ? 's' : ''}</button>`;
+            }
+
+            const menuId = 'vm-' + v.id;
+            const giftHtml = `<div class="card-menu-wrap">
+                <button class="card-menu-btn" onclick="toggleCardMenu(event,'${menuId}')">⋯</button>
+                <div class="card-dropdown" id="${menuId}">
+                    <button class="card-dropdown-item" onclick="openGiftModal({id:'elevenlabs_${v.id}',name:'${v.name.replace(/'/g,"\\'")} (ElevenLabs AI)',tokens:${tokens},coins:0,reqLevel:0});closeAllMenus()">🎁 Gift</button>
+                </div>
+            </div>`;
+
+            return `
+            <div class="voice-card${isOwned ? ' is-owned' : ''}">
+                ${isOwned ? '<div class="voice-badge">Owned</div>' : ''}
+                <div style="display:flex;align-items:center;gap:0.625rem;margin-bottom:0.25rem;">
+                    <div class="voice-card-icon">🎙️</div>
+                    <div class="voice-card-name" style="font-size:0.875rem;">${v.name}</div>
+                </div>
+                <span class="voice-cat-pill" style="background:${catBg};color:${catColor}">${catLabel}</span>
+                <div class="voice-card-desc">${v.desc || '—'}</div>
+                <div class="voice-card-footer">
+                    <span class="voice-price">${isOwned ? 'Owned' : `${tokens} Token${tokens > 1 ? 's' : ''}`}</span>
+                    ${actionBtn}${giftHtml}
+                </div>
+            </div>`;
+        }
+
         function renderVoices(cat) {
             currentVoiceCat = cat;
+            voicesPage = 0;
             document.querySelectorAll('#voiceCatBar .cat-btn').forEach(b => b.classList.toggle('active', b.dataset.vcat === cat));
+            voicesFiltered = getFilteredVoices();
             const grid = document.getElementById('voicesGrid');
-            const voices = EL_CATALOG.filter(v => {
-                if (cat === 'all') return true;
-                if (cat === 'standard' || cat === 'premium') return v.category === cat;
-                return v.gender === cat;
-            });
+            const countEl = document.getElementById('voiceCount');
+            const moreBtn = document.getElementById('voicesLoadMore');
 
-            grid.innerHTML = voices.map(v => {
-                const isOwned  = ownedVoiceIds.has(v.id);
-                const isPrem   = v.category === 'premium';
-                const catBg    = isPrem ? 'rgba(167,139,250,.15)' : 'rgba(113,113,122,.15)';
-                const catColor = isPrem ? '#a78bfa' : '#71717a';
-                const catLabel = isPrem ? 'Premium' : 'Standard';
-                const genderIcon = v.gender === 'female' ? '👩' : '👨';
+            if (!elCatalogLoaded) {
+                grid.innerHTML = '<p style="color:var(--fg-4);font-size:0.875rem;">Loading voices...</p>';
+                return;
+            }
+            if (voicesFiltered.length === 0) {
+                grid.innerHTML = '<p style="color:var(--fg-4);font-size:0.875rem;">No voices found.</p>';
+                countEl.textContent = '';
+                moreBtn.style.display = 'none';
+                return;
+            }
 
-                let actionBtn;
-                if (isOwned) {
-                    actionBtn = `<button class="btn-voice-action btn-voice-owned" disabled>✓ Owned</button>`;
-                } else {
-                    actionBtn = `<button class="btn-voice-action btn-voice-buy buy-btn"
-                        data-id="elevenlabs_${v.id}"
-                        data-name="${v.name} (ElevenLabs)"
-                        data-tokens="${v.price}"
-                        data-coins="0"
-                        data-req-level="0">${v.price} Token${v.price > 1 ? 's' : ''}</button>`;
-                }
+            const page = voicesFiltered.slice(0, VOICES_PAGE_SIZE);
+            grid.innerHTML = page.map(voiceCardHtml).join('');
+            countEl.textContent = `Showing ${page.length} of ${voicesFiltered.length} voices`;
+            moreBtn.style.display = voicesFiltered.length > VOICES_PAGE_SIZE ? 'block' : 'none';
+            voicesPage = 1;
+            bindVoiceButtons();
+        }
 
-                return `
-                <div class="voice-card${isOwned ? ' is-owned' : ''}">
-                    ${isOwned ? '<div class="voice-badge">Owned</div>' : ''}
-                    <div style="display:flex;align-items:center;gap:0.625rem;">
-                        <div class="voice-card-icon">${genderIcon}</div>
-                        <div>
-                            <div class="voice-card-name">${v.name}</div>
-                            <div class="voice-card-meta">${v.accent} · ${v.gender}</div>
-                        </div>
-                    </div>
-                    <span class="voice-cat-pill" style="background:${catBg};color:${catColor}">${catLabel}</span>
-                    <div class="voice-card-desc">${v.desc}</div>
-                    <div class="voice-card-footer">
-                        <span class="voice-price">${isOwned ? 'Owned' : `${v.price} Token${v.price > 1 ? 's' : ''}`}</span>
-                        ${actionBtn}
-                    </div>
-                </div>`;
-            }).join('');
+        function voicesLoadMore() {
+            const grid = document.getElementById('voicesGrid');
+            const countEl = document.getElementById('voiceCount');
+            const moreBtn = document.getElementById('voicesLoadMore');
+            const start = voicesPage * VOICES_PAGE_SIZE;
+            const page  = voicesFiltered.slice(start, start + VOICES_PAGE_SIZE);
+            grid.insertAdjacentHTML('beforeend', page.map(voiceCardHtml).join(''));
+            voicesPage++;
+            const shown = voicesPage * VOICES_PAGE_SIZE;
+            countEl.textContent = `Showing ${Math.min(shown, voicesFiltered.length)} of ${voicesFiltered.length} voices`;
+            if (shown >= voicesFiltered.length) moreBtn.style.display = 'none';
+            bindVoiceButtons();
+        }
 
-            // Bind buy buttons
+        function bindVoiceButtons() {
             document.querySelectorAll('#voicesGrid .buy-btn').forEach(btn => {
+                btn.onclick = null;
                 btn.addEventListener('click', () => openModal(btn.dataset));
             });
         }
@@ -1043,7 +1083,7 @@
                 document.getElementById('voicesTab').style.display  = tab === 'voices'  ? '' : 'none';
                 document.getElementById('profileTab').style.display = tab === 'profile' ? '' : 'none';
                 if (tab === 'themes') renderThemes(currentThemeCat);
-                if (tab === 'voices') renderVoices(currentVoiceCat);
+                if (tab === 'voices') { loadElCatalog().then(() => renderVoices(currentVoiceCat)); }
                 if (tab === 'profile') loadBio();
             });
         });
@@ -1098,6 +1138,13 @@
         document.querySelectorAll('#voiceCatBar .cat-btn').forEach(btn => {
             btn.addEventListener('click', () => renderVoices(btn.dataset.vcat));
         });
+
+        let voiceSearchTimer;
+        document.getElementById('voiceSearch')?.addEventListener('input', () => {
+            clearTimeout(voiceSearchTimer);
+            voiceSearchTimer = setTimeout(() => renderVoices(currentVoiceCat), 250);
+        });
+        document.getElementById('voicesLoadMore')?.addEventListener('click', voicesLoadMore);
 
         // ── Store item buy buttons ───────────────────────────────────────────────
         document.querySelectorAll('#itemsTab .buy-btn').forEach(btn => {
@@ -1331,15 +1378,17 @@
                     return;
                 }
 
-                // 2. For themes: check recipient doesn't already own it
-                if (String(giftItem.id).startsWith('theme_')) {
+                // 2. For themes/voices: check recipient doesn't already own it
+                const itemIdStr = String(giftItem.id);
+                if (itemIdStr.startsWith('theme_') || itemIdStr.startsWith('elevenlabs_')) {
                     const ownCheck = await fetch(
-                        `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${recipientId}&item_id=eq.${giftItem.id}&fulfilled=eq.true&select=item_id`,
+                        `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${recipientId}&item_id=eq.${itemIdStr}&fulfilled=eq.true&select=item_id`,
                         { headers: sbHeaders }
                     );
                     const ownRows = await ownCheck.json();
                     if (Array.isArray(ownRows) && ownRows.length > 0) {
-                        errEl.textContent   = 'That user already owns this theme.';
+                        const itemType = itemIdStr.startsWith('elevenlabs_') ? 'voice' : 'theme';
+                        errEl.textContent   = `That user already owns this ${itemType}.`;
                         errEl.style.display = 'block';
                         btn.disabled = false; btn.textContent = 'Send Gift';
                         return;
