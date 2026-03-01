@@ -170,6 +170,47 @@
             font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
             border-bottom-left-radius: 8px;
         }
+
+        /* ── Card kebab menu ── */
+        .card-menu-wrap { position: relative; display: inline-flex; }
+        .card-menu-btn {
+            background: none; border: none;
+            color: var(--fg-3); cursor: pointer;
+            padding: 0.3rem 0.5rem; border-radius: 4px;
+            font-size: 1.1rem; line-height: 1;
+            transition: background 0.15s, color 0.15s;
+        }
+        .card-menu-btn:hover { background: rgba(255,255,255,0.1); color: var(--fg); }
+        .card-dropdown {
+            position: absolute; right: 0; bottom: calc(100% + 4px);
+            background: #1a1a1f; border: 1px solid var(--border);
+            border-radius: 8px; min-width: 130px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+            z-index: 200; display: none;
+        }
+        .card-dropdown.open { display: block; }
+        .card-dropdown-item {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.55rem 0.875rem; font-size: 0.85rem;
+            color: var(--fg-2); cursor: pointer;
+            transition: background 0.15s;
+            background: none; border: none; width: 100%;
+            text-align: left; font-family: var(--font);
+            border-radius: 7px; white-space: nowrap;
+        }
+        .card-dropdown-item:hover { background: rgba(255,255,255,0.07); color: var(--fg); }
+
+        /* ── Gift modal input ── */
+        .gift-input {
+            width: 100%; box-sizing: border-box;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px; color: var(--fg);
+            padding: 0.65rem 0.875rem; font-size: 0.9rem;
+            font-family: var(--font); outline: none;
+            transition: border-color 0.15s;
+        }
+        .gift-input:focus { border-color: rgba(167,139,250,0.5); }
     </style>
 </head>
 
@@ -303,10 +344,19 @@
                                     </p>
                                     <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">Req: Level 2</p>
                                 </div>
-                                <button class="buy-btn" data-id="1m_coins" data-name="1,000,000 Coins" data-tokens="2" data-coins="0" data-req-level="2"
-                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--fg); padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
-                                    Purchase — 2 Tokens
-                                </button>
+                                <div style="display:flex; gap:0.5rem; align-items:stretch;">
+                                    <button class="buy-btn" data-id="1m_coins" data-name="1,000,000 Coins" data-tokens="2" data-coins="0" data-req-level="2"
+                                        style="flex:1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--fg); padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
+                                        Purchase — 2 Tokens
+                                    </button>
+                                    <div class="card-menu-wrap">
+                                        <button class="card-menu-btn" onclick="toggleCardMenu(event,'im-1m_coins')"
+                                            style="padding:0.5rem 0.6rem; border:1px solid rgba(255,255,255,0.1); border-radius:8px;">⋯</button>
+                                        <div class="card-dropdown" id="im-1m_coins">
+                                            <button class="card-dropdown-item" onclick="openGiftModal({id:'1m_coins',name:'1,000,000 Coins',tokens:'2',coins:'0',reqLevel:'2'});closeAllMenus()">🎁 Gift</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- VIP Badge -->
@@ -344,11 +394,19 @@
                                     </p>
                                     <p style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500;">Req: Level 3</p>
                                 </div>
-                                <button class="buy-btn" data-id="autofish_access" data-name="Autofish Access" data-tokens="15" data-coins="0" data-req-level="3"
-                                    style="background: rgba(20,184,166,0.1); border: 1px solid rgba(20,184,166,0.3); color: #14b8a6; padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
-                                    Purchase — 15 Tokens
-                                </button>
-                            </div>
+                                <div style="display:flex; gap:0.5rem; align-items:stretch;">
+                                    <button class="buy-btn" data-id="autofish_access" data-name="Autofish Access" data-tokens="15" data-coins="0" data-req-level="3"
+                                        style="flex:1; background: rgba(20,184,166,0.1); border: 1px solid rgba(20,184,166,0.3); color: #14b8a6; padding: 0.75rem; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">
+                                        Purchase — 15 Tokens
+                                    </button>
+                                    <div class="card-menu-wrap">
+                                        <button class="card-menu-btn" onclick="toggleCardMenu(event,'im-autofish')"
+                                            style="padding:0.5rem 0.6rem; border:1px solid rgba(20,184,166,0.3); border-radius:8px; color:#14b8a6;">⋯</button>
+                                        <div class="card-dropdown" id="im-autofish">
+                                            <button class="card-dropdown-item" onclick="openGiftModal({id:'autofish_access',name:'Autofish Access',tokens:'15',coins:'0',reqLevel:'3'});closeAllMenus()">🎁 Gift</button>
+                                        </div>
+                                    </div>
+                                </div>
 
                         </div>
                     </div><!-- /itemsTab -->
@@ -414,6 +472,23 @@
             <div class="modal-actions">
                 <button class="btn-cancel" id="btnCancel">Cancel</button>
                 <button class="btn-confirm" id="btnConfirm">Yes, I want to buy this</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gift Modal -->
+    <div class="modal-overlay" id="giftModal">
+        <div class="modal">
+            <h3>🎁 Gift Item</h3>
+            <p>You're gifting <strong id="giftItemName">Item</strong>.<br>Enter the recipient's Discord ID (17–20 digit number).</p>
+            <input type="text" class="gift-input" id="giftRecipientInput"
+                placeholder="e.g. 123456789012345678" autocomplete="off" />
+            <div id="giftError"   style="color: #ef4444; font-size: 0.85rem; margin-top: 0.5rem; display: none;"></div>
+            <div id="giftSuccess" style="color: #86efac; font-size: 0.85rem; margin-top: 0.5rem; display: none;"></div>
+            <div class="modal-actions" style="margin-top: 1.5rem;">
+                <button class="btn-cancel" onclick="closeGiftModal()">Cancel</button>
+                <button class="btn-confirm" id="btnGiftConfirm"
+                    style="background: #16a34a; color: #fff;">Send Gift</button>
             </div>
         </div>
     </div>
@@ -609,6 +684,15 @@
 
                 const priceLabel = isExcl ? 'Earned only' : isOwned ? 'Owned' : (t.tokens > 0 ? `${t.tokens} Tokens` : 'Free');
 
+                const canGift    = !isExcl && t.tokens > 0;
+                const menuId     = `tm-${t.id}`;
+                const giftBtnHtml = canGift ? `<div class="card-menu-wrap">
+                        <button class="card-menu-btn" onclick="toggleCardMenu(event,'${menuId}')">⋯</button>
+                        <div class="card-dropdown" id="${menuId}">
+                            <button class="card-dropdown-item" onclick="openGiftModal({id:'theme_${t.id}',name:'${t.name} Theme',tokens:${t.tokens},coins:0,reqLevel:${t.reqLevel}});closeAllMenus()">🎁 Gift</button>
+                        </div>
+                    </div>` : '';
+
                 return `
                     <div class="theme-card${isActive ? ' is-active' : ''}">
                         ${isOwned && !isActive ? '<div class="theme-owned-badge">Owned</div>' : ''}
@@ -619,7 +703,7 @@
                             <div class="theme-desc">${t.desc}</div>
                             <div class="theme-footer">
                                 <span class="theme-price">${priceLabel}</span>
-                                ${actionBtn}
+                                ${actionBtn}${giftBtnHtml}
                             </div>
                         </div>
                     </div>`;
@@ -848,6 +932,146 @@
                 }
             }
         }
+
+        // ── Card kebab menus ─────────────────────────────────────────────────────
+        function toggleCardMenu(e, menuId) {
+            e.stopPropagation();
+            const menu    = document.getElementById(menuId);
+            const wasOpen = menu?.classList.contains('open');
+            closeAllMenus();
+            if (!wasOpen && menu) menu.classList.add('open');
+        }
+
+        function closeAllMenus() {
+            document.querySelectorAll('.card-dropdown.open').forEach(m => m.classList.remove('open'));
+        }
+
+        document.addEventListener('click', closeAllMenus);
+
+        // ── Gift modal ───────────────────────────────────────────────────────────
+        let giftItem = null;
+
+        function openGiftModal(item) {
+            closeAllMenus();
+            giftItem = item;
+            document.getElementById('giftItemName').textContent = item.name;
+            document.getElementById('giftRecipientInput').value = '';
+            document.getElementById('giftError').style.display   = 'none';
+            document.getElementById('giftSuccess').style.display = 'none';
+            const btn = document.getElementById('btnGiftConfirm');
+            btn.disabled    = false;
+            btn.textContent = 'Send Gift';
+            document.getElementById('giftModal').classList.add('active');
+            setTimeout(() => document.getElementById('giftRecipientInput').focus(), 100);
+        }
+
+        function closeGiftModal() {
+            document.getElementById('giftModal').classList.remove('active');
+            giftItem = null;
+        }
+
+        async function confirmGift() {
+            if (!giftItem || !currentDiscordId) return;
+            const rawInput = document.getElementById('giftRecipientInput').value.trim();
+            const errEl    = document.getElementById('giftError');
+            const sucEl    = document.getElementById('giftSuccess');
+            const btn      = document.getElementById('btnGiftConfirm');
+            errEl.style.display = 'none';
+            sucEl.style.display = 'none';
+
+            // Parse Discord ID — support <@ID> and <@!ID> mention formats
+            const recipientId = rawInput.replace(/^<@!?/, '').replace(/>$/, '');
+            if (!/^\d{17,20}$/.test(recipientId)) {
+                errEl.textContent   = 'Please enter a valid Discord ID (17–20 digit number).';
+                errEl.style.display = 'block';
+                return;
+            }
+            if (recipientId === currentDiscordId) {
+                errEl.textContent   = "You can't gift an item to yourself.";
+                errEl.style.display = 'block';
+                return;
+            }
+
+            const tokens = parseInt(giftItem.tokens);
+            if ((userStats?.tokens || 0) < tokens) {
+                errEl.textContent   = `You need ${tokens} Tokens to gift this. You have ${userStats?.tokens || 0}.`;
+                errEl.style.display = 'block';
+                return;
+            }
+
+            btn.disabled    = true;
+            btn.textContent = 'Sending...';
+
+            try {
+                // 1. Check recipient exists in the bot's user_stats
+                const rCheck = await fetch(
+                    `${SB_URL}/rest/v1/user_stats?discord_id=eq.${recipientId}&select=discord_id`,
+                    { headers: sbHeaders }
+                );
+                const rRows = await rCheck.json();
+                if (!Array.isArray(rRows) || rRows.length === 0) {
+                    errEl.textContent   = "That user hasn't used the bot yet. They need to run a bot command first.";
+                    errEl.style.display = 'block';
+                    btn.disabled = false; btn.textContent = 'Send Gift';
+                    return;
+                }
+
+                // 2. For themes: check recipient doesn't already own it
+                if (String(giftItem.id).startsWith('theme_')) {
+                    const ownCheck = await fetch(
+                        `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${recipientId}&item_id=eq.${giftItem.id}&fulfilled=eq.true&select=item_id`,
+                        { headers: sbHeaders }
+                    );
+                    const ownRows = await ownCheck.json();
+                    if (Array.isArray(ownRows) && ownRows.length > 0) {
+                        errEl.textContent   = 'That user already owns this theme.';
+                        errEl.style.display = 'block';
+                        btn.disabled = false; btn.textContent = 'Send Gift';
+                        return;
+                    }
+                }
+
+                // 3. Deduct tokens from gifter
+                const newTokens = (userStats.tokens || 0) - tokens;
+                await fetch(`${SB_URL}/rest/v1/user_stats?discord_id=eq.${currentDiscordId}`, {
+                    method:  'PATCH',
+                    headers: { ...sbHeaders, Prefer: 'return=minimal' },
+                    body:    JSON.stringify({ tokens: newTokens })
+                });
+
+                // 4. Create a purchase record for the recipient (bot will fulfill it)
+                await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
+                    method:  'POST',
+                    headers: sbHeaders,
+                    body:    JSON.stringify({
+                        discord_id:  recipientId,
+                        item_id:     giftItem.id,
+                        cost_tokens: 0,
+                        cost_coins:  0,
+                        gifted_by:   currentDiscordId
+                    })
+                });
+
+                // 5. Optimistic UI update
+                if (userStats) {
+                    userStats.tokens = newTokens;
+                    document.getElementById('tokenDisplay').textContent =
+                        `${userStats.tokens} Tokens | ${Number(userStats.balance || 0).toLocaleString()} Coins | Lvl ${userStats.level || 0}`;
+                }
+
+                sucEl.textContent   = "🎁 Gift sent! They'll receive it within a few seconds.";
+                sucEl.style.display = 'block';
+                btn.textContent     = 'Sent!';
+                setTimeout(() => closeGiftModal(), 2500);
+            } catch {
+                errEl.textContent   = 'Error sending gift. Please try again.';
+                errEl.style.display = 'block';
+                btn.disabled    = false;
+                btn.textContent = 'Send Gift';
+            }
+        }
+
+        document.getElementById('btnGiftConfirm').addEventListener('click', confirmGift);
 
         document.getElementById('loginBtn').addEventListener('click', () => window.location.href = OAUTH_URL);
         document.getElementById('logoutBtn').addEventListener('click', () => {
