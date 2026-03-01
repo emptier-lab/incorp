@@ -200,7 +200,8 @@
         }
         .card-dropdown-item:hover { background: rgba(255,255,255,0.07); color: var(--fg); }
 
-        /* ── Gift modal input ── */
+        /* ── Gift modal input + autocomplete ── */
+        .gift-input-wrap { position: relative; }
         .gift-input {
             width: 100%; box-sizing: border-box;
             background: rgba(255,255,255,0.05);
@@ -211,6 +212,23 @@
             transition: border-color 0.15s;
         }
         .gift-input:focus { border-color: rgba(167,139,250,0.5); }
+        .gift-suggestions {
+            position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+            background: #1a1a1f; border: 1px solid var(--border);
+            border-radius: 8px; max-height: 180px; overflow-y: auto;
+            z-index: 300; display: none; list-style: none;
+            margin: 0; padding: 0.25rem 0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+        .gift-suggestions.open { display: block; }
+        .gift-suggestion-item {
+            padding: 0.55rem 0.875rem; font-size: 0.875rem;
+            color: var(--fg-2); cursor: pointer;
+            transition: background 0.15s; list-style: none;
+        }
+        .gift-suggestion-item:hover, .gift-suggestion-item.active {
+            background: rgba(255,255,255,0.07); color: var(--fg);
+        }
     </style>
 </head>
 
@@ -481,9 +499,12 @@
     <div class="modal-overlay" id="giftModal">
         <div class="modal">
             <h3>🎁 Gift Item</h3>
-            <p>You're gifting <strong id="giftItemName">Item</strong>.<br>Enter the recipient's Discord ID (17–20 digit number).</p>
-            <input type="text" class="gift-input" id="giftRecipientInput"
-                placeholder="e.g. 123456789012345678" autocomplete="off" />
+            <p>You're gifting <strong id="giftItemName">Item</strong>.<br>Search by username or paste their Discord ID.</p>
+            <div class="gift-input-wrap">
+                <input type="text" class="gift-input" id="giftRecipientInput"
+                    placeholder="Search username or paste Discord ID…" autocomplete="off" />
+                <ul class="gift-suggestions" id="giftSuggestions"></ul>
+            </div>
             <div id="giftError"   style="color: #ef4444; font-size: 0.85rem; margin-top: 0.5rem; display: none;"></div>
             <div id="giftSuccess" style="color: #86efac; font-size: 0.85rem; margin-top: 0.5rem; display: none;"></div>
             <div class="modal-actions" style="margin-top: 1.5rem;">
@@ -951,12 +972,15 @@
 
         // ── Gift modal ───────────────────────────────────────────────────────────
         let giftItem = null;
+        let selectedRecipientId = null;
 
         function openGiftModal(item) {
             closeAllMenus();
             giftItem = item;
+            selectedRecipientId = null;
             document.getElementById('giftItemName').textContent = item.name;
             document.getElementById('giftRecipientInput').value = '';
+            document.getElementById('giftSuggestions').classList.remove('open');
             document.getElementById('giftError').style.display   = 'none';
             document.getElementById('giftSuccess').style.display = 'none';
             const btn = document.getElementById('btnGiftConfirm');
@@ -968,7 +992,78 @@
 
         function closeGiftModal() {
             document.getElementById('giftModal').classList.remove('active');
+            document.getElementById('giftSuggestions').classList.remove('open');
+            selectedRecipientId = null;
             giftItem = null;
+        }
+
+        function setupGiftAutocomplete() {
+            const input = document.getElementById('giftRecipientInput');
+            const list  = document.getElementById('giftSuggestions');
+            let timer;
+
+            input.addEventListener('input', () => {
+                selectedRecipientId = null;
+                const q = input.value.trim().replace(/^@/, '');
+                clearTimeout(timer);
+                list.classList.remove('open');
+                // Skip search if it looks like a raw numeric ID
+                if (q.length < 2 || /^\d{10,}$/.test(q)) return;
+                timer = setTimeout(() => fetchGiftSuggestions(q), 300);
+            });
+
+            input.addEventListener('keydown', e => {
+                if (!list.classList.contains('open')) return;
+                const items = [...list.querySelectorAll('.gift-suggestion-item')];
+                const cur   = list.querySelector('.gift-suggestion-item.active');
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const next = cur ? cur.nextElementSibling : items[0];
+                    cur?.classList.remove('active');
+                    next?.classList.add('active');
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const prev = cur ? cur.previousElementSibling : items[items.length - 1];
+                    cur?.classList.remove('active');
+                    prev?.classList.add('active');
+                } else if (e.key === 'Enter' && cur) {
+                    e.preventDefault();
+                    pickGiftSuggestion(cur.dataset.id, cur.dataset.name);
+                } else if (e.key === 'Escape') {
+                    list.classList.remove('open');
+                }
+            });
+
+            document.addEventListener('click', e => {
+                if (!e.target.closest('.gift-input-wrap')) list.classList.remove('open');
+            });
+        }
+
+        async function fetchGiftSuggestions(query) {
+            const list = document.getElementById('giftSuggestions');
+            try {
+                const res  = await fetch(
+                    `${SB_URL}/rest/v1/user_settings?discord_username=ilike.*${encodeURIComponent(query)}*&select=discord_id,discord_username&limit=6`,
+                    { headers: sbHeaders }
+                );
+                const rows = await res.json();
+                if (!Array.isArray(rows) || rows.length === 0) return;
+                const filtered = rows.filter(r => r.discord_username && r.discord_id !== currentDiscordId);
+                if (filtered.length === 0) return;
+                list.innerHTML = filtered
+                    .map(r => `<li class="gift-suggestion-item" data-id="${r.discord_id}" data-name="${r.discord_username}">@${r.discord_username}</li>`)
+                    .join('');
+                list.classList.add('open');
+                list.querySelectorAll('.gift-suggestion-item').forEach(li => {
+                    li.addEventListener('click', () => pickGiftSuggestion(li.dataset.id, li.dataset.name));
+                });
+            } catch { }
+        }
+
+        function pickGiftSuggestion(id, name) {
+            selectedRecipientId = id;
+            document.getElementById('giftRecipientInput').value = `@${name}`;
+            document.getElementById('giftSuggestions').classList.remove('open');
         }
 
         async function confirmGift() {
@@ -980,12 +1075,16 @@
             errEl.style.display = 'none';
             sucEl.style.display = 'none';
 
-            // Parse Discord ID — support <@ID> and <@!ID> mention formats
-            const recipientId = rawInput.replace(/^<@!?/, '').replace(/>$/, '');
-            if (!/^\d{17,20}$/.test(recipientId)) {
-                errEl.textContent   = 'Please enter a valid Discord ID (17–20 digit number).';
-                errEl.style.display = 'block';
-                return;
+            // Use autocomplete-selected ID or parse raw input
+            let recipientId = selectedRecipientId;
+            if (!recipientId) {
+                const cleaned = rawInput.replace(/^<@!?/, '').replace(/>$/, '').replace(/^@/, '').trim();
+                if (!/^\d{17,20}$/.test(cleaned)) {
+                    errEl.textContent   = 'Search for a username and pick a result, or paste a valid Discord ID (17–20 digits).';
+                    errEl.style.display = 'block';
+                    return;
+                }
+                recipientId = cleaned;
             }
             if (recipientId === currentDiscordId) {
                 errEl.textContent   = "You can't gift an item to yourself.";
@@ -1041,7 +1140,7 @@
                 });
 
                 // 4. Create a purchase record for the recipient (bot will fulfill it)
-                await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
+                const postRes = await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
                     method:  'POST',
                     headers: sbHeaders,
                     body:    JSON.stringify({
@@ -1052,6 +1151,10 @@
                         gifted_by:   currentDiscordId
                     })
                 });
+                if (!postRes.ok) {
+                    const errBody = await postRes.json().catch(() => ({}));
+                    throw new Error(errBody.message || `Server error ${postRes.status}`);
+                }
 
                 // 5. Optimistic UI update
                 if (userStats) {
@@ -1073,6 +1176,7 @@
         }
 
         document.getElementById('btnGiftConfirm').addEventListener('click', confirmGift);
+        setupGiftAutocomplete();
 
         document.getElementById('loginBtn').addEventListener('click', () => window.location.href = OAUTH_URL);
         document.getElementById('logoutBtn').addEventListener('click', () => {
