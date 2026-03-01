@@ -1,6 +1,48 @@
 {
   "versions": [
     {
+      "version": "3.7.0",
+      "title": "AI Voices & TTS Overhaul",
+      "date": "March 2026",
+      "description": "ElevenLabs AI voice integration with 4,800+ voices in the marketplace, daily usage limits, and economy bug fixes.",
+      "groups": [
+        {
+          "title": "ElevenLabs AI Voices",
+          "items": [
+            "4,843 AI voices available — Standard (1 token) and Premium (2 tokens) tiers",
+            "3,000 character daily limit per user",
+            "Use .changevoice <name> to activate an owned AI voice",
+            "Owned voices listed in .changevoice output"
+          ]
+        },
+        {
+          "title": "Marketplace — AI Voices Tab",
+          "items": [
+            "New AI Voices tab with 4,800+ browsable voice cards",
+            "Live search bar with category filters: All / Standard / Premium / Owned",
+            "Gift voices to other users via the card menu",
+            "Paginated display — 48 cards per page with Load More"
+          ]
+        },
+        {
+          "title": "Help Command",
+          "items": [
+            "TTS section now appears in .cmds index as [tts]",
+            "Voice commands (play, stop, joinvc, leavevc) moved to dedicated [vc] section",
+            "Media section now only contains GIF and YouTube commands"
+          ]
+        },
+        {
+          "title": "Bug Fixes",
+          "items": [
+            "Fixed .give @user half — 'half' now correctly gives 50% of your balance",
+            "Fixed .deposit half and .withdraw half with same correction",
+            "Previously 'half' was passed as a literal string causing balance corruption"
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.6.0",
       "title": "Profile Cards & Theme System",
       "date": "February 2026",
