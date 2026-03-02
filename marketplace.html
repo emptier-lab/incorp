@@ -1234,7 +1234,7 @@
               </div>
 
               <!-- Autofish auto-buy -->
-              <div style="padding-top: 1.5rem; border-top: 1px solid var(--border)">
+              <div id="autoBuySection" style="padding-top: 1.5rem; border-top: 1px solid var(--border); display: none">
                 <label
                   style="
                     display: block;
@@ -2449,6 +2449,16 @@
         const user = getUser();
         if (!user) return;
         try {
+          // Check if user owns autofish before showing the settings section
+          const purchaseRes = await fetch(
+            `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${user.id}&item_id=eq.autofish_access&fulfilled=eq.true&select=id&limit=1`,
+            { headers: sbHeaders },
+          );
+          const purchases = await purchaseRes.json();
+          const hasAutofish = Array.isArray(purchases) && purchases.length > 0;
+          document.getElementById("autoBuySection").style.display = hasAutofish ? "" : "none";
+          if (!hasAutofish) return;
+
           const res = await fetch(
             `${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=autofish_autobuy`,
             { headers: sbHeaders },
