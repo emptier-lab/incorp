@@ -1232,6 +1232,84 @@
                   "
                 ></p>
               </div>
+
+              <!-- Autofish auto-buy -->
+              <div style="padding-top: 1.5rem; border-top: 1px solid var(--border)">
+                <label
+                  style="
+                    display: block;
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    color: var(--fg-2);
+                    margin-bottom: 0.35rem;
+                  "
+                  >🪱 Autofish — Auto-Buy Bait</label
+                >
+                <p
+                  style="
+                    font-size: 0.8rem;
+                    color: var(--fg-4);
+                    margin: 0 0 0.75rem 0;
+                    line-height: 1.4;
+                  "
+                >
+                  When autofish runs out of bait, automatically buy this bait type with coins. Set
+                  to Off to stop autofish instead.
+                </p>
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap">
+                  <select
+                    id="autoBuySelect"
+                    style="
+                      background: rgba(255, 255, 255, 0.05);
+                      border: 1px solid rgba(255, 255, 255, 0.1);
+                      border-radius: 8px;
+                      color: var(--fg);
+                      padding: 0.55rem 0.75rem;
+                      font-size: 0.875rem;
+                      font-family: var(--font);
+                      outline: none;
+                      flex: 1;
+                      min-width: 200px;
+                      cursor: pointer;
+                    "
+                  >
+                    <option value="">Off — stop autofish when out of bait</option>
+                    <option value="Fishing Bait">Fishing Bait — 75 coins each</option>
+                    <option value="Worm">Worm — 500 coins each</option>
+                    <option value="Grub">Grub — 1,500 coins each</option>
+                    <option value="Lure">Lure — 5,000 coins each</option>
+                    <option value="Shrimp">Shrimp — 12,000 coins each</option>
+                    <option value="Magic Bait">Magic Bait — 40,000 coins each</option>
+                    <option value="Cosmic Bait">Cosmic Bait — 150,000 coins each</option>
+                  </select>
+                  <button
+                    id="saveAutoBuyBtn"
+                    style="
+                      background: rgba(88, 101, 242, 0.2);
+                      border: 1px solid rgba(88, 101, 242, 0.4);
+                      color: #a5b4fc;
+                      padding: 0.55rem 1.1rem;
+                      border-radius: 6px;
+                      font-size: 0.85rem;
+                      font-weight: 600;
+                      cursor: pointer;
+                      font-family: var(--font);
+                      white-space: nowrap;
+                    "
+                  >
+                    Save
+                  </button>
+                </div>
+                <p
+                  id="autoBuyStatus"
+                  style="
+                    font-size: 0.8rem;
+                    color: var(--fg-4);
+                    margin-top: 0.4rem;
+                    min-height: 1rem;
+                  "
+                ></p>
+              </div>
             </div>
             <!-- /profileTab -->
           </div>
@@ -2311,7 +2389,10 @@
           if (tab === "voices") {
             loadElCatalog().then(() => renderVoices(currentVoiceCat));
           }
-          if (tab === "profile") loadBio();
+          if (tab === "profile") {
+            loadBio();
+            loadAutoBuy();
+          }
         });
       });
 
@@ -2360,6 +2441,49 @@
         } finally {
           btn.disabled = false;
           btn.textContent = "Save Bio";
+        }
+      });
+
+      // ── Autofish auto-buy ────────────────────────────────────────────────────
+      async function loadAutoBuy() {
+        const user = getUser();
+        if (!user) return;
+        try {
+          const res = await fetch(
+            `${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=autofish_autobuy`,
+            { headers: sbHeaders },
+          );
+          const rows = await res.json();
+          const val = (rows[0] && rows[0].autofish_autobuy) || "";
+          document.getElementById("autoBuySelect").value = val;
+        } catch {
+          /* ignore */
+        }
+      }
+
+      document.getElementById("saveAutoBuyBtn").addEventListener("click", async () => {
+        const user = getUser();
+        if (!user) return;
+        const val = document.getElementById("autoBuySelect").value;
+        const status = document.getElementById("autoBuyStatus");
+        const btn = document.getElementById("saveAutoBuyBtn");
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+        try {
+          await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}`, {
+            method: "PATCH",
+            headers: { ...sbHeaders, "Content-Type": "application/json", Prefer: "return=minimal" },
+            body: JSON.stringify({ autofish_autobuy: val || null }),
+          });
+          status.style.color = "#86efac";
+          status.textContent = val ? `Auto-buy set to ${val}.` : "Auto-buy disabled.";
+          setTimeout(() => (status.textContent = ""), 3000);
+        } catch {
+          status.style.color = "#fca5a5";
+          status.textContent = "Failed to save. Try again.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Save";
         }
       });
 
