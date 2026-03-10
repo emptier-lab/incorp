@@ -528,6 +528,20 @@
                     </div>
                 </div>
 
+                <!-- Custom Badge Submissions -->
+                <div class="settings-section reveal" style="margin-top:2rem; transition-delay:.2s">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+                        <div>
+                            <h3 style="margin:0 0 0.25rem 0; font-size:1rem; font-weight:600;">Custom Badge Submissions</h3>
+                            <p style="margin:0; font-size:0.8rem; color:var(--fg-4);">User-submitted badges awaiting review. Edit the name if needed, then approve or reject. Users get a DM on approval.</p>
+                        </div>
+                        <button onclick="loadCustomSubmissions()" style="background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--fg-3);padding:.4rem .85rem;border-radius:6px;font-size:0.8rem;cursor:pointer;font-family:var(--font)">Refresh</button>
+                    </div>
+                    <div id="customSubmissionsGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem;">
+                        <p style="color:var(--fg-4); font-size:0.85rem">Loading...</p>
+                    </div>
+                </div>
+
             </div><!-- /adminView -->
 
         </main>
@@ -1090,6 +1104,7 @@
             // Load data
             await loadUsers();
             await loadBadgeCatalog();
+            await loadCustomSubmissions();
         }
 
         // ── Badge Catalog ─────────────────────────────────────────────────────
@@ -1151,6 +1166,76 @@
             else approvedBadgeIds.delete(badgeId);
             renderBadgeCatalog();
             showToast(approve ? `✓ ${badgeId.split("/").pop()} approved` : `✕ Badge rejected`, approve ? "success" : "");
+        }
+
+        // ── Custom Badge Submissions ──────────────────────────────────────────
+        let customSubmissions = [];
+
+        async function loadCustomSubmissions() {
+            const grid = document.getElementById("customSubmissionsGrid");
+            try {
+                const r = await fetch(
+                    `${SB_URL}/rest/v1/custom_badge_submissions?select=id,discord_id,badge_name,badge_image,status,created_at&order=created_at.desc`,
+                    { headers: sbHeaders }
+                );
+                customSubmissions = await r.json();
+            } catch { customSubmissions = []; }
+            renderCustomSubmissions();
+        }
+
+        function renderCustomSubmissions() {
+            const grid = document.getElementById("customSubmissionsGrid");
+            const pending = customSubmissions.filter(s => s.status === "pending");
+            const rest = customSubmissions.filter(s => s.status !== "pending");
+            const all = [...pending, ...rest];
+
+            if (!all.length) {
+                grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.85rem">No submissions yet.</p>`;
+                return;
+            }
+            grid.innerHTML = all.map(s => {
+                const statusColor = s.status === "approved" ? "#34d399" : s.status === "rejected" ? "#f87171" : "#fbbf24";
+                const date = new Date(s.created_at).toLocaleDateString();
+                return `<div style="background:rgba(255,255,255,.04);border:1px solid ${s.status === "pending" ? "rgba(251,191,36,.3)" : "var(--border)"};border-radius:10px;padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center">
+                    <img src="${s.badge_image}" alt="${s.badge_name}" style="width:72px;height:72px;object-fit:contain;border-radius:6px;border:1px solid var(--border)">
+                    <div style="width:100%">
+                        <label style="font-size:0.7rem;color:var(--fg-4);display:block;margin-bottom:.2rem">Badge Name</label>
+                        <input id="sub-name-${s.id}" value="${s.badge_name.replace(/"/g,'&quot;')}" maxlength="32"
+                            style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;color:var(--fg);padding:.35rem .5rem;font-size:0.8rem;font-family:var(--font);outline:none;text-align:center">
+                    </div>
+                    <span style="font-size:0.7rem;color:var(--fg-4)">By <code>${s.discord_id}</code> · ${date}</span>
+                    <span style="font-size:0.75rem;font-weight:600;color:${statusColor}">${s.status.charAt(0).toUpperCase()+s.status.slice(1)}</span>
+                    ${s.status === "pending" ? `
+                    <div style="display:flex;gap:.5rem;width:100%;margin-top:.25rem">
+                        <button onclick="reviewSubmission('${s.id}', true)"
+                            style="flex:1;padding:.4rem;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid rgba(52,211,153,.4);background:rgba(52,211,153,.1);color:#34d399">
+                            ✓ Approve
+                        </button>
+                        <button onclick="reviewSubmission('${s.id}', false)"
+                            style="flex:1;padding:.4rem;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid rgba(239,68,68,.4);background:rgba(239,68,68,.1);color:#ef4444">
+                            ✕ Reject
+                        </button>
+                    </div>` : ""}
+                </div>`;
+            }).join("");
+        }
+
+        async function reviewSubmission(id, approve) {
+            const nameEl = document.getElementById(`sub-name-${id}`);
+            const editedName = nameEl ? nameEl.value.trim() : null;
+            const patch = { status: approve ? "approved" : "rejected" };
+            if (editedName) patch.badge_name = editedName;
+
+            await fetch(`${SB_URL}/rest/v1/custom_badge_submissions?id=eq.${id}`, {
+                method: "PATCH",
+                headers: { ...sbHeaders, Prefer: "return=minimal" },
+                body: JSON.stringify(patch),
+            });
+            const sub = customSubmissions.find(s => s.id === id);
+            if (sub) sub.status = approve ? "approved" : "rejected";
+            if (sub && editedName) sub.badge_name = editedName;
+            renderCustomSubmissions();
+            showToast(approve ? "Badge approved — user will be DM'd by the bot" : "Badge rejected", approve ? "success" : "");
         }
 
         init();

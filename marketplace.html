@@ -274,6 +274,12 @@
         color: var(--fg-4);
         cursor: default;
       }
+      .btn-theme-action.state-owned {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255,255,255,.12);
+        color: var(--fg-4);
+        cursor: default;
+      }
       .theme-owned-badge {
         position: absolute;
         top: 0.5rem;
@@ -1058,7 +1064,7 @@
                 Customize your <code>.profile</code> card with a theme. Standard themes are free —
                 Premium and Seasonal themes require Tokens. Exclusive themes are earned, not
                 bought.<br />
-                After purchasing, click <strong>Equip</strong> to activate a theme on your profile.
+                After purchasing, head to <strong>Profile Settings</strong> to activate a theme.
               </p>
 
               <div class="cat-filter-bar" id="themeCatBar">
@@ -1161,9 +1167,8 @@
             <!-- ── BADGES TAB ── -->
             <div id="badgesTab" style="display: none">
               <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 0.75rem">
-                Buy badges with Tokens and equip them on your <code>.profile</code> card. Up to
-                <strong>6 badges</strong> can be shown at once — equip and unequip freely after
-                purchase.
+                Buy badges with Tokens. Up to <strong>6 badges</strong> can be shown on your
+                <code>.profile</code> card — equip and manage them in <strong>Profile Settings</strong>.
               </p>
 
               <div class="cat-filter-bar" id="badgeCatBar">
@@ -1182,6 +1187,35 @@
               >
                 <p style="color: var(--fg-4); font-size: 0.875rem">Loading badges...</p>
               </div>
+
+              <!-- Custom Badge Submission -->
+              <div style="margin-top: 2.5rem; padding-top: 1.75rem; border-top: 1px solid var(--border)">
+                <h3 style="font-size: 1rem; font-weight: 700; margin: 0 0 0.35rem 0; color: var(--fg)">Submit a Custom Badge</h3>
+                <p style="font-size: 0.8rem; color: var(--fg-4); margin: 0 0 1.25rem 0; line-height: 1.45">
+                  Upload your own badge image. Costs <strong>5 Tokens</strong>. Goes through admin review — you'll get a DM when it's approved.
+                  Image must be square, under 1 MB. Recommended: 128×128 px PNG.
+                </p>
+                <div style="display:flex; flex-direction:column; gap:0.75rem; max-width:420px">
+                  <div>
+                    <label style="font-size:0.8rem;font-weight:600;color:var(--fg-3);display:block;margin-bottom:0.3rem">Badge Name</label>
+                    <input id="customBadgeName" type="text" maxlength="32" placeholder="e.g. My Cool Badge"
+                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:var(--fg);padding:0.55rem 0.75rem;font-size:0.875rem;font-family:var(--font);outline:none;" />
+                  </div>
+                  <div>
+                    <label style="font-size:0.8rem;font-weight:600;color:var(--fg-3);display:block;margin-bottom:0.3rem">Badge Image</label>
+                    <input id="customBadgeFile" type="file" accept="image/*"
+                      style="font-size:0.825rem;color:var(--fg-3);width:100%" />
+                    <div id="customBadgePreview" style="margin-top:0.5rem;display:none">
+                      <img id="customBadgePreviewImg" alt="preview" style="width:72px;height:72px;object-fit:contain;border-radius:6px;border:1px solid var(--border)">
+                    </div>
+                  </div>
+                  <button id="submitCustomBadgeBtn"
+                    style="align-self:flex-start;background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.4);color:#a78bfa;padding:0.55rem 1.25rem;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font)">
+                    Submit for 5 Tokens
+                  </button>
+                  <p id="customBadgeStatus" style="font-size:0.8rem;color:var(--fg-4);min-height:1rem;margin:0"></p>
+                </div>
+              </div>
             </div>
             <!-- /badgesTab -->
 
@@ -1190,6 +1224,32 @@
               <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.75rem">
                 Customize how your <code>.profile</code> card looks. Changes save instantly.
               </p>
+
+              <!-- Active Theme -->
+              <div style="margin-bottom: 1.75rem">
+                <label style="display:block;font-size:0.875rem;font-weight:600;color:var(--fg-2);margin-bottom:0.5rem">
+                  Active Theme
+                </label>
+                <p style="font-size:0.8rem;color:var(--fg-4);margin:0 0 0.875rem 0">
+                  Pick which owned theme is active on your profile card.
+                </p>
+                <div id="profileThemePicker" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.75rem">
+                  <p style="color:var(--fg-4);font-size:0.8rem">Loading...</p>
+                </div>
+              </div>
+
+              <!-- Equipped Badges -->
+              <div style="margin-bottom: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border)">
+                <label style="display:block;font-size:0.875rem;font-weight:600;color:var(--fg-2);margin-bottom:0.5rem">
+                  Equipped Badges
+                </label>
+                <p style="font-size:0.8rem;color:var(--fg-4);margin:0 0 0.875rem 0">
+                  Up to 6 badges display on your profile card. Click to toggle.
+                </p>
+                <div id="profileBadgePicker" style="display:flex;flex-wrap:wrap;gap:0.625rem">
+                  <p style="color:var(--fg-4);font-size:0.8rem">Loading...</p>
+                </div>
+              </div>
 
               <!-- Bio -->
               <div style="margin-bottom: 1.75rem">
@@ -2186,6 +2246,7 @@
           }
           activeTheme = themeId;
           renderThemes(currentThemeCat);
+          renderProfileThemePicker();
         } catch {
           alert("Failed to equip theme. Please try again.");
         }
@@ -2237,7 +2298,7 @@
             if (isActive) {
               actionBtn = `<button class="btn-theme-action state-active" disabled>✓ Active</button>`;
             } else if (isOwned) {
-              actionBtn = `<button class="btn-theme-action state-equip" onclick="equipTheme('${t.id}')">Equip</button>`;
+              actionBtn = `<button class="btn-theme-action state-owned" disabled>Owned</button>`;
             } else if (isExcl) {
               actionBtn = `<button class="btn-theme-action state-locked" disabled>Locked</button>`;
             } else {
@@ -2423,6 +2484,8 @@
           if (tab === "profile") {
             loadBio();
             loadAutoBuy();
+            renderProfileThemePicker();
+            renderProfileBadgePicker();
           }
         });
       });
@@ -2575,7 +2638,7 @@
         const user = getUser();
         if (!user) return;
         try {
-          const [purchRes, settRes, approvalRes] = await Promise.all([
+          const [purchRes, settRes, approvalRes, customRes] = await Promise.all([
             fetch(
               `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${user.id}&fulfilled=eq.true&item_id=like.badge_*&select=item_id`,
               { headers: sbHeaders },
@@ -2588,10 +2651,15 @@
               `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.BADGE_ADMIN&fulfilled=eq.true&item_id=like.badgecatalog_*&select=item_id`,
               { headers: sbHeaders },
             ),
+            fetch(
+              `${SB_URL}/rest/v1/custom_badge_submissions?discord_id=eq.${user.id}&status=eq.approved&select=id,badge_name,badge_image`,
+              { headers: sbHeaders },
+            ),
           ]);
           const purchases = await purchRes.json();
           const settings = await settRes.json();
           const approvals = await approvalRes.json();
+          const customApproved = await customRes.json();
 
           ownedBadges = new Set(
             (purchases || []).map((p) => p.item_id.replace("badge_", "")),
@@ -2600,6 +2668,11 @@
           approvedBadgeIds = new Set(
             (approvals || []).map((a) => a.item_id.replace("badgecatalog_", "")),
           );
+          customOwnedBadges = (customApproved || []).map((r) => ({
+            id: `custom/${r.id}`,
+            name: r.badge_name,
+            badge_image: r.badge_image,
+          }));
         } catch {}
       }
 
@@ -2624,9 +2697,13 @@
         renderBadges(currentBadgeCat);
       }
 
-      async function buyBadge(emoji, tokens) {
+      async function buyBadge(badgeId) {
         const user = getUser();
         if (!user) { alert("Log in first."); return; }
+        // Look up real price from catalog — never trust caller argument
+        const entry = BADGES_CATALOG.find((b) => b.id === badgeId);
+        if (!entry) return;
+        const tokens = entry.tokens;
         const stats = await fetch(
           `${SB_URL}/rest/v1/user_stats?discord_id=eq.${user.id}&select=tokens`,
           { headers: sbHeaders },
@@ -2636,7 +2713,7 @@
           alert(`Not enough Tokens. You have ${userTokens}, need ${tokens}.`);
           return;
         }
-        if (!confirm(`Buy this badge for ${tokens} Token${tokens !== 1 ? "s" : ""}?`)) return;
+        if (!confirm(`Buy "${entry.name}" for ${tokens} Token${tokens !== 1 ? "s" : ""}?`)) return;
         await Promise.all([
           fetch(`${SB_URL}/rest/v1/user_stats?discord_id=eq.${user.id}`, {
             method: "PATCH",
@@ -2646,11 +2723,34 @@
           fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
             method: "POST",
             headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
-            body: JSON.stringify({ discord_id: user.id, item_id: `badge_${emoji}`, fulfilled: true }),
+            body: JSON.stringify({ discord_id: user.id, item_id: `badge_${badgeId}`, fulfilled: true }),
           }),
         ]);
-        ownedBadges.add(emoji);
+        ownedBadges.add(badgeId);
         renderBadges(currentBadgeCat);
+      }
+
+      async function equipBadge(badgeId) {
+        const user = getUser();
+        if (!user) return;
+        // Must own the badge
+        if (!ownedBadges.has(badgeId) && !customOwnedBadges.some((b) => b.id === badgeId)) return;
+        const idx = equippedBadges.indexOf(badgeId);
+        if (idx > -1) {
+          equippedBadges.splice(idx, 1);
+        } else {
+          if (equippedBadges.length >= 6) {
+            alert("Max 6 badges equipped. Unequip one first.");
+            return;
+          }
+          equippedBadges.push(badgeId);
+        }
+        await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}`, {
+          method: "PATCH",
+          headers: { ...sbHeaders, Prefer: "return=minimal" },
+          body: JSON.stringify({ equipped_badges: equippedBadges }),
+        });
+        renderProfileBadgePicker();
       }
 
       function renderBadges(cat) {
@@ -2671,30 +2771,148 @@
 
         grid.innerHTML = list.map((b) => {
           const owned = ownedBadges.has(b.id);
-          const isEquipped = equippedBadges.includes(b.id);
-
           const preview = b.type === "image"
             ? `<img src="/images/themes/${b.id}.png" alt="${b.name}" style="width:72px;height:72px;object-fit:contain;image-rendering:pixelated" onerror="this.style.display='none'">`
             : `<span style="font-size:3rem;line-height:1">${b.id}</span>`;
+          const btn = owned
+            ? `<span style="font-size:0.75rem;color:var(--fg-4);font-style:italic">Owned — manage in Profile Settings</span>`
+            : `<button onclick="buyBadge('${b.id}')" style="width:100%;padding:.45rem;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1px solid rgba(167,139,250,.4);background:rgba(167,139,250,.12);color:#a78bfa">${b.tokens} Token${b.tokens !== 1 ? "s" : ""}</button>`;
 
-          let btn;
-          if (!owned) {
-            btn = `<button onclick="buyBadge('${b.id}',${b.tokens})" style="width:100%;padding:.45rem;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1px solid rgba(167,139,250,.4);background:rgba(167,139,250,.12);color:#a78bfa">${b.tokens} Token${b.tokens !== 1 ? "s" : ""}</button>`;
-          } else if (isEquipped) {
-            btn = `<button onclick="equipBadge('${b.id}')" style="width:100%;padding:.45rem;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1px solid rgba(52,211,153,.4);background:rgba(52,211,153,.12);color:#34d399">✓ Equipped — Unequip</button>`;
-          } else {
-            btn = `<button onclick="equipBadge('${b.id}')" style="width:100%;padding:.45rem;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--fg)">Equip</button>`;
-          }
-
-          return `<div style="background:rgba(255,255,255,.04);border:1px solid ${isEquipped ? "rgba(52,211,153,.35)" : "var(--border)"};border-radius:10px;padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center">
+          return `<div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center">
             ${preview}
             <strong style="font-size:.95rem;color:var(--fg)">${b.name}</strong>
             <span style="font-size:.75rem;color:var(--fg-4);line-height:1.4">${b.desc}</span>
-            <span style="font-size:.7rem;color:var(--fg-4)">${owned ? "Owned" : `${b.tokens} Tokens`}</span>
             ${btn}
           </div>`;
         }).join("");
       }
+
+      // ── Profile Settings — Theme Picker ──────────────────────────────────────
+      function renderProfileThemePicker() {
+        const el = document.getElementById("profileThemePicker");
+        if (!el) return;
+        const owned = Object.values(THEMES_CATALOG.themes).filter(
+          (t) => ownedThemes.has(t.id) || t.tokens === 0
+        );
+        if (!owned.length) {
+          el.innerHTML = `<p style="color:var(--fg-4);font-size:0.8rem">No themes owned yet. Browse the Themes tab to get one.</p>`;
+          return;
+        }
+        el.innerHTML = owned.map((t) => {
+          const isActive = activeTheme === t.id;
+          const palette = t.colors.map((c) => `<div style="width:16px;height:16px;border-radius:50%;background:${c}"></div>`).join("");
+          return `<div onclick="equipTheme('${t.id}')" style="cursor:pointer;background:rgba(255,255,255,.04);border:1px solid ${isActive ? "rgba(167,139,250,.5)" : "var(--border)"};border-radius:10px;padding:0.875rem;display:flex;flex-direction:column;gap:0.5rem;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(167,139,250,.35)'" onmouseout="this.style.borderColor='${isActive ? "rgba(167,139,250,.5)" : "var(--border)"}'">
+            <div style="display:flex;gap:4px;align-items:center">${palette}</div>
+            <span style="font-size:0.825rem;font-weight:600;color:var(--fg)">${t.name}</span>
+            ${isActive ? `<span style="font-size:0.7rem;color:#a78bfa;font-weight:600">✓ Active</span>` : `<span style="font-size:0.7rem;color:var(--fg-4)">Click to activate</span>`}
+          </div>`;
+        }).join("");
+      }
+
+      // ── Profile Settings — Badge Picker ───────────────────────────────────────
+      let customOwnedBadges = []; // approved custom badges owned by this user
+
+      function renderProfileBadgePicker() {
+        const el = document.getElementById("profileBadgePicker");
+        if (!el) return;
+        // Standard owned badges
+        const standardOwned = BADGES_CATALOG.filter((b) => ownedBadges.has(b.id));
+        // All available owned badges
+        const allOwned = [
+          ...standardOwned.map((b) => ({ id: b.id, name: b.name, imgSrc: `/images/themes/${b.id}.png`, type: "image" })),
+          ...customOwnedBadges.map((b) => ({ id: b.id, name: b.name, imgSrc: b.badge_image, type: "custom" })),
+        ];
+        if (!allOwned.length) {
+          el.innerHTML = `<p style="color:var(--fg-4);font-size:0.8rem">No badges owned yet. Browse the Badges tab to get one.</p>`;
+          return;
+        }
+        el.innerHTML = allOwned.map((b) => {
+          const isEquipped = equippedBadges.includes(b.id);
+          const img = `<img src="${b.imgSrc}" alt="${b.name}" style="width:40px;height:40px;object-fit:contain;image-rendering:pixelated" onerror="this.style.display='none'">`;
+          return `<div onclick="equipBadge('${b.id}')" title="${b.name}${isEquipped ? " — click to unequip" : " — click to equip"}"
+            style="cursor:pointer;display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem 0.4rem 0.5rem;border-radius:8px;border:1px solid ${isEquipped ? "rgba(52,211,153,.45)" : "rgba(255,255,255,.1)"};background:${isEquipped ? "rgba(52,211,153,.1)" : "rgba(255,255,255,.04)"};transition:border-color .15s,background .15s">
+            ${img}
+            <span style="font-size:0.8rem;font-weight:600;color:${isEquipped ? "#34d399" : "var(--fg-3)"}">
+              ${isEquipped ? "✓ " : ""}${b.name}
+            </span>
+          </div>`;
+        }).join("");
+        const count = equippedBadges.length;
+        el.insertAdjacentHTML("beforeend", `<p style="width:100%;font-size:0.75rem;color:var(--fg-4);margin:0.25rem 0 0 0">${count}/6 equipped</p>`);
+      }
+
+      // ── Custom badge submission ───────────────────────────────────────────────
+      let customBadgeDataUrl = null;
+
+      document.getElementById("customBadgeFile")?.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 1_000_000) {
+          document.getElementById("customBadgeStatus").textContent = "Image must be under 1 MB.";
+          customBadgeDataUrl = null;
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          // Resize to 128x128 via canvas
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = 128; canvas.height = 128;
+            canvas.getContext("2d").drawImage(img, 0, 0, 128, 128);
+            customBadgeDataUrl = canvas.toDataURL("image/png");
+            document.getElementById("customBadgePreviewImg").src = customBadgeDataUrl;
+            document.getElementById("customBadgePreview").style.display = "";
+            document.getElementById("customBadgeStatus").textContent = "";
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById("submitCustomBadgeBtn")?.addEventListener("click", async () => {
+        const user = getUser();
+        if (!user) { alert("Log in first."); return; }
+        const name = document.getElementById("customBadgeName").value.trim();
+        if (!name) { document.getElementById("customBadgeStatus").textContent = "Enter a badge name."; return; }
+        if (!customBadgeDataUrl) { document.getElementById("customBadgeStatus").textContent = "Upload an image first."; return; }
+
+        const stats = await fetch(
+          `${SB_URL}/rest/v1/user_stats?discord_id=eq.${user.id}&select=tokens`,
+          { headers: sbHeaders },
+        ).then((r) => r.json());
+        const userTokens = stats?.[0]?.tokens ?? 0;
+        if (userTokens < 5) {
+          document.getElementById("customBadgeStatus").textContent = `Not enough Tokens (have ${userTokens}, need 5).`;
+          return;
+        }
+        if (!confirm(`Submit "${name}" as a custom badge for 5 Tokens? It goes to admin review.`)) return;
+
+        document.getElementById("submitCustomBadgeBtn").disabled = true;
+        document.getElementById("customBadgeStatus").textContent = "Submitting...";
+        try {
+          await Promise.all([
+            fetch(`${SB_URL}/rest/v1/user_stats?discord_id=eq.${user.id}`, {
+              method: "PATCH",
+              headers: { ...sbHeaders, Prefer: "return=minimal" },
+              body: JSON.stringify({ tokens: userTokens - 5 }),
+            }),
+            fetch(`${SB_URL}/rest/v1/custom_badge_submissions`, {
+              method: "POST",
+              headers: { ...sbHeaders, Prefer: "return=minimal" },
+              body: JSON.stringify({ discord_id: user.id, badge_name: name, badge_image: customBadgeDataUrl, status: "pending", dm_sent: false }),
+            }),
+          ]);
+          document.getElementById("customBadgeStatus").textContent = "Submitted! You'll get a DM when it's reviewed.";
+          document.getElementById("customBadgeName").value = "";
+          document.getElementById("customBadgeFile").value = "";
+          document.getElementById("customBadgePreview").style.display = "none";
+          customBadgeDataUrl = null;
+        } catch {
+          document.getElementById("customBadgeStatus").textContent = "Submission failed. Try again.";
+        }
+        document.getElementById("submitCustomBadgeBtn").disabled = false;
+      });
 
       document.querySelectorAll("#badgeCatBar .cat-btn").forEach((btn) => {
         btn.addEventListener("click", () => renderBadges(btn.dataset.bcat));
