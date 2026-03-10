@@ -2537,33 +2537,45 @@
       });
 
       // ── Badges ───────────────────────────────────────────────────────────────
+      // id = path relative to images/themes/ (without .png)
+      // The profile card resolves: images/themes/{id}.png
+      // type: "image" uses <img> preview | "emoji" renders emoji text
       const BADGES_CATALOG = [
-        { id: "🌟", name: "Star",      tokens: 0, desc: "A classic star — free for everyone." },
-        { id: "🔥", name: "Flame",     tokens: 1, desc: "You're on fire." },
-        { id: "⚡", name: "Lightning", tokens: 2, desc: "Fast and electric." },
-        { id: "💀", name: "Skull",     tokens: 2, desc: "For the bold." },
-        { id: "🎯", name: "Bullseye",  tokens: 2, desc: "Never miss." },
-        { id: "🎮", name: "Gamer",     tokens: 2, desc: "Controller freak." },
-        { id: "🎭", name: "Jester",    tokens: 2, desc: "Life's a stage." },
-        { id: "🦋", name: "Butterfly", tokens: 2, desc: "Graceful transformation." },
-        { id: "🌙", name: "Moon",      tokens: 3, desc: "Night owl energy." },
-        { id: "💎", name: "Diamond",   tokens: 3, desc: "Rare and unbreakable." },
-        { id: "🌈", name: "Rainbow",   tokens: 3, desc: "Colour everything." },
-        { id: "🌺", name: "Bloom",     tokens: 3, desc: "In full bloom." },
-        { id: "👑", name: "Crown",     tokens: 5, desc: "Royalty status." },
-        { id: "🏆", name: "Trophy",    tokens: 5, desc: "Proven champion." },
-        { id: "🐉", name: "Dragon",    tokens: 7, desc: "Legendary power." },
+        {
+          id: "badges/vip-status-badge",
+          name: "VIP Status",
+          tokens: 3,
+          desc: "Reserved for the community's most valued members.",
+          type: "image",
+        },
+        {
+          id: "badges/diamond-rank-badge",
+          name: "Diamond Rank",
+          tokens: 5,
+          desc: "Proof you've reached the top tier.",
+          type: "image",
+        },
+        {
+          id: "badges/ascendant-badge",
+          name: "Ascendant",
+          tokens: 8,
+          desc: "You've risen above the rest. Exclusive prestige badge.",
+          type: "image",
+        },
       ];
 
       let ownedBadges = new Set();
       let equippedBadges = [];
       let currentBadgeCat = "all";
 
+      let approvedBadgeIds = new Set();
+
+
       async function loadBadgeData() {
         const user = getUser();
         if (!user) return;
         try {
-          const [purchRes, settRes] = await Promise.all([
+          const [purchRes, settRes, approvalRes] = await Promise.all([
             fetch(
               `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${user.id}&fulfilled=eq.true&item_id=like.badge_*&select=item_id`,
               { headers: sbHeaders },
@@ -2572,15 +2584,22 @@
               `${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=equipped_badges`,
               { headers: sbHeaders },
             ),
+            fetch(
+              `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.BADGE_ADMIN&fulfilled=eq.true&item_id=like.badgecatalog_*&select=item_id`,
+              { headers: sbHeaders },
+            ),
           ]);
           const purchases = await purchRes.json();
           const settings = await settRes.json();
+          const approvals = await approvalRes.json();
+
           ownedBadges = new Set(
             (purchases || []).map((p) => p.item_id.replace("badge_", "")),
           );
-          // star is always free/owned
-          ownedBadges.add("🌟");
-          equippedBadges = (settings?.[0]?.equipped_badges) || [];
+          equippedBadges = settings?.[0]?.equipped_badges || [];
+          approvedBadgeIds = new Set(
+            (approvals || []).map((a) => a.item_id.replace("badgecatalog_", "")),
+          );
         } catch {}
       }
 
@@ -2640,32 +2659,38 @@
           .querySelectorAll("#badgeCatBar .cat-btn")
           .forEach((b) => b.classList.toggle("active", b.dataset.bcat === cat));
         const grid = document.getElementById("badgesGrid");
+        const approved = BADGES_CATALOG.filter((b) => approvedBadgeIds.has(b.id));
         const list = cat === "owned"
-          ? BADGES_CATALOG.filter((b) => ownedBadges.has(b.id))
-          : BADGES_CATALOG;
+          ? approved.filter((b) => ownedBadges.has(b.id))
+          : approved;
 
         if (!list.length) {
-          grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.875rem">You don't own any badges yet.</p>`;
+          grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.875rem">${cat === "owned" ? "You don't own any badges yet." : "No badges available yet."}</p>`;
           return;
         }
 
         grid.innerHTML = list.map((b) => {
           const owned = ownedBadges.has(b.id);
           const isEquipped = equippedBadges.includes(b.id);
+
+          const preview = b.type === "image"
+            ? `<img src="/images/themes/${b.id}.png" alt="${b.name}" style="width:72px;height:72px;object-fit:contain;image-rendering:pixelated" onerror="this.style.display='none'">`
+            : `<span style="font-size:3rem;line-height:1">${b.id}</span>`;
+
           let btn;
-          if (!owned && b.tokens === 0) {
-            btn = `<button onclick="equipBadge('${b.id}')" style="width:100%;padding:.45rem;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--fg)">${isEquipped ? "✓ Equipped" : "Equip (Free)"}</button>`;
-          } else if (!owned) {
+          if (!owned) {
             btn = `<button onclick="buyBadge('${b.id}',${b.tokens})" style="width:100%;padding:.45rem;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1px solid rgba(167,139,250,.4);background:rgba(167,139,250,.12);color:#a78bfa">${b.tokens} Token${b.tokens !== 1 ? "s" : ""}</button>`;
           } else if (isEquipped) {
             btn = `<button onclick="equipBadge('${b.id}')" style="width:100%;padding:.45rem;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1px solid rgba(52,211,153,.4);background:rgba(52,211,153,.12);color:#34d399">✓ Equipped — Unequip</button>`;
           } else {
             btn = `<button onclick="equipBadge('${b.id}')" style="width:100%;padding:.45rem;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--fg)">Equip</button>`;
           }
-          return `<div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;text-align:center">
-            <span style="font-size:2.5rem;line-height:1">${b.id}</span>
-            <strong style="font-size:.9rem;color:var(--fg)">${b.name}</strong>
-            <span style="font-size:.75rem;color:var(--fg-4);line-height:1.3">${b.desc}</span>
+
+          return `<div style="background:rgba(255,255,255,.04);border:1px solid ${isEquipped ? "rgba(52,211,153,.35)" : "var(--border)"};border-radius:10px;padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center">
+            ${preview}
+            <strong style="font-size:.95rem;color:var(--fg)">${b.name}</strong>
+            <span style="font-size:.75rem;color:var(--fg-4);line-height:1.4">${b.desc}</span>
+            <span style="font-size:.7rem;color:var(--fg-4)">${owned ? "Owned" : `${b.tokens} Tokens`}</span>
             ${btn}
           </div>`;
         }).join("");

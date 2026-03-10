@@ -515,6 +515,19 @@
                     <div id="tableFooter" style="padding: 0.75rem 1rem; font-size: 0.78rem; color: var(--fg-4); border-top: 1px solid var(--border);"></div>
                 </div>
 
+                <!-- Badge Catalog Management -->
+                <div class="settings-section reveal" style="margin-top:2rem; transition-delay:.15s">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+                        <div>
+                            <h3 style="margin:0 0 0.25rem 0; font-size:1rem; font-weight:600;">Badge Catalog</h3>
+                            <p style="margin:0; font-size:0.8rem; color:var(--fg-4);">Approve badges before they appear in the marketplace. Rejected badges are hidden from all users.</p>
+                        </div>
+                    </div>
+                    <div id="badgeCatalogGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem;">
+                        <p style="color:var(--fg-4); font-size:0.85rem">Loading...</p>
+                    </div>
+                </div>
+
             </div><!-- /adminView -->
 
         </main>
@@ -1076,6 +1089,68 @@
 
             // Load data
             await loadUsers();
+            await loadBadgeCatalog();
+        }
+
+        // ── Badge Catalog ─────────────────────────────────────────────────────
+        const BADGE_ADMIN_ID = "BADGE_ADMIN";
+        const ALL_BADGES = [
+            { id: "badges/vip-status-badge",    name: "VIP Status",    tokens: 3, desc: "Reserved for the community's most valued members." },
+            { id: "badges/diamond-rank-badge",  name: "Diamond Rank",  tokens: 5, desc: "Proof you've reached the top tier." },
+            { id: "badges/ascendant-badge",     name: "Ascendant",     tokens: 8, desc: "You've risen above the rest. Exclusive prestige badge." },
+        ];
+
+        let approvedBadgeIds = new Set();
+
+        async function loadBadgeCatalog() {
+            const grid = document.getElementById("badgeCatalogGrid");
+            try {
+                const r = await fetch(
+                    `${SB_URL}/rest/v1/marketplace_purchases?discord_id=eq.${BADGE_ADMIN_ID}&item_id=like.badgecatalog_*&select=item_id,fulfilled`,
+                    { headers: sbHeaders }
+                );
+                const rows = await r.json();
+                approvedBadgeIds = new Set(
+                    rows.filter(r => r.fulfilled).map(r => r.item_id.replace("badgecatalog_", ""))
+                );
+            } catch { approvedBadgeIds = new Set(); }
+            renderBadgeCatalog();
+        }
+
+        function renderBadgeCatalog() {
+            const grid = document.getElementById("badgeCatalogGrid");
+            grid.innerHTML = ALL_BADGES.map(b => {
+                const approved = approvedBadgeIds.has(b.id);
+                return `<div style="background:rgba(255,255,255,.04);border:1px solid ${approved ? "rgba(52,211,153,.35)" : "var(--border)"};border-radius:10px;padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center">
+                    <img src="/images/themes/${b.id}.png" alt="${b.name}" style="width:64px;height:64px;object-fit:contain;image-rendering:pixelated" onerror="this.style.opacity='.3'">
+                    <strong style="font-size:.9rem;color:var(--fg)">${b.name}</strong>
+                    <span style="font-size:.75rem;color:var(--fg-4);line-height:1.4">${b.desc}</span>
+                    <span style="font-size:.7rem;color:var(--fg-4)">${b.tokens} Tokens</span>
+                    <div style="display:flex;gap:.5rem;width:100%;margin-top:.25rem">
+                        <button onclick="setBadgeApproval('${b.id}', true)"
+                            style="flex:1;padding:.4rem;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid rgba(52,211,153,.4);background:${approved ? "rgba(52,211,153,.2)" : "rgba(255,255,255,.05)"};color:${approved ? "#34d399" : "var(--fg-3)"}">
+                            ✓ Approve
+                        </button>
+                        <button onclick="setBadgeApproval('${b.id}', false)"
+                            style="flex:1;padding:.4rem;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid rgba(239,68,68,.4);background:${!approved ? "rgba(239,68,68,.15)" : "rgba(255,255,255,.05)"};color:${!approved ? "#ef4444" : "var(--fg-3)"}">
+                            ✕ Reject
+                        </button>
+                    </div>
+                </div>`;
+            }).join("");
+        }
+
+        async function setBadgeApproval(badgeId, approve) {
+            const itemId = `badgecatalog_${badgeId}`;
+            await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
+                method: "POST",
+                headers: { ...sbHeaders, Prefer: "resolution=merge-duplicates,return=minimal" },
+                body: JSON.stringify({ discord_id: BADGE_ADMIN_ID, item_id: itemId, fulfilled: approve })
+            });
+            if (approve) approvedBadgeIds.add(badgeId);
+            else approvedBadgeIds.delete(badgeId);
+            renderBadgeCatalog();
+            showToast(approve ? `✓ ${badgeId.split("/").pop()} approved` : `✕ Badge rejected`, approve ? "success" : "");
         }
 
         init();
