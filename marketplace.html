@@ -1019,7 +1019,7 @@
                         font-size: 1.1rem;
                       "
                     >
-                      🎰 Gambling Limit Expander
+                      🎰 Whale Pass
                     </h4>
                     <p
                       style="
@@ -1029,8 +1029,8 @@
                         line-height: 1.4;
                       "
                     >
-                      Expand your 2-hour gambling win cap. Buy tiers sequentially to unlock a
-                      higher limit — or go unlimited.
+                      For the big spenders. Upgrade your 2-hour gambling win cap tier by tier —
+                      all the way to unlimited.
                     </p>
                     <p
                       id="gamble-limit-tier-label"
@@ -1044,7 +1044,7 @@
                       id="gamble-limit-buy-btn"
                       class="buy-btn"
                       data-id="gamble_limit_upgrade"
-                      data-name="Gambling Limit Expander"
+                      data-name="Whale Pass"
                       data-tokens="0"
                       data-coins="0"
                       disabled
@@ -2605,7 +2605,7 @@
       });
 
       // ── Autofish auto-buy ────────────────────────────────────────────────────
-      // ── Gambling Limit Expander card ─────────────────────────────────────────
+      // ── Whale Pass card ─────────────────────────────────────────
       const GAMBLE_LIMIT_TIERS_CLIENT = [
         { name: "Default",   limit: "500B",       tokens: 0   },
         { name: "1x",        limit: "1T",         tokens: 2   },
@@ -2640,7 +2640,7 @@
             label.textContent = `Current: ${currentTierInfo.name} (${currentTierInfo.limit} cap) → Next: ${nextTierInfo.name} (${nextTierInfo.limit} cap)`;
             btn.textContent = `Upgrade — ${nextTierInfo.tokens} Tokens`;
             btn.dataset.tokens = nextTierInfo.tokens;
-            btn.dataset.name = `Gambling Limit Expander (${nextTierInfo.name})`;
+            btn.dataset.name = `Whale Pass (${nextTierInfo.name})`;
             btn.disabled = false;
             btn.style.opacity = "1";
             btn.style.cursor = "pointer";
