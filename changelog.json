@@ -1,6 +1,259 @@
 {
   "versions": [
     {
+      "version": "4.0.0",
+      "title": "The Big One",
+      "date": "March 2026",
+      "description": "The largest update in Incorp's history. Rebuilt progression from the ground up, added 5 gambling games, a full company simulator, interactive bank heists, 15 image effects, real-time voice transcription, a smart AFK system, and a completely new anti-cheat layer — plus dozens of bug fixes across the board.",
+      "groups": [
+        {
+          "title": "XP & Rank System — Full Overhaul",
+          "items": [
+            "11-tier rank ladder: Novice → Apprentice → Adept → Expert → Master → Grandmaster → Legend → Mythic → Divine → Celestial → Transcendent",
+            "Each rank carries a permanent earnings multiplier — starts at 1.0x, reaches 1.75x at Transcendent",
+            "Rank-up reward: +1 Token per level reached",
+            "Global XP = server messages + commands used, both tracked separately with anti-spam cooldowns",
+            "Profile card shows an XP progress bar between your current rank and the next threshold",
+            "Toggle rank-up notification DMs on or off in your settings"
+          ]
+        },
+        {
+          "title": "Job Level System",
+          "items": [
+            "10-tier job progression tied to .work: Intern → Employee → Senior Employee → Team Lead → Manager → Director → VP → C-Suite → CEO → Industry Legend",
+            "Payout multiplier scales from 1.0x (Intern) to 3.0x (Industry Legend)",
+            "XP earned each work session; automatic level-up with an in-chat announcement",
+            ".joblevel / .job — view your current tier, XP progress, and next milestone"
+          ]
+        },
+        {
+          "title": "Rebirth System",
+          "items": [
+            "Unlimited rebirth levels — each rebirth resets your wallet and bank to 0 in exchange for permanent stacking multipliers",
+            "Bonuses per level: +20% daily reward, +15% work payout, +10% beg payout, +5% rare fish chance, +10% slots winnings, +20% XP gain",
+            "Cost scales 2.5x per rebirth starting at 100,000 coins",
+            "Must type 'confirm' within 30 seconds — 5-minute pending lock prevents balance transfer exploits before it fires",
+            "Rebirth level shown as [RN] tag on the leaderboard"
+          ]
+        },
+        {
+          "title": "Upgrade System — Expanded to 11",
+          "items": [
+            "multiplier — +10% all earnings per level (max 20, starts 100K coins)",
+            "cooldown — -5% work and beg cooldown per level (max 5, starts 250K)",
+            "bank — unlocks your bank account (1 level, 1M coins)",
+            "fishing — +15% fishing rewards per level (max 10, starts 500K)",
+            "gambling — +12% gambling winnings per level (max 5, starts 750K)",
+            "protection — -15% coins lost to robbery per level (max 10, starts 1.5M)",
+            "interest — +0.5% daily bank interest per level (max 5, starts 5M — requires bank upgrade)",
+            "vault — +25% of your balance shielded from robbery per level (max 4, starts 10M)",
+            "xp — +20% XP gain per level (max 8, starts 2.5M)",
+            "company — unlocks the company system with +10% income bonus (1 level, 50M coins)",
+            "energy — -5% energy usage per level (max 10, starts 200K)"
+          ]
+        },
+        {
+          "title": "Gambling — System Overhaul",
+          "items": [
+            "500 billion coin win cap per 2-hour rolling window, enforced across all 7 gambling commands",
+            "Cap is checked before the game runs — you're blocked upfront rather than silently losing winnings",
+            "Window state saved to disk and survives bot restarts",
+            "Gambling upgrade bonus and rebirth multiplier both apply multiplicatively to all wins",
+            "Slots reels fully reweighted with realistic odds: Cherry 35%, Orange 25%, Lemon 20%, Diamond 12%, 7 6%, Jackpot 2%",
+            "Personal gambling toggle — disable all gambling commands for yourself in settings",
+            "Bet limit setting — set your own per-command maximum"
+          ]
+        },
+        {
+          "title": "Whale Pass",
+          "items": [
+            "6-tier purchasable upgrade in the marketplace that expands your 2-hour gambling win cap",
+            "Tier 1 — 1T cap (2 tokens) | Tier 2 — 1.5T cap (5 tokens) | Tier 3 — 2T cap (10 tokens)",
+            "Tier 4 — 2.5T cap (20 tokens) | Tier 5 — 3T cap (40 tokens) | Tier 6 — Unlimited (150 tokens)",
+            "Tiers are sequential — must own the previous to unlock the next",
+            "DM sent on purchase confirming your new tier name and adjusted cap",
+            ".gl / .gamble limit — shows your current tier and cap at any time"
+          ]
+        },
+        {
+          "title": "New Gambling Commands",
+          "items": [
+            ".dice <amount> — roll 1–6; high (4–6) wins 2x, low (1–3) loses; 10s cooldown",
+            ".duel @user [amount] — PvP dice duel; opponent has 60 seconds to .accept; higher roll wins the pot, ties refund both; 30s cooldown",
+            ".rune — rune-based gambling with a 52% base win rate and escalating reward tiers",
+            ".diffuser — bomb diffuser game; pick the right wire each round to build a multiplier, wrong wire loses everything",
+            ".coinstreak — consecutive coinflip streak game; winning streak builds a multiplier"
+          ]
+        },
+        {
+          "title": "Rob System — Reworked",
+          "items": [
+            "70% base success chance with a 10-second suspense delay before the outcome is revealed",
+            "Catch penalty: lose 30% of the attempted amount if caught",
+            "Vault upgrade reduces how much of the target's balance is stealable",
+            "Wolf pet bonus adds a steal multiplier",
+            "rob_protect setting — toggle robbery immunity entirely in your settings",
+            "Simultaneous rob protection — you can't rob someone already being robbed by someone else"
+          ]
+        },
+        {
+          "title": "Bank Interest — Passive Income",
+          "items": [
+            "Interest fires automatically every hour, checked once per day per user",
+            "Rate: 0.5% per interest upgrade level, up to 2.5% at max level 5",
+            "Requires the bank account upgrade to be active",
+            "DMs you with the amount earned and your current rate each payout",
+            "Toggle interest payouts on or off with the bank_interest setting"
+          ]
+        },
+        {
+          "title": "Fishing — Improvements",
+          "items": [
+            ".fishquest [claim] — daily fishing quests with a target fish type and coin reward; progress tracked live during .fish sessions; collect with .fishquest claim on completion",
+            "Fish locations — cast in different spots (.fish <location>) with unique catch pools per location; your current location is shown in .fishstats",
+            "55-rod progression from Wooden to Omniversal — catch rate multiplier 1.0x–28.0x, rare chance 1.0x–9.0x, highest rods cost up to 18.5 billion coins",
+            "Fishing upgrade applies +15% rewards per level, stacking with rebirth multipliers"
+          ]
+        },
+        {
+          "title": "Autofish — Improvements",
+          "items": [
+            "Stats now tracked per session and all-time: fish caught, coins earned, rare caught, mythical caught",
+            "Auto-bait purchasing — .autofish bait <name> automatically buys bait when you run out; supports Fishing Bait, Basic Lure, and Premium Lure",
+            "Autofish messages excluded from XP tracking to prevent passive XP farming",
+            "2-hour daily limit window now persists across bot restarts"
+          ]
+        },
+        {
+          "title": "Company System — Improved",
+          "items": [
+            "Full business simulator — requires the Business License upgrade (50M coins) to unlock",
+            ".createcompany <name> <type> — found a Startup, Established, Enterprise, or Corporation; each has different base costs and income rates",
+            ".company — view your company's type, level, daily income, employees, departments, upgrades, and total investor capital",
+            ".collectincome — collect daily income (24h cooldown); Business License gives an additional +10% on top of all other upgrade bonuses",
+            ".upgradecompany <type> — upgrade Office, Marketing, Technology, or Staff; each tier multiplies your daily income",
+            ".invest <amount> @user — invest in another player's company; investors receive a proportional share of profits on each collect",
+            ".hire @user <position> / .unhire — hire and fire employees with named role assignments",
+            ".createdepartment <type> — add departments to open additional income streams",
+            ".companies — browse all active companies across all players",
+            ".companystats — full financial breakdown of your company"
+          ]
+        },
+        {
+          "title": "Bank Heist System — Improved",
+          "items": [
+            ".robbank — multi-stage interactive heist; the bank opens 4 windows per day at UTC 0–2, 6–8, 12–14, and 18–20; only one heist runs at a time",
+            "Navigate real-time obstacles as a progress bar fills to 100%; full completion rewards a 1.5x loot multiplier",
+            "Loot scales with your wallet balance — up to 3x base at high wealth levels",
+            ".bankstatus — check whether the bank is currently open or closed and when the next window opens",
+            ".bankdebt / .paydebt — failed heists leave a debt that must be cleared before certain actions are available",
+            ".robstats — view your personal heist record: successful heists, failed attempts, and total coins stolen"
+          ]
+        },
+        {
+          "title": "Voice Chat Tools — New",
+          "items": [
+            ".vcscribe / .vctranscribe — real-time voice chat transcription; logs every speaker's name and timestamp as they talk",
+            ".vcsummary — AI-generated summary of the current transcription session powered by Groq; outputs up to 8 concise bullet points"
+          ]
+        },
+        {
+          "title": "Games — New",
+          "items": [
+            ".connect4 / .c4 @user [bet] — canvas-rendered board with GIF playback on game end; play vs another user or a bot at 4 difficulty levels (noob / average / pro / expert); difficulty auto-scales with bet size; .c4 quit to forfeit",
+            ".tictactoe / .ttt [@user|bot] [bet] — canvas board with .place x:y to move; the bot uses fork detection, making it genuinely tricky in the mid-game",
+            ".wordle — classic 6-guess word game",
+            ".quiz — trivia with multiple choice answers",
+            ".wyr — Would You Rather; the server votes on two randomly selected scenarios",
+            ".guessemoji — guess the concept from emoji combinations"
+          ]
+        },
+        {
+          "title": "Image Effects — Improved",
+          "items": [
+            "15 effects: .pixelate, .blur, .mirror, .invert, .deepfry, .glitch, .sepia, .sharpen, .swirl, .vignette, .implode, .bandicam, .legoify, .speechbubble / .sb, .addtext",
+            "All effects accept a reply to any image, a direct attachment, or a URL — consistent input handling across every single command",
+            ".effects — quick reference that lists every available effect in one message",
+            ".banner — view your own or any user's Discord profile banner link",
+            ".tools — quick-reference card grouping all image, media, voice, and TTS commands in one place",
+            "Legoify rewritten with programmatic LEGO brick textures — rounded base, raised stud with shading, and hard-light color tinting per cell; no longer flat colored blocks",
+            "Glitch implemented — row-based horizontal pixel shift on raw image data for a chromatic-style distortion"
+          ]
+        },
+        {
+          "title": "TTS — Improvements",
+          "items": [
+            "FIFO queue system — messages now process in strict order with no overlapping audio",
+            "URL stripping — links are replaced with just the domain name before being read aloud",
+            "Voice state announcements — the bot reads out join, leave, mute, and deafen events in VC",
+            ".ttsrate — adjustable speech speed via atempo filter",
+            ".ttsvolume — per-session volume adjustment",
+            ".ttsfun — enables voice effects and audio modifiers",
+            "Special character voices: ghostface, chewbacca, c3po, stitch, stormtrooper, rocket, and more via TikTok voice API",
+            "ElevenLabs 3,000 character daily limit enforced and tracked per user; usage persists across restarts"
+          ]
+        },
+        {
+          "title": "AFK System — Improved",
+          "items": [
+            ".afk [reason] — go AFK with an optional reason; anyone who mentions you will be notified automatically with how long you've been gone",
+            "AFK clears the moment you send any non-command message",
+            "Mention log on return — the bot posts a full list of who pinged you, in which channel, at what time, and a snippet of their message",
+            "Pinger notification — every unique user who mentioned you while you were away gets an in-chat alert that you're back",
+            "30-second per-channel cooldown per mentioned user to prevent immediate spam notifications",
+            "Spam protection — 5 AFK pings within 2 minutes auto-blacklists the sender for 2 hours"
+          ]
+        },
+        {
+          "title": "User Settings — Expanded",
+          "items": [
+            "16 toggleable settings, all enforced at the command level before any command executes",
+            "passive_income, bank_interest, rob_protect, gambling, pvp_challenges, bet_limit, dm_notifs, cd_remind, lvlup_msg, public_profile, leaderboard, analytics, romance, family_invites, active_theme, equipped_flag",
+            "Settings that block a command show a clean denial message with a direct link to incorp.live/settings",
+            "Bio now set directly from the website marketplace — no bot command needed"
+          ]
+        },
+        {
+          "title": "Anti-Cheat & Security",
+          "items": [
+            "Suspicious activity monitoring across 18 commands: daily, work, fish, slots, blackjack, plinko, mines, spin, ladders, flip, rob, heist, diffuser, collectincome, sell, gamble, bet, cashout",
+            "Auto-flag thresholds: single gain over 2M coins, total wealth exceeding 50M (flagged once), or 1M+ gained within 15 seconds",
+            "Daily rotating command logs at ./logs/commands_{date}.log; suspicious events written to ./logs/suspicious.log",
+            ".auditlog — owner-only command to review recent suspicious events via DM",
+            ".checkuser — owner-only deep inspection of any user's full data",
+            "Bot account detection — auto temp-blacklists for 30 days and DMs the owner with account tag, command used, and channel",
+            "Command spam protection — 10 commands within 10 seconds triggers a 2-hour temp-blacklist",
+            "Blacklisted users who keep spamming commands stop receiving the block message after 2 warnings — the bot goes silent",
+            "Hourly snapshots of 14 critical data files; last 24 retained with automatic rotation (.snapshots / .restoreuser)"
+          ]
+        },
+        {
+          "title": "Website",
+          "items": [
+            "404 page — proper not-found handling for missing pages",
+            "Settings page — full UI for all user preferences; speed test runs silently on login and submits ISP data",
+            "Marketplace — Whale Pass card in the Items tab; shows your current tier, the next tier's cost, and a Maxed Out state when all tiers are owned",
+            "Marketplace — Gift system on every theme and AI voice card; gift to any user by Discord ID with username autocomplete, validation, token deduction, and a DM to the recipient on delivery",
+            "Profile settings tab — set your bio directly from the marketplace without needing a bot command"
+          ]
+        },
+        {
+          "title": "Bug Fixes",
+          "items": [
+            ".server — channel counts (text, voice, categories) now correct; was always showing 0 because the channel cache wasn't being populated before filtering",
+            ".server — role names now displayed sorted by position; was showing the count with no names",
+            ".profile — active pet now shows correctly; was reading from a non-existent file instead of pets_v2.json",
+            "AFK notifications no longer loop — the bot's own reply contained a mention which re-triggered the handler indefinitely",
+            ".give / .deposit / .withdraw half — now correctly calculates 50% of your balance; was passing the literal string 'half' causing balance corruption",
+            "Autofish marketplace card had a missing closing div — caused the Themes and Profile tabs to be completely hidden for every user",
+            "Duplicate .trade and .work command handlers removed — the second unreachable case was silently dropped",
+            "Unresolvable users no longer show as Unknown on leaderboards",
+            "Blacklisted users now show a blocked indicator on the leaderboard"
+          ]
+        }
+      ]
+    },
+    {
       "version": "3.7.0",
       "title": "AI Voices & TTS Overhaul",
       "date": "March 2026",
@@ -77,8 +330,8 @@
         {
           "title": "Website",
           "items": [
-            "Marketplace — new Profile Themes tab with category filters",
-            "Marketplace — new Profile Settings tab (set bio, more coming)",
+            "Marketplace — Improved Profile Themes tab with category filters",
+            "Marketplace — Improved Profile Settings tab (set bio, more coming)",
             "Bio/About set from website, no longer a bot command"
           ]
         }
@@ -269,7 +522,7 @@
           "items": [
             "Coin Flip — double or nothing",
             "Bank Heist — team robberies",
-            "Fishing — new rare catches"
+            "Fishing — Improved rare catches"
           ]
         }
       ]

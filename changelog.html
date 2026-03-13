@@ -70,7 +70,9 @@
       <div class="sidebar-group">
         <h4>Versions</h4>
         <nav class="nav-links" id="clNav">
-          <a href="#v360" class="active">v3.6.0</a>
+          <a href="#v400" class="active">v4.0.0</a>
+          <a href="#v370">v3.7.0</a>
+          <a href="#v360">v3.6.0</a>
           <a href="#v355">v3.5.5</a>
           <a href="#v350">v3.5.0</a>
           <a href="#v340">v3.4.0</a>
@@ -78,10 +80,6 @@
           <a href="#v321">v3.2.1</a>
           <a href="#v320">v3.2.0</a>
           <a href="#v301">v3.0.1</a>
-          <a href="#v300">v3.0.0</a>
-          <a href="#v230">v2.3.0</a>
-          <a href="#v229">v2.2.9</a>
-          <a href="#v226">v2.2.6</a>
         </nav>
       </div>
     </aside>
@@ -93,10 +91,323 @@
         <p>All updates, improvements, and fixes.</p>
       </section>
 
+      <article id="v400" class="ver reveal">
+        <div class="ver-h">
+          <h2>The Big One</h2>
+          <span class="badge">v4.0.0 — latest</span>
+        </div>
+        <span class="ver-date">March 2026</span>
+        <p class="ver-p">The largest update in Incorp's history. Rebuilt progression from the ground up, added 5 gambling games, a full company simulator, interactive bank heists, 15 image effects, real-time voice transcription, a smart AFK system, and a completely new anti-cheat layer — plus dozens of bug fixes.</p>
+        <div class="ver-grid">
+
+          <div class="ver-box">
+            <h4>XP &amp; Rank System</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 11-tier rank ladder: Novice → Apprentice → Adept → Expert → Master → Grandmaster → Legend → Mythic → Divine → Celestial → Transcendent</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Each rank gives a permanent earnings multiplier — up to 1.75x at Transcendent</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> +1 Token reward on every rank-up</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Global XP = server messages + commands used, both tracked with anti-spam cooldowns</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Profile card shows an XP progress bar to your next rank threshold</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Job Level System</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 10-tier job progression tied to .work: Intern → Employee → Senior Employee → Team Lead → Manager → Director → VP → C-Suite → CEO → Industry Legend</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Payout multiplier scales from 1.0x at Intern to 3.0x at Industry Legend</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> XP earned every work session; auto level-up with an in-chat announcement</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .joblevel / .job — see your tier, XP progress, and next milestone</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Rebirth System</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Unlimited rebirth levels — reset wallet and bank to 0 for permanent stacking multipliers</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Bonuses per level: +20% daily, +15% work, +10% beg, +5% rare fish, +10% slots, +20% XP</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Cost scales 2.5x per rebirth starting at 100,000 coins</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Requires typing 'confirm' in 30 seconds; 5-minute lock prevents pre-transfer exploits</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Rebirth level shown as [RN] tag on the leaderboard</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Upgrades — Expanded to 11</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> multiplier — +10% all earnings per level (max 20)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> cooldown — -5% work/beg cooldown per level (max 5)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> fishing — +15% fishing rewards per level (max 10)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> gambling — +12% gambling winnings per level (max 5)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> interest — +0.5% daily bank interest per level (max 5)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> vault — +25% balance shielded from robbery per level (max 4)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> xp — +20% XP gain per level (max 8)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> company — unlocks company system + 10% income bonus (50M coins)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> energy — -5% energy usage per level (max 10)</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Gambling Overhaul</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 500B coin win cap per 2-hour rolling window across all gambling commands</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Cap checked upfront — blocked before the game runs, not after</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Slots reweighted: Cherry 35%, Orange 25%, Lemon 20%, Diamond 12%, 7 6%, Jackpot 2%</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Personal gambling toggle and bet limit cap in settings</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Gambling window state saved to disk and survives restarts</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Whale Pass</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 6-tier marketplace upgrade that expands your 2-hour gambling win cap</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Tier 1 — 1T (2 tokens) | Tier 2 — 1.5T (5) | Tier 3 — 2T (10)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Tier 4 — 2.5T (20) | Tier 5 — 3T (40) | Tier 6 — Unlimited (150)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Sequential — must own previous tier to unlock next</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .gl / .gamble limit — check your current tier and cap</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>New Gambling Commands</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .dice &lt;amount&gt; — roll 1–6; high wins 2x, low loses; 10s cooldown</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .duel @user [amount] — PvP dice duel; 60s to accept; higher roll wins; 30s cooldown</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .rune — rune-based gambling with 52% base win rate and escalating tiers</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .diffuser — bomb diffuser; pick the right wire to build a multiplier, wrong wire loses all</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .coinstreak — consecutive coinflip streak game; winning streak builds a multiplier</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Rob System — Reworked</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 70% base success chance with a 10-second suspense delay</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Catch penalty: lose 30% of the attempted amount if caught</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Vault upgrade reduces how much of a target's balance is stealable</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> rob_protect setting — toggle robbery immunity in settings</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Simultaneous rob protection — can't rob someone already being robbed</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Bank Interest</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Fires automatically every hour; checked once per day per user</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Rate: 0.5% per interest upgrade level, up to 2.5% at max</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Requires the bank account upgrade to be active</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> DMs you the amount earned and your current rate each payout</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Toggle with bank_interest setting</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Fishing — Improvements</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .fishquest [claim] — daily quests with a target fish and coin reward; progress tracked live</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Fish locations — cast in different spots with unique catch pools per location</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 55-rod progression; catch rate 1.0x–28.0x, rare chance 1.0x–9.0x, up to 18.5B coins</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Fishing upgrade gives +15% rewards per level, stacking with rebirth</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Autofish — Improvements</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Stats tracked per session and all-time: caught, earned, rare, mythical</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Auto-bait purchasing — .autofish bait &lt;name&gt; buys bait automatically when you run out</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Autofish messages excluded from XP tracking — no passive XP farming</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 2-hour daily limit persists across restarts</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Company System</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Full business simulator — requires Business License upgrade (50M coins)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .createcompany — found a Startup, Established, Enterprise, or Corporation</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .upgradecompany — upgrade Office, Marketing, Technology, or Staff for income multipliers</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .collectincome — collect daily income; Business License gives +10% bonus</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .invest @user — invest in players' companies and share their profits proportionally</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .hire / .unhire — manage employees; .createdepartment — add income streams</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .companies — browse all active companies; .companystats — financial breakdown</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Bank Heist System</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .robbank — multi-stage heist; bank opens 4 windows daily at UTC 0–2, 6–8, 12–14, 18–20</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Real-time progress bar; full 100% gives a 1.5x loot multiplier</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Loot scales with your wallet — up to 3x base at high wealth</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .bankstatus — check if bank is open and when the next window opens</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .bankdebt / .paydebt — failed heists leave debt that must be paid before certain actions</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .robstats — personal heist record; .quickrob — fast single-target rob</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Voice Chat Tools</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .vcscribe / .vctranscribe — real-time VC transcription with speaker names and timestamps</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .vcsummary — AI-generated session summary; up to 8 concise bullet points</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Games</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .connect4 / .c4 — canvas board + GIF replay; vs bot (4 difficulties) or another user; bet support</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .tictactoe / .ttt — canvas board; bot uses fork detection for stronger mid-game play</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .wordle — classic 6-guess word game</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .quiz — trivia with multiple choice answers</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .wyr — Would You Rather; server votes on two random scenarios</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .guessemoji — guess the concept from emoji combinations</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .pictionary — collaborative drawing; full canvas tool suite on a 500×500 canvas</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Image Effects</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 15 effects: .pixelate, .blur, .mirror, .invert, .deepfry, .glitch, .sepia, .sharpen, .swirl, .vignette, .implode, .bandicam, .legoify, .speechbubble, .addtext</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> All effects accept a reply, attachment, or URL — consistent across every command</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .effects — lists every available effect; .tools — full image/media/voice/TTS reference</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .banner — view your or any user's Discord profile banner</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Legoify rewritten with real LEGO brick textures — raised stud, shading, hard-light tinting</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Glitch effect added — row-based horizontal pixel shift for chromatic-style distortion</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>TTS — Improvements</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> FIFO queue system — messages process in strict order, no overlapping audio</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> URL stripping — links replaced with just the domain name before reading</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Voice state announcements — bot reads join, leave, mute, and deafen events</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .ttsrate — adjustable speech speed; .ttsvolume — per-session volume; .ttsfun — voice effects</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Special character voices: ghostface, chewbacca, c3po, stitch, stormtrooper, rocket, and more</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> ElevenLabs 3,000 character daily limit enforced per user; usage persists across restarts</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>AFK System</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .afk [reason] — go AFK with an optional reason; anyone who mentions you gets notified</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Clears automatically the moment you send any non-command message</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Mention log on return — who pinged you, which channel, the time, and a message snippet</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Every unique pinger gets an in-chat alert that you're back</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 30s per-channel cooldown per user prevents notification spam</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Spam protection — 5 AFK pings within 2 minutes auto-blacklists the sender for 2 hours</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>User Settings — Expanded</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 16 toggleable settings enforced at the command level before any command runs</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> passive_income, bank_interest, rob_protect, gambling, pvp_challenges, bet_limit, dm_notifs, cd_remind, lvlup_msg, public_profile, leaderboard, analytics, romance, family_invites, active_theme, equipped_flag</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Blocked commands show a clean denial with a link to incorp.live/settings</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Anti-Cheat &amp; Security</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Suspicious activity monitoring across 18 commands with automatic flagging</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Flags: single gain over 2M coins, total wealth over 50M, 1M+ in 15 seconds</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Daily rotating command logs; suspicious events written to a separate log file</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .auditlog — owner-only suspicious event viewer; .checkuser — full user data inspection</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Bot account detection — auto temp-blacklist 30 days + owner DM notification</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Command spam protection — 10 commands in 10 seconds triggers a 2-hour temp-blacklist</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Hourly snapshots of 14 critical data files; last 24 retained (.snapshots / .restoreuser)</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Website</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Settings page — full UI for all 16 user preferences</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Marketplace — Whale Pass card with tier display, next cost, and Maxed Out state</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Marketplace — Gift system on every theme and AI voice card; gift by Discord ID with autocomplete</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Profile settings tab — set your bio directly from the marketplace</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 404 page — proper not-found handling</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Bug Fixes</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .server — channel counts now correct; was always 0 due to empty cache before filtering</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .server — role names now shown sorted by position; was displaying count only</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .profile — active pet now displays correctly; was reading from a non-existent file</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> AFK notifications no longer loop — bot's own reply re-triggered the handler indefinitely</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .give / .deposit / .withdraw half — now correctly calculates 50%; was passing literal string 'half'</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Autofish marketplace card missing closing div — Themes and Profile tabs were hidden for all users</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Duplicate .trade and .work handlers removed — second unreachable case silently dropped</li>
+            </ul>
+          </div>
+
+        </div>
+      </article>
+      <hr class="ver-sep">
+
+      <article id="v370" class="ver reveal">
+        <div class="ver-h">
+          <h2>AI Voices &amp; TTS Overhaul</h2>
+          <span class="badge">v3.7.0</span>
+        </div>
+        <span class="ver-date">March 2026</span>
+        <p class="ver-p">ElevenLabs AI voice integration with 4,800+ voices in the marketplace, daily usage limits, and economy bug fixes.</p>
+        <div class="ver-grid">
+
+          <div class="ver-box">
+            <h4>ElevenLabs AI Voices</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 4,843 AI voices — Standard (1 token) and Premium (2 tokens) tiers</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 3,000 character daily limit per user</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .changevoice &lt;name&gt; to activate an owned AI voice</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Owned voices listed in .changevoice output</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Marketplace — AI Voices Tab</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> New AI Voices tab with 4,800+ browsable voice cards</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Live search bar with filters: All / Standard / Premium / Owned</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Gift voices to other users via the card menu</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Paginated display — 48 cards per page with Load More</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Help Command</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> TTS section now appears in .cmds index as [tts]</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Voice commands moved to dedicated [vc] section</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Media section now only contains GIF and YouTube commands</li>
+            </ul>
+          </div>
+
+          <div class="ver-box">
+            <h4>Bug Fixes</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .give @user half — 'half' now correctly gives 50% of your balance</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .deposit half and .withdraw half — same fix applied</li>
+            </ul>
+          </div>
+
+        </div>
+      </article>
+      <hr class="ver-sep">
+
       <article id="v360" class="ver reveal">
         <div class="ver-h">
           <h2>Profile Cards &amp; Theme System</h2>
-          <span class="badge">latest</span>
+          <span class="badge">v3.6.0</span>
         </div>
         <span class="ver-date">February 2026</span>
         <p class="ver-p">Full profile card system, theme marketplace, and XP tracking overhaul.</p>
