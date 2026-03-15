@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
 *,
 *::before,
 *::after {
@@ -7,18 +9,23 @@
 }
 
 :root {
-  --bg: #09090b;
-  --card: #09090b;
-  --border: #27272a;
-  --border-2: #3f3f46;
-  --fg: #fafafa;
-  --fg-2: #a1a1aa;
-  --fg-3: #71717a;
-  --fg-4: #52525b;
-  --radius: 6px;
-  --radius-lg: 10px;
-  --font: ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bg: #08080c;
+  --card: #0d0d12;
+  --card-2: #111118;
+  --border: #1f1f28;
+  --border-2: #2e2e3d;
+  --fg: #f4f4f8;
+  --fg-2: #9898b0;
+  --fg-3: #65657a;
+  --fg-4: #44445a;
+  --accent: #9d6df5;
+  --accent-2: #c4b5fd;
+  --accent-dim: rgba(157, 109, 245, 0.1);
+  --accent-glow: rgba(157, 109, 245, 0.2);
+  --radius: 8px;
+  --radius-lg: 12px;
+  --font: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
   --nav-height: 56px;
 }
 
@@ -34,6 +41,19 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% -5%, rgba(157, 109, 245, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 85% 105%, rgba(157, 109, 245, 0.05) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * { position: relative; z-index: 1; }
 
 a {
   color: inherit;
@@ -128,8 +148,8 @@ a {
 
 .site-sidebar {
   position: sticky;
-  top: var(--nav-height);
-  height: calc(100vh - var(--nav-height));
+  top: 0;
+  height: 100vh;
   width: 240px;
   flex-shrink: 0;
   overflow-y: auto;
@@ -165,11 +185,8 @@ a {
     color 0.15s;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
-  color: var(--fg);
-  background: #18181b;
-}
+.nav-links a:hover { color: var(--fg-2); background: var(--card-2); }
+.nav-links a.active { color: var(--accent-2); background: var(--accent-dim); font-weight: 600; }
 
 .site-main {
   flex: 1;
@@ -184,11 +201,13 @@ a {
   align-items: center;
   font-family: var(--mono);
   font-size: 0.6875rem;
-  font-weight: 500;
-  padding: 0.125rem 0.625rem;
+  font-weight: 600;
+  padding: 0.2rem 0.7rem;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  color: var(--fg-2);
+  border: 1px solid rgba(157, 109, 245, 0.3);
+  color: var(--accent-2);
+  background: var(--accent-dim);
+  letter-spacing: 0.02em;
 }
 
 .btn {
@@ -196,30 +215,33 @@ a {
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
-  height: 32px;
-  padding: 0 0.875rem;
+  height: 34px;
+  padding: 0 1rem;
   border-radius: var(--radius);
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 600;
   font-family: var(--font);
   border: none;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
 .btn-primary {
-  background: var(--fg);
-  color: var(--bg);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 18px var(--accent-glow);
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  background: #8b5cf6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 24px var(--accent-glow);
 }
 
 /* Home Sections */
 .hero {
-  padding: 4rem 0 6rem;
+  padding: 2.5rem 0 6rem;
 }
 
 .hero-svg {
@@ -276,6 +298,13 @@ a {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.feat-cell:hover {
+  border-color: var(--border-2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
 }
 
 .feat-icon {
@@ -327,14 +356,24 @@ a {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.stat-cell:hover {
+  border-color: rgba(157, 109, 245, 0.35);
+  transform: translateY(-2px);
 }
 
 .stat-n {
-  font-family: var(--mono);
+  font-family: var(--font);
   font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.04em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   margin-bottom: 0.25rem;
+  background: linear-gradient(135deg, var(--fg) 0%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .stat-l {

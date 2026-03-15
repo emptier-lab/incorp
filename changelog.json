@@ -1,6 +1,55 @@
 {
   "versions": [
     {
+      "version": "4.1.0",
+      "title": "Reimagine",
+      "date": "March 2026",
+      "description": "Ncorp gets a complete rework. 80+ commands cut, the economy rebalanced from the ground up, gambling bonuses soft-capped, and the bot refocused on what people actually use: gambling, fishing, and TTS. Less bloat, more depth.",
+      "groups": [
+        {
+          "title": "Economy Rebalance",
+          "items": [
+            "All bonus multipliers now stack additively with diminishing returns instead of multiplying on top of each other",
+            "Soft cap: bonuses up to 200% apply fully, 200-500% at half value, 500%+ at quarter value",
+            "Rebirth hard-capped at level 10 — no more infinite scaling",
+            "Balance compression applied to all accounts — inflated trillions scaled down to reasonable amounts",
+            "All existing progress (rod levels, pets, rank, tokens) preserved — only cash was adjusted",
+            "This affects daily, work, beg, and all gambling winnings"
+          ]
+        },
+        {
+          "title": "Commands Removed",
+          "items": [
+            "80+ commands cut to reduce bloat and sharpen the bot's identity",
+            "Removed: companies, marriage, family, sex system, crushes, side jobs, crystals, runes, homes, AFK, VC transcription/stats, most image filters, wordle, quiz, math, roblox commands",
+            "Kept image filters: deepfry, invert, mirror, blur, pixelate, addtext, flip",
+            "Everything that matters stays: gambling, fishing, TTS, economy, pets, profile, leaderboards, rep, weather, urban, wiki, translate, YouTube notifications"
+          ]
+        },
+        {
+          "title": "New Commands",
+          "items": [
+            ".setbio <text> — set your profile bio directly from the bot (no website needed)",
+            ".cmdstats [@user] — see your top 15 most-used commands with usage percentages"
+          ]
+        },
+        {
+          "title": "Server Join Rework",
+          "items": [
+            "New owner DM on join — now lists every feature category (economy, gambling, fishing, pets, TTS, image tools) with actual command examples",
+            "Shows server member count and prefix in the DM footer"
+          ]
+        },
+        {
+          "title": "Website Cleanup",
+          "items": [
+            "Bio editing now available via bot command (.setbio) in addition to the website",
+            "Website remains the place for themes, badges, voices, and token purchases"
+          ]
+        }
+      ]
+    },
+    {
       "version": "4.0.0",
       "title": "The Big One",
       "date": "March 2026",
