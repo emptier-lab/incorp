@@ -1,6 +1,53 @@
 {
   "versions": [
     {
+      "version": "4.2.0",
+      "title": "Roblox Cards",
+      "date": "March 2026",
+      "description": "Collect, trade, and equip Roblox limited item cards for real gameplay bonuses. Pull cards daily, build your collection, and trade on the marketplace.",
+      "groups": [
+        {
+          "title": "Card Collection System",
+          "items": [
+            ".cardroll — pull a random classic Roblox limited card (5 free rolls per day)",
+            "2,500+ real Roblox limiteds in the pool sourced from Rolimons — Dominus, Valkyrie, Headless Horseman, and more",
+            "5 rarity tiers: Common, Uncommon, Rare, Legendary, Mythical — based on real RAP values",
+            "Every card gets a unique serial number — lower serial = better bonus",
+            "Animated spin GIF on card pull that reveals your card",
+            "Canvas-rendered card images matching the bot's visual style"
+          ]
+        },
+        {
+          "title": "Card Bonuses",
+          "items": [
+            "Equip up to 3 cards (expandable to 8) for active gameplay bonuses",
+            "8 bonus types: gambling, fishing, daily, work, XP, cooldown reduction, rob protection, all income",
+            "Bonuses stack across equipped cards — serial #1 cards give up to 1.5x the base bonus",
+            "Cooldown reduction applies to fishing, beg, work, slots, blackjack, plinko, mines, and ladders",
+            "Rob protection reduces the attacker's success chance",
+            "XP bonus multiplies both command usage and chat message XP gains"
+          ]
+        },
+        {
+          "title": "Card Marketplace",
+          "items": [
+            ".cardmarket — browse, list, buy, delist, and search card listings",
+            "5% seller tax on all sales",
+            "Full marketplace tab on the website — browse cards, buy, and list for sale",
+            "Card collection synced to your profile for website viewing"
+          ]
+        },
+        {
+          "title": "Passes & Upgrades (Website)",
+          "items": [
+            "Card Roll Pass — increase daily rolls from 5 up to Unlimited (6 tiers, purchased with Tokens)",
+            "Card Slot Expander — add +1 equip slot for 5 Tokens each (base 3, max 8)",
+            "Both purchasable on the Marketplace website under Store Items"
+          ]
+        }
+      ]
+    },
+    {
       "version": "4.1.0",
       "title": "Reimagine",
       "date": "March 2026",
