@@ -942,67 +942,7 @@
                 </div>
                 <!-- /item-card autofish -->
 
-                <!-- gamble limit expander -->
-                <div class="item-card" id="gamble-limit-card">
-                  <div>
-                    <h4
-                      style="
-                        margin: 0 0 0.5rem 0;
-                        color: var(--fg);
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        font-size: 1.1rem;
-                      "
-                    >
-                      🎰 Whale Pass
-                    </h4>
-                    <p
-                      style="
-                        font-size: 0.9rem;
-                        color: var(--fg-3);
-                        margin: 0 0 0.75rem 0;
-                        line-height: 1.4;
-                      "
-                    >
-                      For the big spenders. Upgrade your 2-hour gambling win cap tier by tier —
-                      all the way to unlimited.
-                    </p>
-                    <p
-                      id="gamble-limit-tier-label"
-                      style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 1rem; font-weight: 500"
-                    >
-                      Loading…
-                    </p>
-                  </div>
-                  <div style="display: flex; gap: 0.5rem; align-items: stretch">
-                    <button
-                      id="gamble-limit-buy-btn"
-                      class="buy-btn"
-                      data-id="gamble_limit_upgrade"
-                      data-name="Whale Pass"
-                      data-tokens="0"
-                      data-coins="0"
-                      disabled
-                      style="
-                        flex: 1;
-                        background: rgba(168, 85, 247, 0.1);
-                        border: 1px solid rgba(168, 85, 247, 0.3);
-                        color: #a855f7;
-                        padding: 0.75rem;
-                        border-radius: 8px;
-                        font-weight: 500;
-                        font-size: 0.9rem;
-                        cursor: not-allowed;
-                        opacity: 0.6;
-                        transition: background 0.2s;
-                      "
-                    >
-                      Loading…
-                    </button>
-                  </div>
-                </div>
-                <!-- /item-card gamble limit -->
+                <!-- whale pass removed — gambling limit disabled -->
 
                 <!-- Card Roll Pass -->
                 <div class="item-card" id="card-roll-card">
@@ -2261,7 +2201,6 @@
             if (p.item_id.startsWith("rod_")) ownedAttachments.add(p.item_id);
           }
           renderAttachments();
-          loadGambleLimitCard();
           loadCardRollCard();
           loadCardSlotCard();
         } catch (err) {
@@ -2660,8 +2599,7 @@
           document.getElementById("cardsTab").style.display = tab === "cards" ? "" : "none";
           if (tab === "items") {
             renderAttachments();
-            loadGambleLimitCard();
-          loadCardRollCard();
+            loadCardRollCard();
           loadCardSlotCard();
           }
           if (tab === "fishing") renderRodUpgrade();
@@ -2733,50 +2671,6 @@
 
       // ── Autofish auto-buy ────────────────────────────────────────────────────
       // ── Whale Pass card ─────────────────────────────────────────
-      const GAMBLE_LIMIT_TIERS_CLIENT = [
-        { name: "Default",   limit: "500B",       tokens: 0   },
-        { name: "1x",        limit: "1T",         tokens: 2   },
-        { name: "2x",        limit: "1.5T",       tokens: 5   },
-        { name: "3x",        limit: "2T",         tokens: 10  },
-        { name: "4x",        limit: "2.5T",       tokens: 20  },
-        { name: "5x",        limit: "3T",         tokens: 40  },
-        { name: "Unlimited", limit: "Unlimited",  tokens: 150 },
-      ];
-
-      async function loadGambleLimitCard() {
-        const user = getUser();
-        if (!user) return;
-        try {
-          const res = await fetch(
-            `${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=gamble_limit_tier`,
-            { headers: sbHeaders },
-          );
-          const rows = await res.json();
-          const tier = (rows[0] && rows[0].gamble_limit_tier) || 0;
-          const label = document.getElementById("gamble-limit-tier-label");
-          const btn = document.getElementById("gamble-limit-buy-btn");
-          const currentTierInfo = GAMBLE_LIMIT_TIERS_CLIENT[tier];
-          const nextTierInfo = GAMBLE_LIMIT_TIERS_CLIENT[tier + 1];
-          if (!nextTierInfo) {
-            label.textContent = `Tier: Unlimited ♾️ — No cap`;
-            btn.textContent = "Maxed Out";
-            btn.disabled = true;
-            btn.style.opacity = "0.5";
-            btn.style.cursor = "not-allowed";
-          } else {
-            label.textContent = `Current: ${currentTierInfo.name} (${currentTierInfo.limit} cap) → Next: ${nextTierInfo.name} (${nextTierInfo.limit} cap)`;
-            btn.textContent = `Upgrade — ${nextTierInfo.tokens} Tokens`;
-            btn.dataset.tokens = nextTierInfo.tokens;
-            btn.dataset.name = `Whale Pass (${nextTierInfo.name})`;
-            btn.disabled = false;
-            btn.style.opacity = "1";
-            btn.style.cursor = "pointer";
-          }
-        } catch {
-          /* ignore — button stays disabled in Loading… state */
-        }
-      }
-
       // ── Card Roll Pass card ─────────────────────────────────────────
       const CARD_ROLL_TIERS_CLIENT = [
         { name: "Default",   rolls: "5/day",       tokens: 0  },
