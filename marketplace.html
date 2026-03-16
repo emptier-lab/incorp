@@ -638,6 +638,7 @@
               <button class="tab-btn" data-tab="badges">Badges</button>
               <button class="tab-btn" data-tab="voices">AI Voices</button>
               <button class="tab-btn" data-tab="profile">Profile Settings</button>
+              <button class="tab-btn" data-tab="cards">Roblox Cards</button>
             </div>
 
             <!-- ── STORE ITEMS TAB ── -->
@@ -1002,6 +1003,139 @@
                   </div>
                 </div>
                 <!-- /item-card gamble limit -->
+
+                <!-- Card Roll Pass -->
+                <div class="item-card" id="card-roll-card">
+                  <div>
+                    <h4
+                      style="
+                        margin: 0 0 0.5rem 0;
+                        color: var(--fg);
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        font-size: 1.1rem;
+                      "
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="2"></rect>
+                        <path d="M12 8v8"></path>
+                        <path d="M8 12h8"></path>
+                      </svg>
+                      Card Roll Pass
+                    </h4>
+                    <p
+                      style="
+                        font-size: 0.9rem;
+                        color: var(--fg-3);
+                        margin: 0 0 0.75rem 0;
+                        line-height: 1.4;
+                      "
+                    >
+                      Increase your daily <code>.cardroll</code> limit. Each tier adds more rolls per day — all the way to unlimited.
+                    </p>
+                    <p
+                      id="card-roll-tier-label"
+                      style="font-size: 0.85rem; color: #60a5fa; margin-bottom: 1rem; font-weight: 500"
+                    >
+                      Loading...
+                    </p>
+                  </div>
+                  <div style="display: flex; gap: 0.5rem; align-items: stretch">
+                    <button
+                      id="card-roll-buy-btn"
+                      class="buy-btn"
+                      data-id="card_roll_pass"
+                      data-name="Card Roll Pass"
+                      data-tokens="0"
+                      data-coins="0"
+                      disabled
+                      style="
+                        flex: 1;
+                        background: rgba(96, 165, 250, 0.1);
+                        border: 1px solid rgba(96, 165, 250, 0.3);
+                        color: #60a5fa;
+                        padding: 0.75rem;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        font-size: 0.9rem;
+                        cursor: not-allowed;
+                        opacity: 0.6;
+                        transition: background 0.2s;
+                      "
+                    >
+                      Loading...
+                    </button>
+                  </div>
+                </div>
+                <!-- /item-card card roll pass -->
+
+                <!-- Card Slot Upgrade -->
+                <div class="item-card" id="card-slot-card">
+                  <div>
+                    <h4
+                      style="
+                        margin: 0 0 0.5rem 0;
+                        color: var(--fg);
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        font-size: 1.1rem;
+                      "
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                      </svg>
+                      Card Slot Expander
+                    </h4>
+                    <p
+                      style="
+                        font-size: 0.9rem;
+                        color: var(--fg-3);
+                        margin: 0 0 0.75rem 0;
+                        line-height: 1.4;
+                      "
+                    >
+                      Equip more cards at once. Each upgrade adds +1 slot (base 3, max 8).
+                    </p>
+                    <p
+                      id="card-slot-tier-label"
+                      style="font-size: 0.85rem; color: #34d399; margin-bottom: 1rem; font-weight: 500"
+                    >
+                      Loading...
+                    </p>
+                  </div>
+                  <div style="display: flex; gap: 0.5rem; align-items: stretch">
+                    <button
+                      id="card-slot-buy-btn"
+                      class="buy-btn"
+                      data-id="card_slot_upgrade"
+                      data-name="Card Slot Expander"
+                      data-tokens="5"
+                      data-coins="0"
+                      disabled
+                      style="
+                        flex: 1;
+                        background: rgba(52, 211, 153, 0.1);
+                        border: 1px solid rgba(52, 211, 153, 0.3);
+                        color: #34d399;
+                        padding: 0.75rem;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        font-size: 0.9rem;
+                        cursor: not-allowed;
+                        opacity: 0.6;
+                        transition: background 0.2s;
+                      "
+                    >
+                      Loading...
+                    </button>
+                  </div>
+                </div>
+                <!-- /item-card card slot -->
               </div>
               <!-- /items grid -->
 
@@ -1394,6 +1528,55 @@
               </div>
             </div>
             <!-- /profileTab -->
+
+            <!-- ── ROBLOX CARDS TAB ── -->
+            <div id="cardsTab" style="display: none">
+              <p style="color: var(--fg-3); font-size: 0.875rem; margin-bottom: 1.5rem">
+                Browse and trade Roblox Limited cards with other players. Use <code>.cardroll</code> in Discord to pull new cards.
+              </p>
+
+              <!-- My Cards -->
+              <div style="margin-bottom: 2rem">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem">
+                  <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--fg)">
+                    My Cards
+                  </h3>
+                  <span id="cardsCount" style="font-size: 0.8rem; color: var(--fg-4)"></span>
+                </div>
+                <div id="myCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem">
+                  <p style="color: var(--fg-4); font-size: 0.85rem">Connect your Discord account to view your cards.</p>
+                </div>
+              </div>
+
+              <!-- Marketplace Listings -->
+              <div style="padding-top: 1.5rem; border-top: 1px solid var(--border)">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem">
+                  <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--fg)">
+                    Card Marketplace
+                  </h3>
+                  <input
+                    id="cardMarketSearch"
+                    type="text"
+                    placeholder="Search cards..."
+                    style="
+                      background: rgba(255,255,255,0.05);
+                      border: 1px solid rgba(255,255,255,0.1);
+                      border-radius: 8px;
+                      color: var(--fg);
+                      padding: 0.5rem 0.75rem;
+                      font-size: 0.85rem;
+                      outline: none;
+                      width: 200px;
+                      font-family: inherit;
+                    "
+                  />
+                </div>
+                <div id="marketListingsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem">
+                  <p style="color: var(--fg-4); font-size: 0.85rem">Loading marketplace...</p>
+                </div>
+              </div>
+            </div>
+            <!-- /cardsTab -->
           </div>
           <!-- /storeArea -->
         </div>
@@ -2079,6 +2262,8 @@
           }
           renderAttachments();
           loadGambleLimitCard();
+          loadCardRollCard();
+          loadCardSlotCard();
         } catch (err) {
           console.warn("Theme data load failed:", err);
         }
@@ -2472,9 +2657,12 @@
           document.getElementById("badgesTab").style.display = tab === "badges" ? "" : "none";
           document.getElementById("voicesTab").style.display = tab === "voices" ? "" : "none";
           document.getElementById("profileTab").style.display = tab === "profile" ? "" : "none";
+          document.getElementById("cardsTab").style.display = tab === "cards" ? "" : "none";
           if (tab === "items") {
             renderAttachments();
             loadGambleLimitCard();
+          loadCardRollCard();
+          loadCardSlotCard();
           }
           if (tab === "fishing") renderRodUpgrade();
           if (tab === "themes") renderThemes(currentThemeCat);
@@ -2487,6 +2675,10 @@
             loadAutoBuy();
             renderProfileThemePicker();
             renderProfileBadgePicker();
+          }
+          if (tab === "cards") {
+            loadMyCards();
+            loadCardMarket();
           }
         });
       });
@@ -2582,6 +2774,84 @@
           }
         } catch {
           /* ignore — button stays disabled in Loading… state */
+        }
+      }
+
+      // ── Card Roll Pass card ─────────────────────────────────────────
+      const CARD_ROLL_TIERS_CLIENT = [
+        { name: "Default",   rolls: "5/day",       tokens: 0  },
+        { name: "Bronze",    rolls: "8/day",       tokens: 3  },
+        { name: "Silver",    rolls: "12/day",      tokens: 8  },
+        { name: "Gold",      rolls: "18/day",      tokens: 15 },
+        { name: "Diamond",   rolls: "25/day",      tokens: 30 },
+        { name: "Unlimited", rolls: "Unlimited",   tokens: 75 },
+      ];
+
+      async function loadCardRollCard() {
+        const user = getUser();
+        if (!user) return;
+        try {
+          const res = await fetch(
+            `${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=card_roll_tier`,
+            { headers: sbHeaders },
+          );
+          const rows = await res.json();
+          const tier = (rows[0] && rows[0].card_roll_tier) || 0;
+          const label = document.getElementById("card-roll-tier-label");
+          const btn = document.getElementById("card-roll-buy-btn");
+          const currentTierInfo = CARD_ROLL_TIERS_CLIENT[tier];
+          const nextTierInfo = CARD_ROLL_TIERS_CLIENT[tier + 1];
+          if (!nextTierInfo) {
+            label.textContent = `Tier: Unlimited — No daily cap`;
+            btn.textContent = "Maxed Out";
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            btn.style.cursor = "not-allowed";
+          } else {
+            label.textContent = `Current: ${currentTierInfo.name} (${currentTierInfo.rolls}) → Next: ${nextTierInfo.name} (${nextTierInfo.rolls})`;
+            btn.textContent = `Upgrade — ${nextTierInfo.tokens} Tokens`;
+            btn.dataset.tokens = nextTierInfo.tokens;
+            btn.dataset.name = `Card Roll Pass (${nextTierInfo.name})`;
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            btn.style.cursor = "pointer";
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+
+      async function loadCardSlotCard() {
+        const user = getUser();
+        if (!user) return;
+        try {
+          const res = await fetch(
+            `${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=card_slots`,
+            { headers: sbHeaders },
+          );
+          const rows = await res.json();
+          const extra = (rows[0] && rows[0].card_slots) || 0;
+          const current = 3 + extra;
+          const maxSlots = 8;
+          const label = document.getElementById("card-slot-tier-label");
+          const btn = document.getElementById("card-slot-buy-btn");
+          if (current >= maxSlots) {
+            label.textContent = `Slots: ${current}/${maxSlots} — Maxed out`;
+            btn.textContent = "Maxed Out";
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            btn.style.cursor = "not-allowed";
+          } else {
+            label.textContent = `Current: ${current}/${maxSlots} equipped card slots`;
+            btn.textContent = `+1 Slot — 5 Tokens`;
+            btn.dataset.tokens = "5";
+            btn.dataset.name = `Card Slot Expander (${current} → ${current + 1})`;
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            btn.style.cursor = "pointer";
+          }
+        } catch {
+          /* ignore */
         }
       }
 
@@ -3294,6 +3564,129 @@
         ownedThemes.clear();
         activeTheme = "default";
         showLoggedOut();
+      });
+
+      // ── Cards Tab ─────────────────────────────────────────────────────────
+      const tierColors = {
+        mythical: { bg: "rgba(124,58,237,0.15)", border: "rgba(124,58,237,0.4)", text: "#a78bfa" },
+        legendary: { bg: "rgba(245,158,11,0.15)", border: "rgba(245,158,11,0.4)", text: "#fbbf24" },
+        rare: { bg: "rgba(59,130,246,0.15)", border: "rgba(59,130,246,0.4)", text: "#60a5fa" },
+        uncommon: { bg: "rgba(34,197,94,0.15)", border: "rgba(34,197,94,0.4)", text: "#4ade80" },
+        common: { bg: "rgba(107,114,128,0.15)", border: "rgba(107,114,128,0.4)", text: "#9ca3af" },
+      };
+
+      function renderCardItem(card, actions) {
+        const tc = tierColors[card.tier] || tierColors.common;
+        const serialMult = 1 + ((card.maxSerial || 500) - card.serial) / (card.maxSerial || 500) * 0.5;
+        const bonus = ((card.bonusBase || 0) * serialMult * 100).toFixed(1);
+        const thumb = card.thumbnailUrl
+          ? `<img src="${card.thumbnailUrl}" style="width:64px;height:64px;border-radius:6px;object-fit:cover;margin-bottom:0.5rem" onerror="this.style.display='none'">`
+          : `<div style="width:64px;height:64px;border-radius:6px;background:rgba(255,255,255,0.05);margin-bottom:0.5rem;display:flex;align-items:center;justify-content:center;color:var(--fg-4)">?</div>`;
+        return `
+          <div style="background:${tc.bg};border:1px solid ${tc.border};border-radius:10px;padding:1rem;display:flex;flex-direction:column;align-items:center;text-align:center">
+            ${thumb}
+            <div style="font-weight:600;font-size:0.9rem;color:var(--fg);margin-bottom:0.25rem">${card.name || "Unknown"}</div>
+            <div style="font-size:0.75rem;font-weight:600;color:${tc.text};text-transform:uppercase;margin-bottom:0.25rem">${card.tier}</div>
+            <div style="font-family:monospace;font-size:0.95rem;color:var(--fg);font-weight:700">#${card.serial}<span style="font-size:0.7rem;color:var(--fg-4);font-weight:400"> / ${card.maxSerial || "?"}</span></div>
+            <div style="font-size:0.7rem;color:var(--fg-3);margin-top:0.25rem">+${bonus}% ${(card.bonusType || "").replace("_"," ")}</div>
+            ${actions || ""}
+          </div>`;
+      }
+
+      async function loadMyCards() {
+        const user = getUser();
+        const grid = document.getElementById("myCardsGrid");
+        if (!user) { grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.85rem">Log in to see your cards.</p>`; return; }
+        try {
+          const res = await fetch(
+            `${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=card_collection`,
+            { headers: sbHeaders },
+          );
+          const rows = await res.json();
+          const raw = rows[0]?.card_collection;
+          if (!raw) { grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.85rem">No cards yet. Use <code>.cardroll</code> in Discord!</p>`; return; }
+          const col = typeof raw === "string" ? JSON.parse(raw) : raw;
+          const cards = col.cards || [];
+          document.getElementById("cardsCount").textContent = `${cards.length} cards | ${col.totalPulls || 0} pulls`;
+          if (cards.length === 0) { grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.85rem">No cards yet.</p>`; return; }
+          const tierOrder = { mythical: 0, legendary: 1, rare: 2, uncommon: 3, common: 4 };
+          cards.sort((a, b) => (tierOrder[a.tier] ?? 5) - (tierOrder[b.tier] ?? 5));
+          grid.innerHTML = cards.map(c => {
+            const equipped = (col.equipped || []).includes(c.copyId);
+            const eqBadge = equipped ? `<div style="font-size:0.7rem;color:#fbbf24;font-weight:600;margin-top:0.25rem">EQUIPPED</div>` : "";
+            const listBtn = `<button class="card-list-btn" data-copyid="${c.copyId}" data-name="${c.name}" data-serial="${c.serial}" data-tier="${c.tier}" style="margin-top:0.5rem;font-size:0.75rem;padding:0.3rem 0.6rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--fg-3);cursor:pointer">List for Sale</button>`;
+            return renderCardItem(c, eqBadge + listBtn);
+          }).join("");
+          grid.querySelectorAll(".card-list-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              const price = prompt(`List ${btn.dataset.name} #${btn.dataset.serial} for how many coins?`);
+              if (!price || isNaN(price) || Number(price) < 1) return;
+              selectedItem = { id: `card_list_${btn.dataset.copyid}_${price}`, tokens: 0, coins: 0 };
+              fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
+                method: "POST",
+                headers: sbHeaders,
+                body: JSON.stringify({
+                  discord_id: user.id,
+                  item_id: `card_list_${btn.dataset.copyid}_${price}`,
+                  cost_tokens: 0,
+                  cost_coins: 0,
+                }),
+              }).then(() => {
+                btn.textContent = "Listed!";
+                btn.disabled = true;
+              }).catch(() => { btn.textContent = "Error"; });
+            });
+          });
+        } catch {
+          grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.85rem">Error loading cards.</p>`;
+        }
+      }
+
+      async function loadCardMarket() {
+        const grid = document.getElementById("marketListingsGrid");
+        try {
+          const res = await fetch(
+            `${SB_URL}/rest/v1/card_listings?select=*&order=listed_at.desc`,
+            { headers: sbHeaders },
+          );
+          const listings = await res.json();
+          if (!Array.isArray(listings) || listings.length === 0) {
+            grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.85rem">No cards listed yet. Use <code>.cardmarket list</code> in Discord to sell cards.</p>`;
+            return;
+          }
+          const user = getUser();
+          grid.innerHTML = listings.map(l => {
+            const buyAction = user && l.seller_id !== user.id
+              ? `<button class="card-buy-btn" data-listid="${l.id}" data-name="${l.name}" data-price="${l.price}" style="margin-top:0.5rem;font-size:0.8rem;padding:0.4rem 0.75rem;background:rgba(88,101,242,0.15);border:1px solid rgba(88,101,242,0.3);border-radius:6px;color:#a5b4fc;cursor:pointer;font-weight:600">${Number(l.price).toLocaleString()} coins</button>`
+              : l.seller_id === user?.id
+              ? `<div style="font-size:0.7rem;color:#fbbf24;margin-top:0.5rem">Your listing</div>`
+              : `<div style="font-size:0.8rem;color:var(--fg-3);margin-top:0.5rem">${Number(l.price).toLocaleString()} coins</div>`;
+            return renderCardItem({
+              name: l.name, tier: l.tier, serial: l.serial,
+              maxSerial: l.max_serial, thumbnailUrl: l.thumbnail_url,
+              bonusType: "", bonusBase: 0,
+            }, buyAction);
+          }).join("");
+          grid.querySelectorAll(".card-buy-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              if (!user) return;
+              selectedItem = { id: `card_buy_${btn.dataset.listid}`, name: btn.dataset.name, tokens: 0, coins: btn.dataset.price };
+              document.getElementById("modalTitle").textContent = "Buy Card";
+              document.getElementById("modalDesc").innerHTML = `Buy <strong>${btn.dataset.name}</strong> for <strong>${Number(btn.dataset.price).toLocaleString()} coins</strong>? (5% tax applied to seller)`;
+              document.getElementById("modalCost").textContent = `${Number(btn.dataset.price).toLocaleString()} Coins`;
+              document.getElementById("confirmModal").classList.add("active");
+            });
+          });
+        } catch {
+          grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.85rem">Marketplace unavailable. Use <code>.cardmarket</code> in Discord.</p>`;
+        }
+      }
+
+      document.getElementById("cardMarketSearch")?.addEventListener("input", (e) => {
+        const q = e.target.value.toLowerCase();
+        document.querySelectorAll("#marketListingsGrid > div").forEach(el => {
+          el.style.display = el.textContent.toLowerCase().includes(q) ? "" : "none";
+        });
       });
 
       init();
