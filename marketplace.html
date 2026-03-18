@@ -2635,8 +2635,8 @@
           if (!res.ok) { const t = await res.text(); throw new Error(t); }
           closeListModal();
           btn.textContent = "Listed!";
-          setTimeout(() => loadMyCards(), 2500);
-          setTimeout(() => loadCardMarket(), 2500);
+          setTimeout(() => loadMyCards(), 5000);
+          setTimeout(() => loadCardMarket(), 5000);
         } catch (e) {
           errEl.textContent = `Failed: ${e.message}`;
           errEl.style.display = "";
@@ -3750,8 +3750,9 @@
                 headers: sbHeaders,
                 body: JSON.stringify({ discord_id: user.id, item_id: `card_delist_${btn.dataset.listid}`, cost_tokens: 0, cost_coins: 0 }),
               }).then(() => {
-                btn.textContent = "Delisted";
+                btn.textContent = "Delisting…";
                 btn.disabled = true;
+                setTimeout(() => loadCardMarket(), 5000);
               }).catch(() => { btn.textContent = "Error"; });
             });
           });
