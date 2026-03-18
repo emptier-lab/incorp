@@ -96,6 +96,40 @@
         cursor: not-allowed;
         filter: none;
       }
+      .currency-toggle {
+        flex: 1;
+        padding: 0.6rem 0;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.04);
+        color: var(--fg-3);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .currency-toggle.active {
+        background: rgba(167,139,250,0.18);
+        border-color: #a78bfa;
+        color: #c4b5fd;
+      }
+      .list-price-input {
+        width: 100%;
+        box-sizing: border-box;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 8px;
+        color: var(--fg);
+        padding: 0.65rem 0.9rem;
+        font-size: 0.95rem;
+        outline: none;
+        margin-top: 0.75rem;
+      }
+      .list-price-input:focus {
+        border-color: #a78bfa;
+      }
+      .list-price-input::placeholder { color: var(--fg-4); }
+      }
 
       /* ── User bar badge ── */
       .tokens-badge {
@@ -1542,6 +1576,25 @@
       </div>
     </div>
 
+    <!-- List Card Modal -->
+    <div class="modal-overlay" id="listCardModal">
+      <div class="modal">
+        <h3>List Card for Sale</h3>
+        <p id="listCardModalName" style="font-weight:600;color:#c4b5fd;margin-bottom:1rem"></p>
+        <p style="font-size:0.8rem;color:var(--fg-3);margin-bottom:0.75rem">Currency</p>
+        <div style="display:flex;gap:0.5rem;margin-bottom:0.25rem">
+          <button class="currency-toggle" id="listCurrencyTokens" onclick="setListCurrency('tokens')">🔷 Tokens</button>
+          <button class="currency-toggle" id="listCurrencyCoins" onclick="setListCurrency('coins')">🪙 Coins</button>
+        </div>
+        <input class="list-price-input" id="listPriceInput" type="number" min="1" placeholder="Price…" />
+        <div id="listCardError" style="color:#ef4444;font-size:0.83rem;margin-top:0.5rem;display:none"></div>
+        <div class="modal-actions" style="margin-top:1.25rem">
+          <button class="btn-cancel" onclick="closeListModal()">Cancel</button>
+          <button class="btn-confirm" id="btnListConfirm">List for Sale</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Gift Modal -->
     <div class="modal-overlay" id="giftModal">
       <div class="modal">
@@ -2474,6 +2527,73 @@
       }
 
       // ── Modal ────────────────────────────────────────────────────────────────
+      // ── List Card Modal ──────────────────────────────────────────────────────
+      let _listCopyId = null;
+      let _listCurrency = "tokens";
+
+      function openListModal(copyId) {
+        const card = (window.myCardsMap || {})[copyId];
+        if (!card) return;
+        _listCopyId = copyId;
+        _listCurrency = "tokens";
+        document.getElementById("listCardModalName").textContent = `${card.name} #${card.serial}`;
+        document.getElementById("listPriceInput").value = "";
+        document.getElementById("listCardError").style.display = "none";
+        document.getElementById("btnListConfirm").disabled = false;
+        document.getElementById("btnListConfirm").textContent = "List for Sale";
+        setListCurrency("tokens");
+        document.getElementById("listCardModal").classList.add("active");
+      }
+
+      function closeListModal() {
+        document.getElementById("listCardModal").classList.remove("active");
+        _listCopyId = null;
+      }
+
+      function setListCurrency(cur) {
+        _listCurrency = cur;
+        document.getElementById("listCurrencyTokens").classList.toggle("active", cur === "tokens");
+        document.getElementById("listCurrencyCoins").classList.toggle("active", cur === "coins");
+      }
+
+      document.getElementById("listCardModal").addEventListener("click", e => {
+        if (e.target === document.getElementById("listCardModal")) closeListModal();
+      });
+
+      document.getElementById("btnListConfirm").addEventListener("click", async () => {
+        const errEl = document.getElementById("listCardError");
+        const btn = document.getElementById("btnListConfirm");
+        const price = parseInt(document.getElementById("listPriceInput").value);
+        if (!price || price < 1) { errEl.textContent = "Enter a valid price (min 1)."; errEl.style.display = ""; return; }
+        const user = getUser();
+        if (!user || !_listCopyId) return;
+        const card = (window.myCardsMap || {})[_listCopyId];
+        if (!card) { errEl.textContent = "Card not found."; errEl.style.display = ""; return; }
+
+        btn.disabled = true;
+        btn.textContent = "Listing…";
+        errEl.style.display = "none";
+
+        try {
+          const itemId = `card_list_${_listCopyId}_${_listCurrency}_${price}`;
+          const res = await fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
+            method: "POST",
+            headers: { ...sbHeaders, Prefer: "return=minimal" },
+            body: JSON.stringify({ discord_id: user.id, item_id: itemId, cost_tokens: 0, cost_coins: 0 }),
+          });
+          if (!res.ok) { const t = await res.text(); throw new Error(t); }
+          closeListModal();
+          btn.textContent = "Listed!";
+          setTimeout(() => loadMyCards(), 2500);
+          setTimeout(() => loadCardMarket(), 2500);
+        } catch (e) {
+          errEl.textContent = `Failed: ${e.message}`;
+          errEl.style.display = "";
+          btn.disabled = false;
+          btn.textContent = "List for Sale";
+        }
+      });
+
       function openModal(item) {
         selectedItem = item;
         let costParts = [];
@@ -3505,31 +3625,25 @@
           if (cards.length === 0) { grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.85rem">No cards yet.</p>`; return; }
           const tierOrder = { mythical: 0, legendary: 1, rare: 2, uncommon: 3, common: 4 };
           cards.sort((a, b) => (tierOrder[a.tier] ?? 5) - (tierOrder[b.tier] ?? 5));
+          window.myCardsMap = {};
+          cards.forEach(c => { window.myCardsMap[c.copyId] = c; });
+          const alreadyListed = new Set();
+          try {
+            const lRes = await fetch(`${SB_URL}/rest/v1/card_listings?seller_id=eq.${user.id}&select=copy_id`, { headers: sbHeaders });
+            const lRows = await lRes.json();
+            lRows.forEach(r => alreadyListed.add(r.copy_id));
+          } catch {}
           grid.innerHTML = cards.map(c => {
             const equipped = (col.equipped || []).includes(c.copyId);
             const eqBadge = equipped ? `<div style="font-size:0.7rem;color:#fbbf24;font-weight:600;margin-top:0.25rem">EQUIPPED</div>` : "";
-            const listBtn = `<button class="card-list-btn" data-copyid="${c.copyId}" data-name="${c.name}" data-serial="${c.serial}" data-tier="${c.tier}" style="margin-top:0.5rem;font-size:0.75rem;padding:0.3rem 0.6rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--fg-3);cursor:pointer">List for Sale</button>`;
+            const isListed = alreadyListed.has(c.copyId);
+            const listBtn = isListed
+              ? `<button disabled style="margin-top:0.5rem;font-size:0.75rem;padding:0.3rem 0.6rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:var(--fg-4);cursor:not-allowed">Listed</button>`
+              : `<button class="card-list-btn" data-copyid="${c.copyId}" style="margin-top:0.5rem;font-size:0.75rem;padding:0.3rem 0.6rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--fg-3);cursor:pointer">List for Sale</button>`;
             return renderCardItem(c, eqBadge + listBtn);
           }).join("");
           grid.querySelectorAll(".card-list-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-              const price = prompt(`List ${btn.dataset.name} #${btn.dataset.serial} for how many coins?`);
-              if (!price || isNaN(price) || Number(price) < 1) return;
-              selectedItem = { id: `card_list_${btn.dataset.copyid}_${price}`, tokens: 0, coins: 0 };
-              fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
-                method: "POST",
-                headers: sbHeaders,
-                body: JSON.stringify({
-                  discord_id: user.id,
-                  item_id: `card_list_${btn.dataset.copyid}_${price}`,
-                  cost_tokens: 0,
-                  cost_coins: 0,
-                }),
-              }).then(() => {
-                btn.textContent = "Listed!";
-                btn.disabled = true;
-              }).catch(() => { btn.textContent = "Error"; });
-            });
+            btn.addEventListener("click", () => openListModal(btn.dataset.copyid));
           });
         } catch {
           grid.innerHTML = `<p style="color:var(--fg-4);font-size:0.85rem">Error loading cards.</p>`;
@@ -3550,11 +3664,16 @@
           }
           const user = getUser();
           grid.innerHTML = listings.map(l => {
-            const buyAction = user && l.seller_id !== user.id
-              ? `<button class="card-buy-btn" data-listid="${l.id}" data-name="${l.name}" data-price="${l.price}" style="margin-top:0.5rem;font-size:0.8rem;padding:0.4rem 0.75rem;background:rgba(88,101,242,0.15);border:1px solid rgba(88,101,242,0.3);border-radius:6px;color:#a5b4fc;cursor:pointer;font-weight:600">${Number(l.price).toLocaleString()} coins</button>`
-              : l.seller_id === user?.id
-              ? `<div style="font-size:0.7rem;color:#fbbf24;margin-top:0.5rem">Your listing</div>`
-              : `<div style="font-size:0.8rem;color:var(--fg-3);margin-top:0.5rem">${Number(l.price).toLocaleString()} coins</div>`;
+            const cur = l.currency || "coins";
+            const priceLabel = `${Number(l.price).toLocaleString()} ${cur}`;
+            let buyAction;
+            if (user && l.seller_id === user.id) {
+              buyAction = `<button class="card-delist-btn" data-listid="${l.id}" data-name="${l.name}" style="margin-top:0.5rem;font-size:0.75rem;padding:0.3rem 0.6rem;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:6px;color:#f87171;cursor:pointer">Delist</button>`;
+            } else if (user && l.seller_id !== user.id) {
+              buyAction = `<button class="card-buy-btn" data-listid="${l.id}" data-name="${l.name}" data-price="${l.price}" data-currency="${cur}" style="margin-top:0.5rem;font-size:0.8rem;padding:0.4rem 0.75rem;background:rgba(88,101,242,0.15);border:1px solid rgba(88,101,242,0.3);border-radius:6px;color:#a5b4fc;cursor:pointer;font-weight:600">${priceLabel}</button>`;
+            } else {
+              buyAction = `<div style="font-size:0.8rem;color:var(--fg-3);margin-top:0.5rem">${priceLabel}</div>`;
+            }
             return renderCardItem({
               name: l.name, tier: l.tier, serial: l.serial,
               maxSerial: l.max_serial, thumbnailUrl: l.thumbnail_url,
@@ -3564,11 +3683,25 @@
           grid.querySelectorAll(".card-buy-btn").forEach(btn => {
             btn.addEventListener("click", () => {
               if (!user) return;
-              selectedItem = { id: `card_buy_${btn.dataset.listid}`, name: btn.dataset.name, tokens: 0, coins: btn.dataset.price };
+              const cur = btn.dataset.currency || "coins";
+              selectedItem = { id: `card_buy_${btn.dataset.listid}`, name: btn.dataset.name, tokens: cur === "tokens" ? btn.dataset.price : 0, coins: cur === "coins" ? btn.dataset.price : 0 };
               document.getElementById("modalTitle").textContent = "Buy Card";
-              document.getElementById("modalDesc").innerHTML = `Buy <strong>${btn.dataset.name}</strong> for <strong>${Number(btn.dataset.price).toLocaleString()} coins</strong>? (5% tax applied to seller)`;
-              document.getElementById("modalCost").textContent = `${Number(btn.dataset.price).toLocaleString()} Coins`;
+              document.getElementById("modalDesc").innerHTML = `Buy <strong>${btn.dataset.name}</strong> for <strong>${Number(btn.dataset.price).toLocaleString()} ${cur}</strong>? (5% tax applied to seller)`;
+              document.getElementById("modalCost").textContent = `${Number(btn.dataset.price).toLocaleString()} ${cur.charAt(0).toUpperCase() + cur.slice(1)}`;
               document.getElementById("confirmModal").classList.add("active");
+            });
+          });
+          grid.querySelectorAll(".card-delist-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              if (!user) return;
+              fetch(`${SB_URL}/rest/v1/marketplace_purchases`, {
+                method: "POST",
+                headers: sbHeaders,
+                body: JSON.stringify({ discord_id: user.id, item_id: `card_delist_${btn.dataset.listid}`, cost_tokens: 0, cost_coins: 0 }),
+              }).then(() => {
+                btn.textContent = "Delisted";
+                btn.disabled = true;
+              }).catch(() => { btn.textContent = "Error"; });
             });
           });
         } catch {
