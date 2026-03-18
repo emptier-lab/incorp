@@ -2099,7 +2099,7 @@
 
         const level = currentRodLevel;
         const rod = FISHING_RODS[level];
-        const isMax = level >= 55;
+        const isMax = level >= Object.keys(FISHING_RODS).length;
         const nextRod = !isMax ? FISHING_RODS[level + 1] : null;
 
         function tierColor(l) {
@@ -2109,7 +2109,10 @@
           if (l <= 30) return "#a78bfa";
           if (l <= 40) return "#fbbf24";
           if (l <= 50) return "#fb923c";
-          return "#f0abfc";
+          if (l <= 65) return "#f0abfc";
+          if (l <= 80) return "#e879f9";
+          if (l <= 90) return "#c026d3";
+          return "#ff0080";
         }
         function tierLabel(l) {
           if (l <= 5) return "Basic";
@@ -2118,7 +2121,10 @@
           if (l <= 30) return "Master";
           if (l <= 40) return "Legendary";
           if (l <= 50) return "Mythical";
-          return "Apex";
+          if (l <= 65) return "Apex";
+          if (l <= 80) return "Cosmic";
+          if (l <= 90) return "Eternal";
+          return "Godlike";
         }
         function fc(n) {
           if (n >= 1e9) return (n / 1e9).toFixed(2).replace(/\.?0+$/, "") + "B";
@@ -2129,7 +2135,7 @@
 
         const color = tierColor(level);
         const canAfford = nextRod && userStats && (userStats.balance || 0) >= nextRod.cost;
-        const pct = Math.round((level / 55) * 100);
+        const pct = Math.round((level / Object.keys(FISHING_RODS).length) * 100);
 
         const currentCard = `
           <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;">
@@ -2154,7 +2160,7 @@
                   </div>
                   <div>
                     <div style="font-size:0.7rem;color:var(--fg-4);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.2rem;">Progress</div>
-                    <div style="font-size:1.05rem;font-weight:600;color:var(--fg);">${level}<span style="color:var(--fg-4);font-size:0.8rem;"> / 55</span></div>
+                    <div style="font-size:1.05rem;font-weight:600;color:var(--fg);">${level}<span style="color:var(--fg-4);font-size:0.8rem;"> / ${Object.keys(FISHING_RODS).length}</span></div>
                   </div>
                 </div>
                 <div style="margin-top:0.9rem;">
