@@ -2729,7 +2729,7 @@
           }
           // If this was a rod upgrade purchase: increment local level and re-render
           if (selectedItem.id === "rod_upgrade") {
-            currentRodLevel = Math.min(55, currentRodLevel + 1);
+            currentRodLevel = Math.min(Object.keys(FISHING_RODS).length, currentRodLevel + 1);
             renderRodUpgrade();
           }
           // If this was a rod attachment purchase: add to owned set and re-render
