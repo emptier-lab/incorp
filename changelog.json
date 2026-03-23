@@ -2,9 +2,9 @@
   "versions": [
     {
       "version": "4.2.1",
-      "title": "Card Packs & Fusion",
+      "title": "Card Packs, Fusion & TV",
       "date": "March 2026",
-      "description": "Pokemon-style card packs with animated reveals, card fusion to upgrade duplicates into rarer cards, and a new gambling limit expander for high-rollers.",
+      "description": "Pokemon-style card packs with animated per-card reveals, card fusion to upgrade duplicates, live TV streaming into voice channels, and a new gambling limit expander for high-rollers.",
       "groups": [
         {
           "title": "Card Packs",
@@ -37,6 +37,18 @@
             "Auto-selects your worst copies first (highest serial ratio) so you don't have to pick manually",
             "Fused cards get a fresh serial number from the next-tier pool",
             "Cannot fuse equipped or marketplace-listed cards"
+          ]
+        },
+        {
+          "title": "TV Streaming",
+          "items": [
+            ".source <channel> — stream a live TV channel directly into your voice channel",
+            "Supports YouTube live streams and satellite HLS channels (Al Jazeera, France 24, DW News, CGTN, NASA TV)",
+            "Static noise fallback when a channel is offline — no dead air",
+            ".source guide — opens an on-screen guide overlay navigable with reactions (⬆️⬇️◀️▶️✅❌)",
+            ".source list — list all available channels",
+            ".source stop — stop the current stream",
+            ".source vol <n> — adjust stream volume (0–200)"
           ]
         },
         {
