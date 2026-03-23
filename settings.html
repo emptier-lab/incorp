@@ -9,10 +9,422 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m12 3-10 5 10 5 10-5-10-5z'/><path d='m2 12 10 5 10-5'/><path d='m2 17 10 5 10-5'/></svg>">
+    <style>
+        /* ── Accent & base ── */
+        :root {
+            --accent: #a78bfa;
+            --accent-dim: rgba(167,139,250,0.15);
+            --accent-border: rgba(167,139,250,0.3);
+            --red: #ef4444;
+            --red-dim: rgba(239,68,68,0.12);
+            --red-border: rgba(239,68,68,0.25);
+        }
+
+        /* ── Settings head ── */
+        .settings-head h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0 0 0.25rem;
+        }
+        .settings-head p {
+            color: var(--fg-3, #888);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* ── Login card ── */
+        .login-card {
+            max-width: 400px;
+            margin: 2.5rem auto;
+            background: var(--bg-secondary, #1a1a22);
+            border: 1px solid var(--border, #2a2a35);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .login-card svg { color: var(--fg-3, #888); }
+        .login-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .login-card p {
+            color: var(--fg-3, #888);
+            font-size: 0.9rem;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* ── Tab bar ── */
+        .tab-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--bg-primary, #111118);
+            border-bottom: 1px solid var(--border, #2a2a35);
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.5rem 0;
+            margin: 1.5rem 0 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tab-bar::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--fg-3, #888);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.4rem 0.85rem;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s, color 0.15s;
+        }
+        .tab-btn:hover {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+        .tab-btn.active {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        /* ── User bar ── */
+        .user-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            background: var(--bg-secondary, #1a1a22);
+            border: 1px solid var(--border, #2a2a35);
+            border-radius: 12px;
+            margin-top: 1.5rem;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-primary, #111118);
+            border: 1px solid var(--border, #2a2a35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            color: var(--fg-3, #888);
+        }
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .user-info strong {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .user-info span {
+            font-size: 0.8rem;
+            color: var(--fg-3, #888);
+        }
+        .token-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: var(--accent-dim);
+            border: 1px solid var(--accent-border);
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        /* ── Stats grid ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.875rem;
+            margin-top: 1.25rem;
+        }
+        .stat-card {
+            background: var(--bg-secondary, #1a1a22);
+            border: 1px solid var(--border, #2a2a35);
+            border-radius: 12px;
+            padding: 1.25rem 1rem;
+            text-align: center;
+        }
+        .stat-card-label {
+            font-size: 0.75rem;
+            color: var(--fg-3, #888);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.4rem;
+        }
+        .stat-card-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary, #f0f0f5);
+        }
+
+        /* ── Section ── */
+        .settings-section {
+            margin-top: 2.5rem;
+            background: var(--bg-secondary, #1a1a22);
+            border: 1px solid var(--border, #2a2a35);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.25rem 1.5rem 1rem;
+            border-left: 3px solid var(--accent);
+        }
+        .section-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0 0 0.1rem;
+            color: var(--text-primary, #f0f0f5);
+        }
+        .section-header p {
+            font-size: 0.825rem;
+            color: var(--fg-3, #888);
+            margin: 0;
+        }
+        .section-header-icon { color: var(--accent); flex-shrink: 0; }
+
+        /* ── Setting row ── */
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.875rem 1.5rem;
+            border-top: 1px solid var(--border, #2a2a35);
+            transition: background 0.12s;
+        }
+        .setting-row:hover { background: rgba(255,255,255,0.025); }
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--fg-3, #888);
+            min-width: 0;
+        }
+        .setting-text h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0 0 0.1rem;
+            color: var(--text-primary, #f0f0f5);
+        }
+        .setting-text p {
+            font-size: 0.8rem;
+            color: var(--fg-3, #888);
+            margin: 0;
+        }
+
+        /* ── Select ── */
+        .select-wrap select {
+            background: var(--bg-primary, #111118);
+            border: 1px solid var(--border, #2a2a35);
+            color: var(--text-primary, #f0f0f5);
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        /* ── Cards info row ── */
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.875rem 1.5rem;
+            border-top: 1px solid var(--border, #2a2a35);
+            font-size: 0.85rem;
+            color: var(--fg-3, #888);
+        }
+        .info-row code {
+            background: var(--bg-primary, #111118);
+            border: 1px solid var(--border, #2a2a35);
+            border-radius: 5px;
+            padding: 0.1em 0.4em;
+            font-size: 0.82rem;
+            color: var(--accent);
+        }
+
+        /* ── Bio / Profile section ── */
+        .bio-wrap {
+            padding: 1rem 1.5rem 1.25rem;
+            border-top: 1px solid var(--border, #2a2a35);
+        }
+        .bio-wrap textarea {
+            width: 100%;
+            background: var(--bg-primary, #111118);
+            border: 1px solid var(--border, #2a2a35);
+            border-radius: 10px;
+            color: var(--text-primary, #f0f0f5);
+            font-size: 0.875rem;
+            padding: 0.75rem 1rem;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: border-color 0.15s;
+            display: block;
+        }
+        .bio-wrap textarea:focus {
+            outline: none;
+            border-color: var(--accent-border);
+        }
+        .bio-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.6rem;
+        }
+        #bioCounter {
+            font-size: 0.78rem;
+            color: var(--fg-3, #888);
+        }
+        #bioSaveBtn {
+            background: var(--accent-dim);
+            border: 1px solid var(--accent-border);
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        #bioSaveBtn:hover { background: rgba(167,139,250,0.25); }
+
+        /* ── Marketplace promo ── */
+        .promo-section {
+            margin-top: 2.5rem;
+            background: var(--bg-secondary, #1a1a22);
+            border: 1px solid var(--border, #2a2a35);
+            border-radius: 14px;
+            padding: 1.5rem;
+        }
+        .promo-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0 0 0.4rem;
+            color: var(--text-primary, #f0f0f5);
+        }
+        .promo-section p {
+            font-size: 0.875rem;
+            color: var(--fg-3, #888);
+            margin: 0 0 1.25rem;
+        }
+        .btn-promo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent-dim);
+            border: 1px solid var(--accent-border);
+            color: #c4b5fd;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: background 0.15s;
+        }
+        .btn-promo:hover { background: rgba(167,139,250,0.25); }
+
+        /* ── Admin section ── */
+        .admin-section {
+            margin-top: 2.5rem;
+            background: var(--bg-secondary, #1a1a22);
+            border: 1px solid var(--red-border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .admin-section .section-header { border-left-color: var(--red); }
+        .admin-section .section-header h3 { color: var(--red); }
+        .admin-section .section-header-icon { color: var(--red); }
+        .admin-cmds {
+            margin: 0 1.5rem 1.25rem;
+            background: var(--red-dim);
+            border: 1px solid var(--red-border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+        }
+        .admin-cmds strong {
+            font-size: 0.875rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .admin-cmds ul {
+            margin: 0;
+            padding-left: 1.1rem;
+            line-height: 1.9;
+        }
+        .admin-cmds li {
+            font-family: monospace;
+            font-size: 0.82rem;
+            color: var(--fg-3, #888);
+        }
+        .admin-cmds li span { color: var(--red); }
+
+        /* ── Footer note ── */
+        .settings-footer {
+            border-top: 1px solid var(--border, #2a2a35);
+            margin: 2.5rem 0 0;
+            padding: 1.5rem 0 0;
+        }
+        .settings-footer span {
+            font-size: 0.75rem;
+            color: var(--fg-4, #666);
+        }
+
+        /* ── Save toast ── */
+        #saveToast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: #1e1e28;
+            border: 1px solid var(--border, #2a2a35);
+            color: #c4b5fd;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.2s, transform 0.2s;
+            pointer-events: none;
+            z-index: 999;
+        }
+        #saveToast.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 
 <body>
-
 
     <div class="site-layout">
         <aside class="site-sidebar" id="sidebar"></aside>
@@ -29,12 +441,11 @@
             <div id="loginView" class="reveal" style="transition-delay:.06s">
                 <div class="login-card">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                        style="color:var(--fg-3); margin-bottom: 0.5rem">
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="8" r="5" />
                         <path d="M20 21a8 8 0 0 0-16 0" />
                     </svg>
-                    <h3 style="font-size: 1rem; font-weight: 600;">Sign in to configure</h3>
+                    <h3>Sign in to configure</h3>
                     <p>Connect your Discord account to personalize how Incorp interacts with you across all servers.</p>
                     <button class="btn-discord" id="loginBtn">
                         <svg width="20" height="20" viewBox="0 0 71 55" fill="currentColor">
@@ -49,10 +460,10 @@
             <!-- Logged-in State -->
             <div id="settingsView" style="display:none">
 
+                <!-- User bar -->
                 <div class="user-bar reveal">
                     <div class="user-avatar" id="userAvatar">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="8" r="5" />
                             <path d="M20 21a8 8 0 0 0-16 0" />
                         </svg>
@@ -60,6 +471,12 @@
                     <div class="user-info">
                         <strong id="userName">User</strong>
                         <span id="userTag">#0000</span>
+                    </div>
+                    <div class="token-badge" id="userTokenBadge">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <span id="userTokenCount">—</span>
                     </div>
                     <button class="btn-logout" id="logoutBtn">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -72,82 +489,94 @@
                     </button>
                 </div>
 
-                <!-- Your Stats -->
-                <div class="settings-section reveal" id="statsSection" style="margin-top: 2rem;">
-                    <h3>Your Stats</h3>
-                    <p>Live snapshot of your Incorp profile.</p>
-                    <div
-                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                        <div
-                            style="background: var(--bg-secondary); padding: 1.5rem; border-radius:12px; border: 1px solid var(--border); text-align: center;">
-                            <div
-                                style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">
-                                Wallet</div>
-                            <div id="statWallet"
-                                style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">0</div>
+                <!-- Tab bar -->
+                <nav class="tab-bar" id="tabBar">
+                    <button class="tab-btn active" data-target="sec-overview">Overview</button>
+                    <button class="tab-btn" data-target="sec-economy">Economy</button>
+                    <button class="tab-btn" data-target="sec-gambling">Gambling</button>
+                    <button class="tab-btn" data-target="sec-cards">Cards</button>
+                    <button class="tab-btn" data-target="sec-notifs">Notifications</button>
+                    <button class="tab-btn" data-target="sec-privacy">Privacy</button>
+                    <button class="tab-btn" data-target="sec-social">Social</button>
+                </nav>
+
+                <!-- Overview / Stats -->
+                <div id="sec-overview"></div>
+                <div class="settings-section reveal" id="statsSection">
+                    <div class="section-header">
+                        <svg class="section-header-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+                        </svg>
+                        <div>
+                            <h3>Your Stats</h3>
+                            <p>Live snapshot of your Incorp profile.</p>
                         </div>
-                        <div
-                            style="background: var(--bg-secondary); padding: 1.5rem; border-radius:12px; border: 1px solid var(--border); text-align: center;">
-                            <div
-                                style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">
-                                Bank</div>
-                            <div id="statBank" style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">
-                                0</div>
-                        </div>
-                        <div
-                            style="background: var(--bg-secondary); padding: 1.5rem; border-radius:12px; border: 1px solid var(--border); text-align: center;">
-                            <div
-                                style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">
-                                Level</div>
-                            <div id="statLevel"
-                                style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">0</div>
-                        </div>
-                        <div
-                            style="background: var(--bg-secondary); padding: 1.5rem; border-radius:12px; border: 1px solid var(--border); text-align: center;">
-                            <div
-                                style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">
-                                Commands</div>
-                            <div id="statCmds" style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">
-                                0</div>
+                    </div>
+                    <div style="padding: 0 1.5rem 1.5rem">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-card-label">Wallet</div>
+                                <div class="stat-card-value" id="statWallet">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-label">Bank</div>
+                                <div class="stat-card-value" id="statBank">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-label">Tokens</div>
+                                <div class="stat-card-value" id="statTokens">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-label">Level</div>
+                                <div class="stat-card-value" id="statLevel">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-label">Commands</div>
+                                <div class="stat-card-value" id="statCmds">0</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Economy -->
+                <div id="sec-economy"></div>
                 <div class="settings-section reveal" style="transition-delay:.02s">
-                    <h3>Economy</h3>
-                    <p>Control how the economy system affects you.</p>
+                    <div class="section-header">
+                        <svg class="section-header-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        <div>
+                            <h3>Economy</h3>
+                            <p>Control how the economy system affects you.</p>
+                        </div>
+                    </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2v20" />
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                <path d="M12 2v20" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                             </svg>
                             <div class="setting-text">
                                 <h4>Passive income</h4>
                                 <p>Earn coins from activity automatically</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="passive_income" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="passive_income" checked><span class="toggle-track"></span></label>
                     </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="20" height="14" x="2" y="5" rx="2" />
-                                <line x1="2" x2="22" y1="10" y2="10" />
+                                <rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" />
                             </svg>
                             <div class="setting-text">
                                 <h4>Bank interest</h4>
                                 <p>Collect daily interest on your savings</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="bank_interest" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="bank_interest" checked><span class="toggle-track"></span></label>
                     </div>
 
                     <div class="setting-row">
@@ -161,33 +590,39 @@
                                 <p>Other users cannot rob you</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="rob_protect"><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="rob_protect"><span class="toggle-track"></span></label>
                     </div>
                 </div>
 
                 <!-- Gambling -->
+                <div id="sec-gambling"></div>
                 <div class="settings-section reveal" style="transition-delay:.04s">
-                    <h3>Gambling</h3>
-                    <p>Manage gambling and betting preferences.</p>
+                    <div class="section-header">
+                        <svg class="section-header-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="2"/>
+                            <circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/>
+                            <circle cx="12" cy="8" r="1"/><circle cx="12" cy="16" r="1"/>
+                        </svg>
+                        <div>
+                            <h3>Gambling</h3>
+                            <p>Manage gambling and betting preferences.</p>
+                        </div>
+                    </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="2" y="4" width="20" height="16" rx="2" />
-                                <circle cx="8" cy="12" r="1" />
-                                <circle cx="16" cy="12" r="1" />
-                                <circle cx="12" cy="8" r="1" />
-                                <circle cx="12" cy="16" r="1" />
+                                <circle cx="8" cy="12" r="1" /><circle cx="16" cy="12" r="1" />
+                                <circle cx="12" cy="8" r="1" /><circle cx="12" cy="16" r="1" />
                             </svg>
                             <div class="setting-text">
                                 <h4>Allow gambling</h4>
                                 <p>Enable casino and dice games</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="gambling" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="gambling" checked><span class="toggle-track"></span></label>
                     </div>
 
                     <div class="setting-row">
@@ -196,24 +631,21 @@
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                                 <circle cx="9" cy="7" r="4" />
-                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
                             </svg>
                             <div class="setting-text">
                                 <h4>PvP challenges</h4>
                                 <p>Allow others to challenge you to dice duels</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="pvp_challenges" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="pvp_challenges" checked><span class="toggle-track"></span></label>
                     </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 3v18h18" />
-                                <path d="m19 9-5 5-4-4-3 3" />
+                                <path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" />
                             </svg>
                             <div class="setting-text">
                                 <h4>Bet limit</h4>
@@ -222,20 +654,67 @@
                         </div>
                         <div class="select-wrap">
                             <select data-key="bet_limit">
-                                <option value="1000">1,000</option>
-                                <option value="5000">5,000</option>
-                                <option value="10000" selected>10,000</option>
-                                <option value="50000">50,000</option>
+                                <option value="100000">100,000</option>
+                                <option value="1000000">1,000,000</option>
+                                <option value="10000000" selected>10,000,000</option>
+                                <option value="100000000">100,000,000</option>
+                                <option value="1000000000">1,000,000,000</option>
                                 <option value="0">No limit</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
+                <!-- Cards -->
+                <div id="sec-cards"></div>
+                <div class="settings-section reveal" style="transition-delay:.06s">
+                    <div class="section-header">
+                        <svg class="section-header-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8"/><path d="M12 17v4"/>
+                        </svg>
+                        <div>
+                            <h3>Cards</h3>
+                            <p>Card collection and roll settings.</p>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+                        </svg>
+                        Use <code>.cardstats</code> in Discord to view your full card collection stats.
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-label">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                            </svg>
+                            <div class="setting-text">
+                                <h4>Card roll notifications</h4>
+                                <p>Get notified when card rolls are available</p>
+                            </div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" data-key="card_notifs"><span class="toggle-track"></span></label>
+                    </div>
+                </div>
+
                 <!-- Notifications -->
+                <div id="sec-notifs"></div>
                 <div class="settings-section reveal" style="transition-delay:.08s">
-                    <h3>Notifications</h3>
-                    <p>Choose what Incorp messages you about.</p>
+                    <div class="section-header">
+                        <svg class="section-header-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                        </svg>
+                        <div>
+                            <h3>Notifications</h3>
+                            <p>Choose what Incorp messages you about.</p>
+                        </div>
+                    </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
@@ -249,24 +728,21 @@
                                 <p>Receive direct messages for important events</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="dm_notifs" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="dm_notifs" checked><span class="toggle-track"></span></label>
                     </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10" />
-                                <polyline points="12 6 12 12 16 14" />
+                                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
                             </svg>
                             <div class="setting-text">
                                 <h4>Cooldown reminders</h4>
                                 <p>Get pinged when a cooldown expires</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="cd_remind"><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="cd_remind"><span class="toggle-track"></span></label>
                     </div>
 
                     <div class="setting-row">
@@ -280,15 +756,23 @@
                                 <p>Show level-up announcements in chat</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="lvlup_msg" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="lvlup_msg" checked><span class="toggle-track"></span></label>
                     </div>
                 </div>
 
                 <!-- Privacy -->
+                <div id="sec-privacy"></div>
                 <div class="settings-section reveal" style="transition-delay:.12s">
-                    <h3>Privacy</h3>
-                    <p>Manage your visibility and data sharing.</p>
+                    <div class="section-header">
+                        <svg class="section-header-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <div>
+                            <h3>Privacy</h3>
+                            <p>Manage your visibility and data sharing.</p>
+                        </div>
+                    </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
@@ -302,8 +786,7 @@
                                 <p>Allow others to view your stats and inventory</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="public_profile" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="public_profile" checked><span class="toggle-track"></span></label>
                     </div>
 
                     <div class="setting-row">
@@ -318,46 +801,49 @@
                                 <p>Appear on global and server leaderboards</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="leaderboard" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="leaderboard" checked><span class="toggle-track"></span></label>
                     </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path
-                                    d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+                                <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
                             </svg>
                             <div class="setting-text">
                                 <h4>Data collection</h4>
                                 <p>Allow anonymous usage analytics</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="analytics"><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="analytics"><span class="toggle-track"></span></label>
                     </div>
                 </div>
 
                 <!-- Social -->
+                <div id="sec-social"></div>
                 <div class="settings-section reveal" style="transition-delay:.16s">
-                    <h3>Social</h3>
-                    <p>Manage romance and social features.</p>
+                    <div class="section-header">
+                        <svg class="section-header-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                        </svg>
+                        <div>
+                            <h3>Social</h3>
+                            <p>Manage romance and social features.</p>
+                        </div>
+                    </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path
-                                    d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                             </svg>
                             <div class="setting-text">
                                 <h4>Romance system</h4>
                                 <p>Allow marriage proposals and relationship features</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="romance" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="romance" checked><span class="toggle-track"></span></label>
                     </div>
 
                     <div class="setting-row">
@@ -366,84 +852,94 @@
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                 <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
                             </svg>
                             <div class="setting-text">
                                 <h4>Family invites</h4>
                                 <p>Accept family and adoption requests</p>
                             </div>
                         </div>
-                        <label class="toggle"><input type="checkbox" data-key="family_invites" checked><span
-                                class="toggle-track"></span></label>
+                        <label class="toggle"><input type="checkbox" data-key="family_invites" checked><span class="toggle-track"></span></label>
+                    </div>
+                </div>
+
+                <!-- Profile / Bio -->
+                <div class="settings-section reveal" style="transition-delay:.18s">
+                    <div class="section-header">
+                        <svg class="section-header-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/>
+                        </svg>
+                        <div>
+                            <h3>Profile</h3>
+                            <p>Customize your public profile bio.</p>
+                        </div>
+                    </div>
+                    <div class="bio-wrap">
+                        <textarea id="bioInput" maxlength="150" placeholder="Write something about yourself..."></textarea>
+                        <div class="bio-footer">
+                            <span id="bioCounter">0 / 150</span>
+                            <button id="bioSaveBtn">Save bio</button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Token Marketplace Promo -->
-                <div class="settings-section reveal" id="storeArea" style="margin-top: 2rem;">
-                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"
+                <div class="promo-section reveal" id="storeArea" style="transition-delay:.2s">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round">
-                            <polygon
-                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                            </polygon>
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
-                        <h3 style="color: var(--text-primary); margin: 0;">Token Marketplace</h3>
-                    </div>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Spend your hard-earned Tokens on exclusive
-                        items, themes, and perks directly on the Marketplace.</p>
-
-                    <div style="margin-top: 1.5rem;">
-                        <a href="marketplace.html"
-                            style="background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.3); color: #c4b5fd; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                <line x1="3" y1="6" x2="21" y2="6"></line>
-                                <path d="M16 10a4 4 0 0 1-8 0"></path>
-                            </svg>
-                            Visit Marketplace
-                        </a>
-                    </div>
+                        Token Marketplace
+                    </h3>
+                    <p>Spend your hard-earned Tokens on exclusive items, themes, and perks directly on the Marketplace.</p>
+                    <a href="marketplace.html" class="btn-promo">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                        Visit Marketplace
+                    </a>
                 </div>
 
-                <!-- Admin panel (only visible to admin) -->
-                <div class="settings-section reveal" id="adminArea"
-                    style="display: none; transition-delay:.2s; margin-top: 2rem;">
-                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <!-- Admin panel -->
+                <div class="admin-section reveal" id="adminArea" style="display:none; transition-delay:.22s">
+                    <div class="section-header">
+                        <svg class="section-header-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         </svg>
-                        <h3 style="color: #ef4444; margin: 0;">System Administrator</h3>
+                        <div>
+                            <h3>System Administrator</h3>
+                            <p>You are authenticated with system-level privileges.</p>
+                        </div>
                     </div>
-                    <p style="color: var(--text-muted); opacity: 0.9; margin-top: 0.5rem; font-size: 0.95rem;">You are
-                        authenticated with system-level privileges.</p>
-
-                    <div
-                        style="background: rgba(20, 20, 24, 0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2); margin-top: 1.25rem; color: var(--text-secondary);">
-                        <strong style="color: var(--text-primary); font-size: 0.95rem;">Available Administrative
-                            Commands:</strong>
-                        <ul
-                            style="margin-top: 0.75rem; margin-bottom: 0; margin-left: 1.2rem; line-height: 1.8; color: var(--text-muted); font-family: monospace; font-size: 0.85rem;">
-                            <li><span style="color: #ef4444">.adminbal</span> @user &lt;amount&gt; &mdash; Overwrite a
-                                user's wallet balance</li>
-                            <li><span style="color: #ef4444">.adminbank</span> @user &lt;amount&gt; &mdash; Overwrite a
-                                user's bank balance</li>
-                            <li><span style="color: #ef4444">.adminset</span> @user &lt;setting_name&gt;
-                                &lt;true/false&gt; &mdash; Forcefully flip a user's setting</li>
+                    <div class="admin-cmds">
+                        <strong>Available Administrative Commands:</strong>
+                        <ul>
+                            <li><span>.adminbal</span> @user &lt;amount&gt; &mdash; Overwrite a user's wallet balance</li>
+                            <li><span>.adminbank</span> @user &lt;amount&gt; &mdash; Overwrite a user's bank balance</li>
+                            <li><span>.adminset</span> @user &lt;setting_name&gt; &lt;true/false&gt; &mdash; Forcefully flip a user's setting</li>
                         </ul>
                     </div>
                 </div>
 
             </div>
 
-            <div style="border-top: 1px solid var(--border); margin: 2rem 0; padding: 2rem 0 0;">
-                <span style="font-size: .75rem; color: var(--fg-4);">Settings are synced to the Incorp server and
-                    will apply across all servers the bot is in.</span>
+            <div class="settings-footer">
+                <span>Settings are synced to the Incorp server and will apply across all servers the bot is in.</span>
             </div>
 
         </main>
+    </div>
+
+    <!-- Save toast -->
+    <div id="saveToast">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Saved
     </div>
 
     <script>
@@ -461,10 +957,10 @@
 
         const DEFAULTS = {
             passive_income: true, bank_interest: true, rob_protect: false,
-            gambling: true, pvp_challenges: true, bet_limit: '10000',
+            gambling: true, pvp_challenges: true, bet_limit: '10000000',
             dm_notifs: true, cd_remind: false, lvlup_msg: true,
             public_profile: true, leaderboard: true, analytics: false,
-            romance: true, family_invites: true
+            romance: true, family_invites: true, card_notifs: false
         };
 
         const sbHeaders = {
@@ -537,13 +1033,15 @@
                     const s = rows[0];
                     document.getElementById('statWallet').textContent = (s.balance || 0).toLocaleString();
                     document.getElementById('statBank').textContent = (s.bank || 0).toLocaleString();
+                    document.getElementById('statTokens').textContent = (s.tokens || 0).toLocaleString();
                     document.getElementById('statLevel').textContent = (s.level || 0).toLocaleString();
                     document.getElementById('statCmds').textContent = (s.commands_run || 0).toLocaleString();
+                    document.getElementById('userTokenCount').textContent = (s.tokens || 0).toLocaleString();
                 } else {
-                    document.getElementById('statWallet').textContent = '—';
-                    document.getElementById('statBank').textContent = '—';
-                    document.getElementById('statLevel').textContent = '—';
-                    document.getElementById('statCmds').textContent = '—';
+                    ['statWallet','statBank','statTokens','statLevel','statCmds'].forEach(id => {
+                        document.getElementById(id).textContent = '—';
+                    });
+                    document.getElementById('userTokenCount').textContent = '—';
                 }
             } catch (err) {
                 console.warn('Supabase stats load failed:', err);
@@ -565,6 +1063,13 @@
             }
         }
 
+        function showToast() {
+            const toast = document.getElementById('saveToast');
+            toast.classList.add('visible');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('visible'), 2000);
+        }
+
         function renderUser(user) {
             document.getElementById('loginView').style.display = 'none';
             document.getElementById('settingsView').style.display = 'block';
@@ -578,7 +1083,6 @@
             if (user.id === '1195147448541261855') {
                 document.getElementById('adminArea').style.display = 'block';
             }
-
         }
 
         function applySettings(row) {
@@ -588,6 +1092,11 @@
                 if (el.type === 'checkbox') el.checked = row[key];
                 if (el.tagName === 'SELECT') el.value = row[key];
             });
+            if (row.bio) {
+                const bioInput = document.getElementById('bioInput');
+                bioInput.value = row.bio;
+                document.getElementById('bioCounter').textContent = `${row.bio.length} / 150`;
+            }
         }
 
         function showLoggedOut() {
@@ -618,7 +1127,6 @@
                 currentDiscordId = user.id;
                 renderUser(user);
 
-                // Sync username to Supabase for admin panel
                 fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}`, {
                     method: 'PATCH', headers: sbHeaders,
                     body: JSON.stringify({ discord_username: user.username })
@@ -663,6 +1171,42 @@
             localStorage.removeItem(STORE_TOKEN);
             currentDiscordId = null;
             showLoggedOut();
+        });
+
+        // Tab bar navigation
+        document.getElementById('tabBar').addEventListener('click', (e) => {
+            const btn = e.target.closest('.tab-btn');
+            if (!btn) return;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const target = document.getElementById(btn.dataset.target);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        // Bio counter
+        document.getElementById('bioInput').addEventListener('input', (e) => {
+            document.getElementById('bioCounter').textContent = `${e.target.value.length} / 150`;
+        });
+
+        // Bio save
+        document.getElementById('bioSaveBtn').addEventListener('click', async () => {
+            if (!currentDiscordId) return;
+            const bio = document.getElementById('bioInput').value.trim();
+            await sbSaveSetting(currentDiscordId, 'bio', bio);
+            showToast();
+        });
+
+        // Setting change → save + toast
+        let saveTimer = null;
+        document.addEventListener('change', (e) => {
+            const key = e.target.dataset?.key;
+            if (!key || !currentDiscordId) return;
+            const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => {
+                sbSaveSetting(currentDiscordId, key, val);
+                showToast();
+            }, 300);
         });
 
         async function runSpeedTest(discordId) {
@@ -760,15 +1304,6 @@
                 });
             } catch (_) {}
         }
-
-        let saveTimer = null;
-        document.addEventListener('change', (e) => {
-            const key = e.target.dataset?.key;
-            if (!key || !currentDiscordId) return;
-            const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-            clearTimeout(saveTimer);
-            saveTimer = setTimeout(() => sbSaveSetting(currentDiscordId, key, val), 300);
-        });
 
         init();
     </script>

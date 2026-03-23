@@ -3821,6 +3821,25 @@
 
       const TIER_EMOJIS = { mythical: "\u{1f52e}", legendary: "\u{1f31f}", rare: "\u{1f535}", uncommon: "\u{1f7e2}", common: "\u26aa" };
 
+      const PACK_THUMBNAILS = {
+        mythic:   ["https://tr.rbxcdn.com/180DAY-7fddb094b8752cd87b62ffba2abae797/420/420/Hat/Png/noFilter","https://tr.rbxcdn.com/180DAY-f7e9ac94ffdf31df4129d6b166ada89c/420/420/Hat/Png/noFilter","https://tr.rbxcdn.com/180DAY-37394f41594f9ae78675a5c7d703953c/420/420/Hat/Png/noFilter"],
+        gold:     ["https://tr.rbxcdn.com/180DAY-b74bdb5eacfc5222704493cbedd72663/420/420/Hat/Png/noFilter","https://tr.rbxcdn.com/180DAY-1eadd4ab9d4b99ec4a624a00e5c68660/420/420/Hat/Png/noFilter","https://tr.rbxcdn.com/180DAY-3407a0b8348a459e206409d5a6209bcb/420/420/Hat/Png/noFilter"],
+        silver:   ["https://tr.rbxcdn.com/180DAY-dbb58ec25cf5279abc3d7ab6008b0ded/420/420/Hat/Png/noFilter","https://tr.rbxcdn.com/180DAY-5e92e508e8028a2fe1c02d751aa16829/420/420/Hat/Png/noFilter","https://tr.rbxcdn.com/180DAY-79c3ee1f0674baf169c81140f456aa01/420/420/Hat/Png/noFilter"],
+        bronze:   ["https://tr.rbxcdn.com/180DAY-20795a2b1b7bff9a062f162c209e527b/420/420/Hat/Png/noFilter","https://tr.rbxcdn.com/180DAY-9f94a6b906e302168b8adf90c3004468/420/420/Hat/Png/noFilter","https://tr.rbxcdn.com/180DAY-907b1e83b31963c2984790275c991656/420/420/Hat/Png/noFilter"],
+      };
+
+      function packFanHtml(packId, accent) {
+        const thumbs = PACK_THUMBNAILS[packId];
+        if (!thumbs) return `<div style="font-size:2.8rem">📦</div>`;
+        const [center, left, right] = thumbs;
+        return `
+          <div style="position:relative;width:180px;height:130px;margin:0 auto">
+            <img src="${left}" alt="" style="position:absolute;left:0;bottom:0;width:72px;height:72px;object-fit:contain;transform:rotate(-22deg) translateY(6px);filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));z-index:1;opacity:0.85">
+            <img src="${center}" alt="" style="position:absolute;left:50%;bottom:0;width:100px;height:100px;object-fit:contain;transform:translateX(-50%);filter:drop-shadow(0 6px 18px ${accent}88);z-index:2">
+            <img src="${right}" alt="" style="position:absolute;right:0;bottom:0;width:72px;height:72px;object-fit:contain;transform:rotate(22deg) translateY(6px);filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));z-index:1;opacity:0.85">
+          </div>`;
+      }
+
       async function loadPacksTab() {
         const user = getUser();
         let owned = {};
@@ -3870,7 +3889,7 @@
                 background:${p.shine};transform:rotate(25deg);pointer-events:none"></div>
               <!-- pack icon -->
               <div style="text-align:center;z-index:1">
-                <div style="font-size:2.8rem;line-height:1">${p.count <= 3 ? "\u{1f4e6}" : p.count <= 5 ? "\u{1f3b4}" : p.count <= 8 ? "\u2728" : "\u{1f52e}"}</div>
+                ${packFanHtml(p.id, p.accent)}
                 <div style="font-size:0.7rem;font-weight:700;color:${p.accent};letter-spacing:0.12em;margin-top:0.4rem">${p.count} CARDS</div>
               </div>
               <!-- owned badge -->
