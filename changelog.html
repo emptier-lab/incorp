@@ -35,7 +35,8 @@
       <div class="sidebar-group">
         <h4>Versions</h4>
         <nav class="nav-links" id="clNav">
-          <a href="#v421" class="active">v4.2.1</a>
+          <a href="#v425" class="active">v4.2.5</a>
+          <a href="#v421">v4.2.1</a>
           <a href="#v420">v4.2.0</a>
           <a href="#v410">v4.1.0</a>
           <a href="#v400">v4.0.0</a>
@@ -59,13 +60,61 @@
         <p>All updates, improvements, and fixes.</p>
       </section>
 
+      <article id="v425" class="ver reveal">
+        <div class="ver-h">
+          <h2>Event Cards &amp; Polish</h2>
+          <span class="badge">v4.2.5 — latest</span>
+        </div>
+        <span class="ver-date">March 2026</span>
+        <p class="ver-p">Weekly rotating event cards with animated drops, fused card durability drain, a reworked rob system that scales with rebirth, profile card emoji icons, and a round of bug fixes.</p>
+        <div class="ver-grid">
+          <div class="ver-box">
+            <h4>Weekly Event Cards</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> A new event card rotates every Monday — different card each week</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> 8% chance to drop during any .cardroll if you haven't claimed it this week</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Event drops use the fusion GIF animation — you'll know when it hits</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Event cards never lose durability — permanent once obtained</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .card event — shows the current week's card, rotation timer, and whether you own it</li>
+            </ul>
+          </div>
+          <div class="ver-box">
+            <h4>Fused Card Durability</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Fused cards lose durability each time their bonus activates in gameplay</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Drain per use: Mythical -0.15%, Legendary/Rare/Uncommon -0.05%, Common -0.02%</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> At 0% the card auto re-rolls into a fresh copy of the same tier</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .cards limited shows remaining durability % for every fused card</li>
+            </ul>
+          </div>
+          <div class="ver-box">
+            <h4>Rob Overhaul</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Max rob amount scales with your rebirth — R0: 100K, R10: ~3B, R20: ~100T, R24: ~6Q</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Success chance scales off rebirth gap vs your target — ±2% per level, capped at 40–95%</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Steal card bonuses now boost your success chance in addition to the stolen amount</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Catch penalty scales with your rebirth (30% base, +1%/level, max 60%)</li>
+            </ul>
+          </div>
+          <div class="ver-box">
+            <h4>Profile &amp; Fixes</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Profile card stat icons replaced — colored dots swapped for Twemoji PNG images (&#x26A1; &#x1F4AC; &#x1FA99; &#x1F3E6; &#x1F3AB;)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Wallet token field now shows a &#x1F3AB; icon instead of a bare T abbreviation</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Number formatting was showing spaces as separators on Linux — fixed globally</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .cards burn stops giving rolls after 3 burns — dust still always awarded</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <article id="v421" class="ver reveal">
         <div class="ver-h">
           <h2>Card Packs, Fusion &amp; TV</h2>
-          <span class="badge">v4.2.1 — latest</span>
+          <span class="badge">v4.2.1</span>
         </div>
         <span class="ver-date">March 2026</span>
-        <p class="ver-p">Pokemon-style card packs with animated per-card reveals, card fusion to upgrade duplicates into rarer cards, live TV streaming into voice channels, and a gambling limit expander for high-rollers.</p>
+        <p class="ver-p">Styled card packs with animated per-card reveals, card fusion to upgrade duplicates into rarer cards, live TV streaming into voice channels, and a gambling limit expander for high-rollers.</p>
         <div class="ver-grid">
           <div class="ver-box">
             <h4>Card Packs</h4>

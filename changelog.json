@@ -1,6 +1,65 @@
 {
   "versions": [
     {
+      "version": "4.2.5",
+      "title": "Event Cards & Polish",
+      "date": "March 2026",
+      "description": "Weekly rotating event cards with animated drops, fused card durability drain, profile card emoji icons, and a round of bug fixes across cards, formatting, and the website.",
+      "groups": [
+        {
+          "title": "Weekly Event Cards",
+          "items": [
+            "A new limited event card rotates every Monday — different card each week based on the week number",
+            "8% chance to drop the event card during any .cardroll if you haven't claimed it this week",
+            "Event drops use the fusion GIF animation so you know something special happened",
+            "Event cards never lose durability from use — they're permanent once you have them",
+            ".card event — shows the current week's event card, when it rotates, and whether you own it"
+          ]
+        },
+        {
+          "title": "Fused Card Durability Drain",
+          "items": [
+            "Fused cards now lose durability each time their bonus is applied during gameplay",
+            "Drain per use by tier: Mythical -0.15%, Legendary -0.05%, Rare -0.05%, Uncommon -0.05%, Common -0.02%",
+            "When a fused card reaches 0% it automatically re-rolls into a fresh copy of the same tier",
+            ".cards limited now shows remaining durability % for every fused card in your collection"
+          ]
+        },
+        {
+          "title": "Card System Fixes",
+          "items": [
+            ".cards burn now stops giving bonus rolls after 3 burns — dust is still always awarded regardless",
+            ".cards limited was showing NaN% and undefined% for cards fused before the durability system launched — fixed with defaults",
+            ".cards limited now includes an info section explaining what 0% durability does and how event cards work"
+          ]
+        },
+        {
+          "title": "Profile & Wallet",
+          "items": [
+            "Profile card stat icons replaced — colored dots swapped for actual emoji icons (⚡ XP, 💬 Chat, 🪙 Coins, 🏦 Bank, 🎫 Tokens)",
+            "Wallet card token field now shows a 🎫 icon next to your token balance instead of a bare T abbreviation"
+          ]
+        },
+        {
+          "title": "Rob Overhaul",
+          "items": [
+            "Max rob amount now scales with your rebirth level — R0 caps at 100K, R10 at ~3B, R20 at ~100T, R24 at ~6Q",
+            "Success chance scales with the rebirth gap between you and your target — ±2% per level, clamped between 40% and 95%",
+            "Steal card bonuses now improve your success chance in addition to the amount stolen",
+            "Catch penalty scales with rebirth level — higher rebirth means a bigger fine if you get caught (30% base, +1% per level, max 60%)"
+          ]
+        },
+        {
+          "title": "Bug Fixes",
+          "items": [
+            "Number formatting was showing spaces as thousand separators (e.g. '1 000 000') — fixed by passing 'en-US' locale explicitly across all 269 number format calls",
+            "Marketplace website pack cards now show animated fan thumbnails instead of a plain emoji icon",
+            "New commands from recent updates added to the .help index under their correct sections"
+          ]
+        }
+      ]
+    },
+    {
       "version": "4.2.1",
       "title": "Card Packs, Fusion & TV",
       "date": "March 2026",
