@@ -1,6 +1,57 @@
 {
   "versions": [
     {
+      "version": "4.2.1",
+      "title": "Card Packs & Fusion",
+      "date": "March 2026",
+      "description": "Pokemon-style card packs with animated reveals, card fusion to upgrade duplicates into rarer cards, and a new gambling limit expander for high-rollers.",
+      "groups": [
+        {
+          "title": "Card Packs",
+          "items": [
+            "4 pack tiers: Bronze (2T), Silver (5T), Gold (15T), Mythic (50T) — all purchased with Tokens on the website",
+            "Bronze — 3 random cards at standard pull rates",
+            "Silver — 5 cards, guaranteed at least 1 Rare or better",
+            "Gold — 8 cards, guaranteed at least 1 Legendary or better",
+            "Mythic — 10 cards, guaranteed 1 Mythical",
+            "New Card Packs tab on the marketplace website with pack shop, inventory display, and per-tier pack art",
+            ".cardpack — view your pack inventory and open counts",
+            ".cardpack open <type> — open a pack directly in Discord"
+          ]
+        },
+        {
+          "title": "Pack Opening Experience",
+          "items": [
+            "Each card reveals one at a time with an animated flip GIF before showing the full card",
+            "React ✅ on a card to keep it, ❌ to discard it — you choose every single card",
+            "Discarded cards are permanently removed from your collection",
+            "30 second timeout per card — defaults to keep if you don't react",
+            "Summary at the end shows kept vs discarded counts and tier breakdown"
+          ]
+        },
+        {
+          "title": "Card Fusion",
+          "items": [
+            ".cards fuse <tier> — sacrifice multiple cards of the same tier to roll one card of the next tier up",
+            "Fusion costs: 5 Commons → 1 Uncommon, 4 Uncommons → 1 Rare, 3 Rares → 1 Legendary, 2 Legendaries → 1 Mythical",
+            "Auto-selects your worst copies first (highest serial ratio) so you don't have to pick manually",
+            "Fused cards get a fresh serial number from the next-tier pool",
+            "Cannot fuse equipped or marketplace-listed cards"
+          ]
+        },
+        {
+          "title": "Gambling Limit Expander",
+          "items": [
+            "New upgrade purchasable on the Marketplace website under Store Items",
+            "Raises the 2-hour gambling win cap across all gambling commands",
+            "6 tiers: Standard → High Roller → Whale → Mega Whale → Titan → Unlimited",
+            "Each tier multiplies the base 500B cap — Unlimited removes the cap entirely",
+            "Applies to slots, blackjack, plinko, mines, ladders, dice, coinstreak, rune, and diffuser"
+          ]
+        }
+      ]
+    },
+    {
       "version": "4.2.0",
       "title": "Roblox Cards",
       "date": "March 2026",
