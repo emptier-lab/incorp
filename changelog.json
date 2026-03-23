@@ -43,7 +43,8 @@
           "title": "TV Streaming",
           "items": [
             ".source <channel> — stream a live TV channel directly into your voice channel",
-            "4 new 24/7 HLS satellite channels added: Nick Jr., Boomerang, CNN, ABC News",
+            "4 HLS satellite channels added: Disney XD, Nick Jr., Boomerang, Nickelodeon",
+            "Disney XD switched from YouTube search to a 24/7 HLS satellite stream",
             "All new channels use reliable m3u8 streams — no YouTube dependency",
             ".source list — browse all channels | .source stop — stop stream | .source vol <n> — volume 0–200"
           ]
