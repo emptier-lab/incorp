@@ -673,6 +673,7 @@
               <button class="tab-btn" data-tab="voices">AI Voices</button>
               <button class="tab-btn" data-tab="profile">Profile Settings</button>
               <button class="tab-btn" data-tab="cards">Roblox Cards</button>
+              <button class="tab-btn" data-tab="packs">Card Packs</button>
             </div>
 
             <!-- ── STORE ITEMS TAB ── -->
@@ -1551,6 +1552,22 @@
               </div>
             </div>
             <!-- /cardsTab -->
+
+            <div id="packsTab" style="display:none">
+              <p style="color:var(--fg-3);font-size:0.875rem;margin-bottom:1.5rem">
+                Buy card packs to open in Discord with <code>.cardpack open &lt;type&gt;</code>. Higher tiers guarantee rarer cards.
+              </p>
+
+              <div id="packsInventoryBar" style="display:none;padding:0.75rem 1rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;margin-bottom:1.5rem;font-size:0.85rem;color:var(--fg-3)">
+                <strong style="color:var(--fg)">Your packs:</strong>
+                <span id="packsInventoryText"></span>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem" id="packsShopGrid">
+                <!-- injected by JS -->
+              </div>
+            </div>
+            <!-- /packsTab -->
           </div>
           <!-- /storeArea -->
         </div>
@@ -2768,6 +2785,7 @@
           document.getElementById("voicesTab").style.display = tab === "voices" ? "" : "none";
           document.getElementById("profileTab").style.display = tab === "profile" ? "" : "none";
           document.getElementById("cardsTab").style.display = tab === "cards" ? "" : "none";
+          document.getElementById("packsTab").style.display = tab === "packs" ? "" : "none";
           if (tab === "items") {
             renderAttachments();
             loadCardRollCard();
@@ -2789,6 +2807,7 @@
             loadMyCards();
             loadCardMarket();
           }
+          if (tab === "packs") loadPacksTab();
         });
       });
 
@@ -3767,6 +3786,133 @@
           el.style.display = el.textContent.toLowerCase().includes(q) ? "" : "none";
         });
       });
+
+      // ── Card Packs tab ───────────────────────────────────────────────────────
+      const PACK_DEFS = [
+        {
+          id: "bronze", label: "Bronze Pack", count: 3, price: 2, currency: "tokens",
+          guarantee: null,
+          desc: "3 random cards. Normal pull rates.",
+          gradA: "#3d1f00", gradB: "#7c4010", accent: "#cd7f32",
+          shine: "rgba(205,127,50,0.25)",
+        },
+        {
+          id: "silver", label: "Silver Pack", count: 5, price: 5, currency: "tokens",
+          guarantee: "rare",
+          desc: "5 cards with at least 1 Rare or better.",
+          gradA: "#1a1a1a", gradB: "#3a3a3a", accent: "#c0c0c0",
+          shine: "rgba(192,192,192,0.25)",
+        },
+        {
+          id: "gold", label: "Gold Pack", count: 8, price: 15, currency: "tokens",
+          guarantee: "legendary",
+          desc: "8 cards with at least 1 Legendary or better.",
+          gradA: "#2a1a00", gradB: "#6b3d00", accent: "#ffd700",
+          shine: "rgba(255,215,0,0.25)",
+        },
+        {
+          id: "mythic", label: "Mythic Pack", count: 10, price: 50, currency: "tokens",
+          guarantee: "mythical",
+          desc: "10 cards with a guaranteed Mythical.",
+          gradA: "#1a0033", gradB: "#4b0082", accent: "#a855f7",
+          shine: "rgba(168,85,247,0.3)",
+        },
+      ];
+
+      const TIER_EMOJIS = { mythical: "\u{1f52e}", legendary: "\u{1f31f}", rare: "\u{1f535}", uncommon: "\u{1f7e2}", common: "\u26aa" };
+
+      async function loadPacksTab() {
+        const user = getUser();
+        let owned = {};
+        if (user) {
+          try {
+            const res = await fetch(`${SB_URL}/rest/v1/user_settings?discord_id=eq.${user.id}&select=card_packs`, { headers: sbHeaders });
+            const rows = await res.json();
+            const raw = rows[0]?.card_packs;
+            owned = raw ? (typeof raw === "string" ? JSON.parse(raw) : raw) : {};
+          } catch {}
+        }
+
+        const bar = document.getElementById("packsInventoryBar");
+        const barText = document.getElementById("packsInventoryText");
+        const ownedEntries = PACK_DEFS.filter(p => owned[p.id] > 0).map(p => `${p.label}: ${owned[p.id]}`);
+        if (ownedEntries.length > 0) {
+          barText.textContent = "  " + ownedEntries.join("  \u2022  ");
+          bar.style.display = "";
+        } else {
+          bar.style.display = "none";
+        }
+
+        const grid = document.getElementById("packsShopGrid");
+        grid.innerHTML = PACK_DEFS.map(p => {
+          const ownedCount = owned[p.id] || 0;
+          const guaranteeHtml = p.guarantee
+            ? `<div style="font-size:0.72rem;font-weight:700;color:${p.accent};letter-spacing:0.05em;margin-bottom:0.5rem">GUARANTEES ${TIER_EMOJIS[p.guarantee] || ""} ${p.guarantee.toUpperCase()}+</div>`
+            : `<div style="font-size:0.72rem;color:rgba(255,255,255,0.35);margin-bottom:0.5rem">STANDARD ODDS</div>`;
+          return `
+          <div style="
+            background:linear-gradient(160deg,${p.gradA},${p.gradB});
+            border:1px solid ${p.accent}55;
+            border-radius:14px;
+            padding:0;
+            overflow:hidden;
+            position:relative;
+            display:flex;flex-direction:column;
+          ">
+            <!-- pack art -->
+            <div style="
+              position:relative;height:160px;
+              background:linear-gradient(135deg,${p.gradA} 0%,${p.gradB} 60%,${p.accent}33 100%);
+              display:flex;align-items:center;justify-content:center;overflow:hidden;
+            ">
+              <!-- diagonal shine stripe -->
+              <div style="position:absolute;top:-40px;left:-60px;width:80px;height:300px;
+                background:${p.shine};transform:rotate(25deg);pointer-events:none"></div>
+              <!-- pack icon -->
+              <div style="text-align:center;z-index:1">
+                <div style="font-size:2.8rem;line-height:1">${p.count <= 3 ? "\u{1f4e6}" : p.count <= 5 ? "\u{1f3b4}" : p.count <= 8 ? "\u2728" : "\u{1f52e}"}</div>
+                <div style="font-size:0.7rem;font-weight:700;color:${p.accent};letter-spacing:0.12em;margin-top:0.4rem">${p.count} CARDS</div>
+              </div>
+              <!-- owned badge -->
+              ${ownedCount > 0 ? `<div style="position:absolute;top:10px;right:10px;background:${p.accent};color:#000;font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:20px">${ownedCount} owned</div>` : ""}
+            </div>
+            <!-- info -->
+            <div style="padding:1rem;flex:1;display:flex;flex-direction:column;gap:0.4rem">
+              <div style="font-size:1rem;font-weight:700;color:${p.accent}">${p.label}</div>
+              ${guaranteeHtml}
+              <div style="font-size:0.8rem;color:rgba(255,255,255,0.55);line-height:1.4;flex:1">${p.desc}</div>
+              <button
+                class="pack-buy-btn"
+                data-packid="${p.id}"
+                data-tokens="${p.currency === "tokens" ? p.price : 0}"
+                data-coins="${p.currency === "coins" ? p.price : 0}"
+                data-name="${p.label}"
+                style="
+                  margin-top:0.75rem;width:100%;padding:0.55rem;
+                  background:${p.accent}22;border:1px solid ${p.accent}66;
+                  border-radius:8px;color:${p.accent};font-size:0.85rem;font-weight:700;
+                  cursor:pointer;transition:background 0.15s;
+                "
+                onmouseover="this.style.background='${p.accent}44'"
+                onmouseout="this.style.background='${p.accent}22'"
+              >Buy — ${p.price} Tokens</button>
+            </div>
+          </div>`;
+        }).join("");
+
+        grid.querySelectorAll(".pack-buy-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            if (!user) { alert("Log in with Discord to buy packs."); return; }
+            openModal({
+              id: `card_pack_${btn.dataset.packid}`,
+              name: btn.dataset.name,
+              tokens: btn.dataset.tokens,
+              coins: btn.dataset.coins,
+              reqLevel: 0,
+            });
+          });
+        });
+      }
 
       init();
     </script>
