@@ -43,12 +43,15 @@
           "title": "TV Streaming",
           "items": [
             ".source <channel> — stream a live TV channel directly into your voice channel",
-            "Supports YouTube live streams and satellite HLS channels (Al Jazeera, France 24, DW News, CGTN, NASA TV)",
+            "45 channels across Kids, News, Entertainment, Music, Ambient, and Science categories",
+            "Kids: Cartoon Network, Nickelodeon, Nick Jr., Disney Channel, Disney XD, Disney Junior, Boomerang, Nicktoons, Adult Swim",
+            "News: Al Jazeera, CNN, Fox News, BBC News, ABC News, MSNBC, Sky News, Euronews, France 24, DW News, CGTN, TRT World, NHK World, Bloomberg, CBS News",
+            "Entertainment: MTV, Comedy Central, Discovery, Animal Planet, Nat Geo, History Channel, VH1, BET, Syfy",
+            "Music: Lofi Girl, Lofi Hip Hop, Synthwave Radio, Classical Music",
+            "HLS satellite streams where available, YouTube live fallback for the rest",
             "Static noise fallback when a channel is offline — no dead air",
-            ".source guide — opens an on-screen guide overlay navigable with reactions (⬆️⬇️◀️▶️✅❌)",
-            ".source list — list all available channels",
-            ".source stop — stop the current stream",
-            ".source vol <n> — adjust stream volume (0–200)"
+            ".source guide — OSD guide overlay navigable with reactions",
+            ".source list — browse all 45 channels | .source stop — stop stream | .source vol <n> — volume 0–200"
           ]
         },
         {
