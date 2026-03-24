@@ -40,6 +40,12 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  animation: page-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 body::before {
@@ -51,6 +57,12 @@ body::before {
     radial-gradient(ellipse 50% 40% at 85% 105%, rgba(157, 109, 245, 0.05) 0%, transparent 55%);
   pointer-events: none;
   z-index: 0;
+  animation: orb-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes orb-drift {
+  0%   { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-24px) scale(1.04); opacity: 0.75; }
 }
 
 body > * { position: relative; z-index: 1; }
@@ -62,10 +74,10 @@ a {
 
 .reveal {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(20px);
   transition:
-    opacity 0.5s ease,
-    transform 0.5s ease;
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal.visible {
@@ -177,16 +189,31 @@ a {
 .nav-links a {
   font-size: 0.875rem;
   color: var(--fg-3);
-  padding: 0.375rem 0.5rem;
+  padding: 0.375rem 0.5rem 0.375rem 0.75rem;
   margin-left: -0.5rem;
   border-radius: var(--radius);
+  position: relative;
   transition:
-    background 0.15s,
-    color 0.15s;
+    background 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-links a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 2px;
+  height: 60%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nav-links a:hover { color: var(--fg-2); background: var(--card-2); }
 .nav-links a.active { color: var(--accent-2); background: var(--accent-dim); font-weight: 600; }
+.nav-links a.active::before { transform: translateY(-50%) scaleY(1); }
 
 .site-main {
   flex: 1;
@@ -223,7 +250,7 @@ a {
   font-family: var(--font);
   border: none;
   cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
@@ -235,8 +262,8 @@ a {
 
 .btn-primary:hover {
   background: #8b5cf6;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 24px var(--accent-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(157, 109, 245, 0.35);
 }
 
 /* Home Sections */
@@ -298,13 +325,13 @@ a {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .feat-cell:hover {
-  border-color: var(--border-2);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  border-color: rgba(157, 109, 245, 0.28);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(157, 109, 245, 0.1);
 }
 
 .feat-icon {
@@ -356,12 +383,13 @@ a {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  transition: border-color 0.2s, transform 0.2s;
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .stat-cell:hover {
-  border-color: rgba(157, 109, 245, 0.35);
-  transform: translateY(-2px);
+  border-color: rgba(157, 109, 245, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(157, 109, 245, 0.1);
 }
 
 .stat-n {
