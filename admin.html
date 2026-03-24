@@ -127,9 +127,29 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 1rem 1.25rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
         }
-        .stat-card-label { font-size: 0.75rem; color: var(--fg-3); font-weight: 500; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.04em; }
-        .stat-card-value { font-size: 1.5rem; font-weight: 700; }
+        .stat-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+        }
+        .stat-card.accent-blue::before { background: #60a5fa; }
+        .stat-card.accent-green::before { background: #34d399; }
+        .stat-card.accent-purple::before { background: var(--accent); }
+        .stat-card.accent-red::before { background: #f87171; }
+        .stat-card-label { font-size: 0.72rem; color: var(--fg-4); font-weight: 600; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
+        .stat-card-value {
+            font-size: 1.5rem; font-weight: 700;
+            background: linear-gradient(135deg, var(--fg) 30%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
         /* ── Search + filter bar ── */
         .toolbar {
@@ -152,7 +172,7 @@
             min-width: 180px;
             transition: border-color 0.15s;
         }
-        .search-input:focus { border-color: var(--border-2); }
+        .search-input:focus { border-color: rgba(157,109,245,0.5); box-shadow: 0 0 0 3px rgba(157,109,245,0.08); }
         .search-input::placeholder { color: var(--fg-4); }
         .select-input {
             background: #111113;
@@ -164,8 +184,9 @@
             border-radius: 6px;
             outline: none;
             cursor: pointer;
+            transition: border-color 0.15s;
         }
-        .select-input:focus { border-color: var(--border-2); }
+        .select-input:focus { border-color: rgba(157,109,245,0.5); outline: none; }
 
         /* ── Users table ── */
         .users-table-wrap {
@@ -201,7 +222,7 @@
             transition: background 0.1s;
         }
         tbody tr:last-child { border-bottom: none; }
-        tbody tr:hover { background: rgba(255,255,255,0.03); cursor: pointer; }
+        tbody tr:hover { background: rgba(157,109,245,0.05); cursor: pointer; }
         tbody td { padding: 0.75rem 1rem; color: var(--fg-2); vertical-align: middle; }
         tbody td.td-name { color: var(--fg); font-weight: 500; }
         tbody td.td-mono { font-family: var(--mono); font-size: 0.8rem; color: var(--fg-3); }
@@ -311,8 +332,8 @@
             max-width: 300px;
         }
         #toast.show { opacity: 1; transform: translateY(0); }
-        #toast.success { border-color: rgba(52,211,153,0.4); }
-        #toast.error { border-color: rgba(239,68,68,0.4); }
+        #toast.success { border-color: rgba(52,211,153,0.4); border-left: 3px solid #34d399; }
+        #toast.error { border-color: rgba(239,68,68,0.4); border-left: 3px solid #f87171; }
 
         /* ── Loading ── */
         .spinner {
@@ -415,19 +436,19 @@
 
                 <!-- Overview stats -->
                 <div class="stat-cards reveal" id="overviewStats" style="transition-delay:.04s">
-                    <div class="stat-card">
+                    <div class="stat-card accent-blue">
                         <div class="stat-card-label">Total Users</div>
                         <div class="stat-card-value" id="statTotalUsers">—</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card accent-green">
                         <div class="stat-card-label">Total Balance</div>
                         <div class="stat-card-value" id="statTotalBalance">—</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card accent-purple">
                         <div class="stat-card-label">Total Bank</div>
                         <div class="stat-card-value" id="statTotalBank">—</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card accent-red">
                         <div class="stat-card-label">Rigged Users</div>
                         <div class="stat-card-value" id="statRigged">—</div>
                     </div>
@@ -456,8 +477,15 @@
                 </div>
 
                 <!-- Users table -->
-                <div class="settings-section reveal" style="padding: 0; transition-delay:.1s">
-                    <div class="users-table-wrap">
+                <div class="section-card reveal" style="overflow:hidden; transition-delay:.1s">
+                    <div class="section-card-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <div>
+                            <h3>Users</h3>
+                            <p>Click any row to inspect and manage.</p>
+                        </div>
+                    </div>
+                    <div class="users-table-wrap" style="border:none; border-radius:0; border-top:1px solid var(--border);">
                         <table id="usersTable">
                             <thead>
                                 <tr>
@@ -481,28 +509,32 @@
                 </div>
 
                 <!-- Badge Catalog Management -->
-                <div class="settings-section reveal" style="margin-top:2rem; transition-delay:.15s">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+                <div class="section-card reveal" style="margin-top:2rem; overflow:hidden; transition-delay:.15s">
+                    <div class="section-card-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg>
                         <div>
-                            <h3 style="margin:0 0 0.25rem 0; font-size:1rem; font-weight:600;">Badge Catalog</h3>
-                            <p style="margin:0; font-size:0.8rem; color:var(--fg-4);">Approve badges before they appear in the marketplace. Rejected badges are hidden from all users.</p>
+                            <h3>Badge Catalog</h3>
+                            <p>Approve badges before they appear in the marketplace. Rejected badges are hidden from all users.</p>
                         </div>
                     </div>
-                    <div id="badgeCatalogGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem;">
+                    <div id="badgeCatalogGrid" style="padding:1.25rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; border-top:1px solid var(--border);">
                         <p style="color:var(--fg-4); font-size:0.85rem">Loading...</p>
                     </div>
                 </div>
 
                 <!-- Custom Badge Submissions -->
-                <div class="settings-section reveal" style="margin-top:2rem; transition-delay:.2s">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
-                        <div>
-                            <h3 style="margin:0 0 0.25rem 0; font-size:1rem; font-weight:600;">Custom Badge Submissions</h3>
-                            <p style="margin:0; font-size:0.8rem; color:var(--fg-4);">User-submitted badges awaiting review. Edit the name if needed, then approve or reject. Users get a DM on approval.</p>
+                <div class="section-card reveal" style="margin-top:2rem; overflow:hidden; transition-delay:.2s">
+                    <div class="section-card-header" style="justify-content:space-between">
+                        <div style="display:flex; align-items:flex-start; gap:0.75rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent); flex-shrink:0; margin-top:0.1rem"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            <div>
+                                <h3>Custom Badge Submissions</h3>
+                                <p>User-submitted badges awaiting review. Edit the name if needed, then approve or reject. Users get a DM on approval.</p>
+                            </div>
                         </div>
-                        <button onclick="loadCustomSubmissions()" style="background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--fg-3);padding:.4rem .85rem;border-radius:6px;font-size:0.8rem;cursor:pointer;font-family:var(--font)">Refresh</button>
+                        <button onclick="loadCustomSubmissions()" style="background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--fg-3);padding:.4rem .85rem;border-radius:6px;font-size:0.8rem;cursor:pointer;font-family:var(--font);flex-shrink:0">Refresh</button>
                     </div>
-                    <div id="customSubmissionsGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem;">
+                    <div id="customSubmissionsGrid" style="padding:1.25rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; border-top:1px solid var(--border);">
                         <p style="color:var(--fg-4); font-size:0.85rem">Loading...</p>
                     </div>
                 </div>
