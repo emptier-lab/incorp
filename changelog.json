@@ -1,6 +1,44 @@
 {
   "versions": [
     {
+      "version": "4.3.0",
+      "title": "Criminal Justice System",
+      "date": "March 2026",
+      "description": "A full crime and punishment economy. Rob enough times and you become a wanted criminal with escalating penalties. Fund the police, report criminals, and watch the streets get cleaned up — or don't, and risk everything.",
+      "groups": [
+        {
+          "title": "Criminal Levels",
+          "items": [
+            "Robbing someone makes you a criminal — each subsequent rob increases your level (max 5)",
+            "Level 1 Wanted: -30% earnings, 7 days | Level 2 Felon: -40%, 14 days | Level 3 Fugitive: -50%, 21 days",
+            "Level 4 Public Enemy: -60%, 28 days | Level 5 Police Target: -70%, permanent until caught",
+            "Earnings penalty applies to daily, work, and beg — your criminal record is shown every time",
+            "Criminal level resets when you're caught"
+          ]
+        },
+        {
+          "title": "Police & Catch System",
+          "items": [
+            "Catch chance per rob scales with the police fund size — 0 fund: ~3%, 1M: ~33%, 1T: ~63%, 1Q: ~78%",
+            "Higher criminal level = higher catch probability on each rob attempt",
+            "Level 1-2 bust: wallet seized | Level 3-5 bust: wallet + bank + tokens all seized",
+            "Police patrol random NPCs periodically — keeps the streets busy even between player crimes",
+            "Top donor gets credited in every arrest announcement"
+          ]
+        },
+        {
+          "title": ".report & .fund",
+          "items": [
+            ".report @user — costs 3 tokens, recovers all coins stolen from you, rewards up to 5 bonus tokens",
+            "Reporting triggers an immediate police bust on the criminal",
+            ".fund police <amount> — donate coins to the police fund",
+            "Every 1B donated gives +2% work earnings bonus (max +30%)",
+            "Rob protection can't shield you from people you've already robbed"
+          ]
+        }
+      ]
+    },
+    {
       "version": "4.2.5",
       "title": "Event Cards & Polish",
       "date": "March 2026",

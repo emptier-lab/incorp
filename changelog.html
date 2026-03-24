@@ -35,7 +35,8 @@
       <div class="sidebar-group">
         <h4>Versions</h4>
         <nav class="nav-links" id="clNav">
-          <a href="#v425" class="active">v4.2.5</a>
+          <a href="#v430" class="active">v4.3.0</a>
+          <a href="#v425">v4.2.5</a>
           <a href="#v421">v4.2.1</a>
           <a href="#v420">v4.2.0</a>
           <a href="#v410">v4.1.0</a>
@@ -60,10 +61,48 @@
         <p>All updates, improvements, and fixes.</p>
       </section>
 
+      <article id="v430" class="ver reveal">
+        <div class="ver-h">
+          <h2>Criminal Justice System</h2>
+          <span class="badge">v4.3.0 — latest</span>
+        </div>
+        <span class="ver-date">March 2026</span>
+        <p class="ver-p">A full crime and punishment economy. Rob enough times and you become a wanted criminal with escalating penalties. Fund the police, report criminals, and watch the streets get cleaned up — or don't, and risk everything.</p>
+        <div class="ver-grid">
+          <div class="ver-box">
+            <h4>Criminal Levels</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Each rob increases your criminal level (max 5) — earnings penalties stack per level</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Lv1 Wanted: -30%, 7d | Lv2 Felon: -40%, 14d | Lv3 Fugitive: -50%, 21d</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Lv4 Public Enemy: -60%, 28d | Lv5 Police Target: -70%, permanent until caught</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Penalties apply to daily, work, and beg — shown every time you earn</li>
+            </ul>
+          </div>
+          <div class="ver-box">
+            <h4>Police Catch System</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Catch chance per rob scales with police fund — 0: ~3%, 1M: ~33%, 1T: ~63%, 1Q: ~78%</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Lv1-2 bust: wallet seized | Lv3-5 bust: wallet + bank + tokens all seized</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Police patrol random NPC criminals periodically — seized coins go to the fund</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Top donor gets credited in every arrest announcement</li>
+            </ul>
+          </div>
+          <div class="ver-box">
+            <h4>.report &amp; .fund police</h4>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .report @user — costs 3 tokens, recovers all stolen coins, triggers immediate police bust</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Bonus tokens rewarded on report (1 per rob by that person, max 5)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> .fund police &lt;amount&gt; — donate coins, earn +2% work bonus per 1B donated (max +30%)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg> Rob protection can't shield you from people you've already robbed</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <article id="v425" class="ver reveal">
         <div class="ver-h">
           <h2>Event Cards &amp; Polish</h2>
-          <span class="badge">v4.2.5 — latest</span>
+          <span class="badge">v4.2.5</span>
         </div>
         <span class="ver-date">March 2026</span>
         <p class="ver-p">Weekly rotating event cards with animated drops, fused card durability drain, a reworked rob system that scales with rebirth, profile card emoji icons, and a round of bug fixes.</p>
