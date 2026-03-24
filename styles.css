@@ -412,7 +412,7 @@ a {
 
 /* Changelog specific */
 .cl-head {
-  padding: 4rem 0 6rem;
+  padding: 2rem 0 2rem 1.5rem;
 }
 
 .cl-head h1 {
@@ -885,16 +885,17 @@ a {
 /* ── Changelog timeline ── */
 .cl-timeline {
   position: relative;
-  padding-left: 1.75rem;
+  padding-left: 1.5rem;
 }
 .cl-timeline::before {
   content: '';
   position: absolute;
-  left: 2px;
-  top: 0.6rem;
-  bottom: 3rem;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--accent) 0%, var(--border) 15%, var(--border) 88%, transparent 100%);
+  left: 3px;
+  top: 0.5rem;
+  bottom: 2rem;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, var(--accent) 0%, rgba(255,255,255,0.08) 20%, rgba(255,255,255,0.08) 85%, transparent 100%);
 }
 .cl-timeline .ver {
   position: relative;
@@ -902,20 +903,20 @@ a {
 .cl-timeline .ver::before {
   content: '';
   position: absolute;
-  left: -1.75rem;
+  left: -1.5rem;
   top: 0.625rem;
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: var(--border-2);
-  border: 1px solid var(--border-2);
-  transform: translateX(1px);
-  transition: background 0.2s;
+  background: var(--card);
+  border: 2px solid rgba(255,255,255,0.18);
+  transform: translateX(0);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 .cl-timeline .ver.is-latest::before {
   background: var(--accent);
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(157, 109, 245, 0.18), 0 0 10px var(--accent-glow);
+  box-shadow: 0 0 0 3px rgba(157,109,245,0.2), 0 0 10px var(--accent-glow);
 }
 .ver-box {
   background: var(--card);
