@@ -779,3 +779,150 @@ a {
     padding-top: 1.5rem;
   }
 }
+
+/* ── Gradient text ── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--fg) 30%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Pulse dot (badge) ── */
+.pulse-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-right: 0.35rem;
+  margin-bottom: 1px;
+  animation: pulse-blink 2.2s ease-in-out infinite;
+}
+@keyframes pulse-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ── Feature icon wrap ── */
+.feat-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(157, 109, 245, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: var(--accent-2);
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+.feat-cell:hover .feat-icon-wrap {
+  background: rgba(157, 109, 245, 0.16);
+  border-color: rgba(157, 109, 245, 0.35);
+}
+.feat-cell:hover {
+  border-color: rgba(157, 109, 245, 0.28);
+}
+
+/* ── Section card (settings-style grouped container) ── */
+.section-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.section-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem 1rem;
+  border-left: 3px solid var(--accent);
+}
+.section-card-header svg { color: var(--accent); flex-shrink: 0; margin-top: 0.1rem; }
+.section-card-header h3 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: 0 0 0.2rem;
+}
+.section-card-header p {
+  font-size: 0.8rem;
+  color: var(--fg-3);
+  margin: 0;
+}
+
+/* ── Changelog timeline ── */
+.cl-timeline {
+  position: relative;
+  padding-left: 1.75rem;
+}
+.cl-timeline::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.6rem;
+  bottom: 3rem;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent) 0%, var(--border) 15%, var(--border) 88%, transparent 100%);
+}
+.cl-timeline .ver {
+  position: relative;
+}
+.cl-timeline .ver::before {
+  content: '';
+  position: absolute;
+  left: -1.75rem;
+  top: 0.625rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-2);
+  border: 1px solid var(--border-2);
+  transform: translateX(1px);
+  transition: background 0.2s;
+}
+.cl-timeline .ver.is-latest::before {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(157, 109, 245, 0.18), 0 0 10px var(--accent-glow);
+}
+.ver-box {
+  background: var(--card);
+}
+.ver.is-latest .ver-h h2 {
+  background: linear-gradient(135deg, var(--fg) 40%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Pill tabs ── */
+.pill-tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: fit-content;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.pill-tab {
+  background: none;
+  border: none;
+  color: var(--fg-3);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.4rem 0.875rem;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: var(--font);
+  white-space: nowrap;
+}
+.pill-tab:hover { color: var(--fg-2); background: rgba(255, 255, 255, 0.05); }
+.pill-tab.active { background: var(--accent-dim); color: var(--accent-2); font-weight: 600; }

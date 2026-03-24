@@ -145,31 +145,36 @@
       /* ── Tabs ── */
       .store-tabs {
         display: flex;
-        border-bottom: 1px solid var(--border);
+        gap: 0.25rem;
+        padding: 0.25rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        width: fit-content;
         margin-bottom: 2rem;
-        gap: 0;
+        flex-wrap: wrap;
       }
       .tab-btn {
         background: none;
         border: none;
-        border-bottom: 2px solid transparent;
         color: var(--fg-3);
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         font-weight: 500;
-        padding: 0.625rem 1.25rem;
+        padding: 0.4rem 0.875rem;
+        border-radius: 7px;
         cursor: pointer;
-        margin-bottom: -1px;
-        transition:
-          color 0.15s,
-          border-color 0.15s;
+        transition: background 0.15s, color 0.15s;
         font-family: var(--font);
+        white-space: nowrap;
       }
       .tab-btn:hover {
         color: var(--fg-2);
+        background: rgba(255, 255, 255, 0.05);
       }
       .tab-btn.active {
-        color: var(--fg);
-        border-bottom-color: var(--fg);
+        background: var(--accent-dim);
+        color: var(--accent-2);
+        font-weight: 600;
       }
 
       /* ── Category filter pills ── */
