@@ -61,15 +61,16 @@
 
         /* ── Tab bar ── */
         .tab-bar {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: var(--bg-primary, #111118);
-            border-bottom: 1px solid var(--border, #2a2a35);
             display: flex;
             gap: 0.25rem;
-            padding: 0.5rem 0;
-            margin: 1.5rem 0 0;
+            padding: 0.25rem;
+            background: var(--card, #0d0d12);
+            border: 1px solid var(--border, #1f1f28);
+            border-radius: 10px;
+            width: fit-content;
+            max-width: 100%;
+            margin: 1.5rem 0 2rem;
+            flex-wrap: wrap;
             overflow-x: auto;
             scrollbar-width: none;
         }
@@ -78,21 +79,23 @@
             background: none;
             border: none;
             color: var(--fg-3, #888);
-            font-size: 0.85rem;
+            font-size: 0.8125rem;
             font-weight: 500;
-            padding: 0.4rem 0.85rem;
-            border-radius: 20px;
+            padding: 0.4rem 0.875rem;
+            border-radius: 7px;
             cursor: pointer;
             white-space: nowrap;
             transition: background 0.15s, color 0.15s;
+            font-family: var(--font);
         }
         .tab-btn:hover {
-            background: var(--accent-dim);
-            color: var(--accent);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--fg-2, #aaa);
         }
         .tab-btn.active {
             background: var(--accent-dim);
-            color: var(--accent);
+            color: var(--accent-2, #c4b5fd);
+            font-weight: 600;
         }
 
         /* ── User bar ── */
@@ -952,6 +955,16 @@
         const SB_URL = 'https://pwbvvzskdzuccnskduiz.supabase.co';
         const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3YnZ2enNrZHp1Y2Nuc2tkdWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3MDcyMTMsImV4cCI6MjA4NzI4MzIxM30.r5G_RQgEkudLkSLn4QUBviJAzum3tHm2Z4zqytxl1kQ';
 
+        function fmt(n) {
+            n = Number(n) || 0;
+            if (n >= 1e15) return (n/1e15).toFixed(1).replace(/\.0$/, '') + 'Q';
+            if (n >= 1e12) return (n/1e12).toFixed(1).replace(/\.0$/, '') + 'T';
+            if (n >= 1e9)  return (n/1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+            if (n >= 1e6)  return (n/1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+            if (n >= 1e3)  return (n/1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+            return n.toLocaleString();
+        }
+
         const STORE_TOKEN = 'incorp_token';
         const STORE_USER = 'incorp_user';
 
@@ -1031,12 +1044,12 @@
                 const rows = await res.json();
                 if (rows.length > 0) {
                     const s = rows[0];
-                    document.getElementById('statWallet').textContent = (s.balance || 0).toLocaleString();
-                    document.getElementById('statBank').textContent = (s.bank || 0).toLocaleString();
-                    document.getElementById('statTokens').textContent = (s.tokens || 0).toLocaleString();
+                    document.getElementById('statWallet').textContent = fmt(s.balance);
+                    document.getElementById('statBank').textContent = fmt(s.bank);
+                    document.getElementById('statTokens').textContent = fmt(s.tokens);
                     document.getElementById('statLevel').textContent = (s.level || 0).toLocaleString();
                     document.getElementById('statCmds').textContent = (s.commands_run || 0).toLocaleString();
-                    document.getElementById('userTokenCount').textContent = (s.tokens || 0).toLocaleString();
+                    document.getElementById('userTokenCount').textContent = fmt(s.tokens);
                 } else {
                     ['statWallet','statBank','statTokens','statLevel','statCmds'].forEach(id => {
                         document.getElementById(id).textContent = '—';
