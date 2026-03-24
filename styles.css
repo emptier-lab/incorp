@@ -891,7 +891,7 @@ a {
   content: '';
   position: absolute;
   left: 3px;
-  top: 0.5rem;
+  top: calc(0.625rem + 4px);
   bottom: 2rem;
   width: 2px;
   border-radius: 2px;
