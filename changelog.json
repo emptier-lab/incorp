@@ -1,6 +1,56 @@
 {
   "versions": [
     {
+      "version": "4.4.0",
+      "title": "Message Log Privacy & Media",
+      "date": "March 2026",
+      "description": "Major upgrades to the message logger: full privacy controls, rich media rendering for videos and audio, pinned message canvas views, and a smarter canvas engine that trims blank space automatically.",
+      "groups": [
+        {
+          "title": "Privacy Controls",
+          "items": [
+            ".mlog privacy — view all privacy settings for the current channel",
+            "encrypt — AES-256 encrypts stored message content and author names in the JSON file",
+            "devmode — log images are sent to your DMs instead of the channel",
+            "owneronly — restricts all mlog commands to server admins and the server owner",
+            "autounpin — automatically removes pins from Discord after storing them in mlog"
+          ]
+        },
+        {
+          "title": "Pinned Messages",
+          "items": [
+            ".mlog pins — view pinned messages as a canvas image (8 per page)",
+            ".mlog pins @user — filter pins by a specific user",
+            ".mlog pins raw — plain text list of all pins with indices",
+            ".mlog pin <n> — reply to pinned message #n in Discord",
+            ".mlog focuspin <n> — single pin as a focused canvas image",
+            ".mlog focuspins @user — all pins from one user as a canvas image",
+            ".mlog mpin — reply to a message to manually add it to pins",
+            ".mlog fetchpins — re-fetch pins from Discord API"
+          ]
+        },
+        {
+          "title": "Media Rendering",
+          "items": [
+            "MP4 and video attachments render as a Discord-style video card with thumbnail and play button",
+            "Video thumbnails fetched via Discord CDN proxy, with ffmpeg fallback for older videos",
+            "Audio attachments render as a Discord-style player card with filename, waveform, and timeline",
+            "Audio duration fetched via ffprobe directly from the CDN URL",
+            "Voice message duration displayed from Discord API data"
+          ]
+        },
+        {
+          "title": "Canvas Improvements",
+          "items": [
+            "Canvas height now crops to actual content — no more blank space at the bottom",
+            "Footer drawn at real content bottom instead of estimated height",
+            "ctx state is saved and restored around media rendering to prevent font/color bleed",
+            "Cache size limits adjustable with .mlog max and .mlog min"
+          ]
+        }
+      ]
+    },
+    {
       "version": "4.3.0",
       "title": "Criminal Justice System",
       "date": "March 2026",
