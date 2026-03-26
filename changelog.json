@@ -1,6 +1,65 @@
 {
   "versions": [
     {
+      "version": "4.5.0",
+      "title": "Competitive Ecosystem",
+      "date": "March 2026",
+      "description": "A full competitive ecosystem — street racing with upgradeable cars, prediction markets with parimutuel betting, and weekly seasonal leaderboards with massive payouts. Compete across 6 categories every week for tokens, coins, bonus card rolls, and exclusive badges.",
+      "groups": [
+        {
+          "title": "Street Racing",
+          "items": [
+            "15 cars across 5 tiers: Junker, Street, Sport, Super, Hypercar — each with randomized stats on purchase",
+            ".carshop — browse all available cars by tier with prices",
+            ".carbuy <car> — buy a car, stats roll randomly within the tier range",
+            ".garage — view your cars, stats, upgrades, and active car",
+            ".carupgrade <engine|tires|nitro> — 10 upgrade levels per category, +3 stat per level",
+            ".race @user <bet> — PvP race with wager, opponent has 30s to accept, 5% house tax on winnings",
+            ".race npc <easy|medium|hard|extreme> — solo race vs NPC for fixed payouts scaled by rebirth",
+            "10 random track locations: Downtown Strip, Highway 101, Mountain Pass, and more",
+            "Own up to 10 cars, sell your active car for 40% value with .carsell"
+          ]
+        },
+        {
+          "title": "Prediction Markets",
+          "items": [
+            ".predict list — view all active markets with live odds and pool sizes",
+            ".predict <id> <option> <amount> — place a bet on any active market",
+            "Parimutuel odds — odds shift dynamically as bets come in, 8% house cut on winnings",
+            ".predict info <id> — detailed view with odds breakdown and your bets",
+            ".predict history — your total bets, wins, and net P/L",
+            ".predict create — admins can create custom markets with 2-4 options and a duration",
+            ".predict resolve / cancel — admin resolves with a winner or cancels with full refunds"
+          ]
+        },
+        {
+          "title": "Weekly Seasons",
+          "items": [
+            "Seasons run Monday to Sunday — new season starts automatically each week",
+            "6 tracked categories: Gambling Profit, Fishing Value, XP Gained, Race Wins, Prediction Profit, Richest Grinder",
+            "Minimum 10 actions per category to qualify for rewards",
+            "1st place per category: 30 tokens + 10 bonus card rolls + seasonal badge",
+            "2nd place: 10 tokens + 5 card rolls | 3rd place: 5 tokens + 3 card rolls | Everyone else: 1 token",
+            "Coin rewards scale with rebirth level — base × (1 + rebirth × 0.5)",
+            "Rewards stack per category — dominate multiple categories for massive weekly payouts",
+            ".season — view current season, your stats, and rankings across all categories",
+            ".seasonboard [category] — full leaderboard for any category or an overview of all",
+            ".seasonhistory — past seasons and your placements"
+          ]
+        },
+        {
+          "title": "Season Rewards",
+          "items": [
+            "1st place: 5B base coins + 30 tokens + 10 bonus card rolls + exclusive seasonal badge on profile",
+            "2nd place: 1B base coins + 10 tokens + 5 bonus card rolls",
+            "3rd place: 500M base coins + 5 tokens + 3 bonus card rolls",
+            "Everyone else who qualified: 50M base coins + 1 token",
+            "Seasonal badges are unique per season and shown on your profile card forever"
+          ]
+        }
+      ]
+    },
+    {
       "version": "4.4.0",
       "title": "Message Log Privacy & Media",
       "date": "March 2026",
